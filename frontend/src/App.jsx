@@ -10,6 +10,7 @@ import Register from './pages/register'
 import Admin from './pages/Admin'
 import Coustomer from './pages/Customer'
 import NotFound from './pages/NotFound'
+import Feedback from './pages/Feedback'
 
 
 const App = () => {
@@ -25,6 +26,7 @@ const App = () => {
         <Route path='/register' element={<Register/>}/>
         <Route path='/admin' element={<Admin/>}/>
         <Route path='/customer' element={<Coustomer/>}/> 
+        <Route path='/feedback' element={<Feedback/>}/>
         <Route path='*' element={<NotFound/>}/> 
       </Routes>
       <End/>
