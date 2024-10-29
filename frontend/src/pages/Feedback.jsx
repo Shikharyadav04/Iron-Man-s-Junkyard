@@ -11,7 +11,7 @@ const Feedback = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('/api/feedback', {
+            const response = await axios.post('http://localhost:8000/api/v1/feedback', {
                 transactionId,
                 customerId,
                 message,

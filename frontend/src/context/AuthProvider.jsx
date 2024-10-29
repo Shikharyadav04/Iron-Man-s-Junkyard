@@ -34,7 +34,12 @@ const AuthProvider = ({ children }) => {
     try {
       const response = await axios.post(
         "http://localhost:8000/api/v1/users/register",
-        formData
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data", // Added header to handle FormData
+          },
+        }
       );
 
       if (response.data.success) {

@@ -32,5 +32,5 @@ import feedbackRoutes from '../src/routes/feedback.routes.js';
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/request", requestRouter);
 app.use("/api/v1/admin", adminRouter);
-app.use("/api/feedback", feedbackRoutes);
+app.use("/api/v1/feedback", feedbackRoutes);
 export { app };

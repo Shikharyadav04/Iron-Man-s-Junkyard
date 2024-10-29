@@ -18,11 +18,9 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Pass the credentials object directly
       const user = await login(credentials);
-      console.log("Logged in user:", user); // Log the user to verify
+      console.log("Logged in user:", user);
       if (user && user.role) {
-        // Check if user and role are defined
         if (user.role === "admin") navigate("/admin");
         else if (user.role === "customer") navigate("/customer");
         else if (user.role === "dealer") navigate("/dealer");
@@ -35,26 +33,36 @@ const Login = () => {
   };
 
   return (
-    <div>
-      <h2>Login</h2>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="username"
-          placeholder="Username or Email"
-          onChange={handleChange}
-          value={credentials.username} // Controlled input
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          onChange={handleChange}
-          value={credentials.password} // Controlled input
-        />
-        <button type="submit">Login</button>
-      </form>
+    <div className="flex justify-center items-center h-screen bg-transparent">
+      <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-md">
+        <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Login</h2>
+        {error && <p className="text-red-500 mb-4 text-center">{error}</p>}
+        
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <input
+            type="text"
+            name="username"
+            placeholder="Username or Email"
+            onChange={handleChange}
+            value={credentials.username}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
+          />
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            onChange={handleChange}
+            value={credentials.password}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
+          />
+          <button
+            type="submit"
+            className="w-full py-2 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition duration-200"
+          >
+            Login
+          </button>
+        </form>
+      </div>
     </div>
   );
 };
