@@ -6,22 +6,25 @@ import Buy from './pages/Buy';
 import End from './components/End';
 import Navbar from './components/Navbar';
 import Login from './pages/Login';
-import Register from './pages/register'; // Fixed capitalization here
+import Register from './pages/register'; // Fixed capitalization
 import Admin from './pages/Admin';
-import Customer from './pages/Customer'; // Fixed typo from "Coustomer" to "Customer"
+import Customer from './pages/Customer'; // Fixed typo
 import NotFound from './pages/NotFound';
 import Feedback from './pages/Feedback';
 import Dealer from './pages/Dealer';
-import { AuthProvider } from './context/AuthProvider'; // Ensure you import AuthProvider
+import  { useAuth } from './context/AuthProvider'; // Correct import
 
 const App = () => {
+  const { user } = useAuth(); // Access user state via useAuth hook
+  console.log(user);
+
   return (
-    <AuthProvider> {/* Wrap everything inside AuthProvider */}
+   
       <div
-        className="sm:px-[5vw] md:px-[7vw] lg:px-[0vw]"
-        style={{ fontFamily: 'Roboto, sans-serif', fontWeight: 300 }}
+        
+        
       >
-        <Navbar /> {/* Navbar can access Auth context */}
+        <Navbar />
 
         <Routes>
           <Route path="/" element={<Home />} />
@@ -29,19 +32,25 @@ const App = () => {
           <Route path="/buy" element={<Buy />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/admin" element={<Admin />} />
+          <Route
+            path="/admin"
+            element={user ? <Admin /> : <Navigate to="/login" />}
+          />
           <Route
             path="/customer"
-            element={<Customer />} // No need for conditional here
+            element={user ? <Customer /> : <Navigate to="/login" />}
           />
           <Route path="/feedback" element={<Feedback />} />
-          <Route path="/dealer" element={<Dealer />} />
+          <Route
+            path="/dealer"
+            element={user ? <Dealer /> : <Navigate to="/login" />}
+          />
           <Route path="*" element={<NotFound />} />
         </Routes>
 
         <End />
       </div>
-    </AuthProvider>
+    
   );
 };
 

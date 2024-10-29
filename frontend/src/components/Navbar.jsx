@@ -53,10 +53,10 @@ const Navbar = () => {
       </ul>
 
       <div className='flex items-center gap-6'>
-      <div className={`group relative navbar ${isScrolled ? 'shadow-lg' : ''}`} key={user ? user.id : 'guest'}>
+      <div className='group relative navbar'>
         
           {user ? (
-            <Logout /> // Show Logout button if user is logged in
+           onclick= <Logout /> // Show Logout button if user is logged in
           ) : (
             <>
               <img className='w-5 cursor-pointer' src={assets.profile_icon} alt='Profile' />
