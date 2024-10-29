@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/AuthProvider";
 import { useNavigate } from "react-router-dom";
 
 const Register = () => {
@@ -50,16 +50,15 @@ const Register = () => {
       data.append("avatar", avatar);
     }
 
-    console.log("Submitting registration with data:", data); // Log data for debugging
-
     try {
       const response = await register(data);
-      console.log("Registration response:", response); // Log response for debugging
+      console.log("Registration response:", response);
 
       // Check if response is as expected
       if (response && response.data && response.data.user) {
         // Handle successful registration
-        alert("Registration successful!"); // Notify the user of success
+        alert("Registration successful! Redirecting to login...");
+        navigate("/login"); // Redirect to the login page
       } else {
         alert("Registration failed: Unexpected response from server");
       }
@@ -108,7 +107,7 @@ const Register = () => {
       <input
         type="file"
         name="avatar"
-        accept="image/*" // Only allow image files
+        accept="image/*"
         onChange={handleChange}
         required
       />

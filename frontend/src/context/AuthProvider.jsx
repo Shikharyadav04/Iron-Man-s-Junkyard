@@ -1,27 +1,45 @@
-import React, { createContext, useContext, useState } from "react";
-import axios from "axios";
+// AuthProvider.jsx
+import React, { createContext, useContext, useState } from 'react';
+import axios from 'axios';
 
 const AuthContext = createContext();
+
+export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
+  // AuthProvider.jsx
   const login = async (credentials) => {
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/v1/users/login",
-        credentials,
+        'http://localhost:8000/api/v1/users/login',
+        JSON.stringify(credentials), // Ensure you stringify the JSON
         {
+          headers: { 'Content-Type': 'application/json' },
           withCredentials: true,
         }
       );
-      setUser(response.data.user);
-      return response.data;
+
+      setUser(response.data.user); // Assuming response has a user field
+      return response.data.user;
     } catch (error) {
-      console.error("Login failed:", error);
-      throw error;
+      console.error("Login error:", error); // Log the error for debugging
+      throw error; // Rethrow to handle it in the component
     }
   };
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 
   const register = async (userData) => {
     try {
@@ -35,19 +53,21 @@ export const AuthProvider = ({ children }) => {
       throw error;
     }
   };
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 
   const logout = async () => {
-    try {
-      await axios.post(
-        "http://localhost:8000/api/v1/users/logout",
-        {},
-        { withCredentials: true }
-      );
-      setUser(null);
-    } catch (error) {
-      console.error("Logout failed:", error);
-      throw error;
-    }
+    await axios.post('/api/v1/users/logout', {}, { withCredentials: true });
+    setUser(null);
   };
 
   return (
@@ -57,4 +77,4 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-export const useAuth = () => useContext(AuthContext);
+export default AuthProvider;
