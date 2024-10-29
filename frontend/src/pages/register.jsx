@@ -3,7 +3,7 @@ import { useAuth } from "../context/AuthProvider";
 import { useNavigate } from "react-router-dom";
 
 const Register = () => {
-  const { user, register } = useAuth();
+  const { user, register } = useAuth(); // Ensure register is being destructured
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: "",
@@ -16,7 +16,6 @@ const Register = () => {
   });
 
   useEffect(() => {
-    // Redirect if user is already logged in
     if (user) {
       if (user.role === "admin") navigate("/admin/dashboard");
       else if (user.role === "dealer") navigate("/dealer/dashboard");
@@ -27,7 +26,7 @@ const Register = () => {
   const handleChange = (e) => {
     const { name, value, files } = e.target;
     if (name === "avatar") {
-      setFormData({ ...formData, avatar: files[0] }); // Store the file in formData
+      setFormData({ ...formData, avatar: files[0] });
     } else {
       setFormData({ ...formData, [name]: value });
     }
@@ -38,7 +37,6 @@ const Register = () => {
     const { username, email, password, fullName, role, address, avatar } =
       formData;
 
-    // Create FormData
     const data = new FormData();
     data.append("username", username);
     data.append("email", email);
@@ -54,11 +52,9 @@ const Register = () => {
       const response = await register(data);
       console.log("Registration response:", response);
 
-      // Check if response is as expected
       if (response && response.data && response.data.user) {
-        // Handle successful registration
         alert("Registration successful! Redirecting to login...");
-        navigate("/login"); // Redirect to the login page
+        navigate("/login");
       } else {
         alert("Registration failed: Unexpected response from server");
       }
@@ -102,8 +98,6 @@ const Register = () => {
         placeholder="Password"
         required
       />
-
-      {/* Avatar Upload */}
       <input
         type="file"
         name="avatar"
@@ -111,14 +105,11 @@ const Register = () => {
         onChange={handleChange}
         required
       />
-
-      {/* Role Selection */}
       <select name="role" onChange={handleChange} value={formData.role}>
         <option value="customer">Customer</option>
         <option value="dealer">Dealer</option>
         <option value="admin">Admin</option>
       </select>
-
       <button type="submit">Register</button>
     </form>
   );

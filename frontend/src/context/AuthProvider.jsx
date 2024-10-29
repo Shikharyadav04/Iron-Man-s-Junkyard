@@ -1,73 +1,60 @@
-// AuthProvider.jsx
-import React, { createContext, useContext, useState } from 'react';
-import axios from 'axios';
+import React, { createContext, useContext, useState } from "react";
+import axios from "axios";
 
 const AuthContext = createContext();
 
-export const useAuth = () => useContext(AuthContext);
-
-export const AuthProvider = ({ children }) => {
+const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
-  // AuthProvider.jsx
   const login = async (credentials) => {
     try {
       const response = await axios.post(
-        'http://localhost:8000/api/v1/users/login',
-        JSON.stringify(credentials), // Ensure you stringify the JSON
-        {
-          headers: { 'Content-Type': 'application/json' },
-          withCredentials: true,
-        }
+        "http://localhost:8000/api/v1/users/login",
+        credentials
       );
 
-      setUser(response.data.user); // Assuming response has a user field
-      return response.data.user;
+      if (response.data.success) {
+        setUser(response.data.data.user);
+        localStorage.setItem("token", response.data.token);
+        return response.data.data.user; // Return user object
+      } else {
+        console.error("Login failed:", response.data.message);
+        throw new Error(response.data.message);
+      }
     } catch (error) {
-      console.error("Login error:", error); // Log the error for debugging
-      throw error; // Rethrow to handle it in the component
+      console.error(
+        "Login error:",
+        error.response ? error.response.data : error.message
+      );
+      throw new Error("Login failed. Please try again.");
     }
   };
 
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-
-  const register = async (userData) => {
+  const register = async (formData) => {
     try {
-      const response = await axios.post("/api/v1/users/register", userData, {
-        withCredentials: true,
-      });
-      setUser(response.data.user);
-      return response.data;
+      const response = await axios.post(
+        "http://localhost:8000/api/v1/users/register",
+        formData
+      );
+
+      if (response.data.success) {
+        return response.data; // Return the response data
+      } else {
+        console.error("Registration failed:", response.data.message);
+        throw new Error(response.data.message);
+      }
     } catch (error) {
-      console.error("Registration failed:", error);
-      throw error;
+      console.error(
+        "Registration error:",
+        error.response ? error.response.data : error.message
+      );
+      throw new Error("Registration failed. Please try again.");
     }
   };
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
 
-  const logout = async () => {
-    await axios.post('/api/v1/users/logout', {}, { withCredentials: true });
+  const logout = () => {
     setUser(null);
+    localStorage.removeItem("token");
   };
 
   return (
@@ -78,3 +65,7 @@ export const AuthProvider = ({ children }) => {
 };
 
 export default AuthProvider;
+
+export const useAuth = () => {
+  return useContext(AuthContext);
+};
