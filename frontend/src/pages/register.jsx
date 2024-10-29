@@ -1,141 +1,65 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from "react";
+import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
+  const { user, register } = useAuth();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    mobile: '',
-    gender: '',
-    place: ''
+    username: "",
+    email: "",
+    fullName: "",
+    password: "",
+    role: "customer", // default role
+    address: "",
   });
 
-  const cities = ["Delhi", "Mumbai", "Bengaluru", "Chennai", "Kolkata", "Hyderabad", "Pune", "Ahmedabad", "Jaipur", "Lucknow"];
+  useEffect(() => {
+    // Redirect if user is already logged in
+    if (user) {
+      if (user.role === "admin") navigate("/admin/dashboard");
+      else if (user.role === "dealer") navigate("/dealer/dashboard");
+      else navigate("/customer/dashboard");
+    }
+  }, [user, navigate]);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle registration logic
-    console.log("Form data:", formData);
+    try {
+      const response = await register(formData);
+      const { role } = response.user;
+
+      // Redirect based on role
+      if (role === "admin") navigate("/admin/dashboard");
+      else if (role === "dealer") navigate("/dealer/dashboard");
+      else navigate("/customer/dashboard");
+
+      alert("Registration successful");
+    } catch (error) {
+      alert("Registration failed");
+    }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-transparent bg-gray-100">
-      <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-md">
-        <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Register</h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-gray-700">Name</label>
-            <input
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Enter your name"
-              required
-            />
-          </div>
+    <form onSubmit={handleSubmit}>
+      <input type="text" name="username" onChange={handleChange} placeholder="Username" required />
+      <input type="email" name="email" onChange={handleChange} placeholder="Email" required />
+      <input type="text" name="fullName" onChange={handleChange} placeholder="Full Name" required />
+      <input type="password" name="password" onChange={handleChange} placeholder="Password" required />
 
-          <div>
-            <label className="block text-gray-700">Email</label>
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Enter your email"
-              required
-            />
-          </div>
+      {/* Role Selection */}
+      <select name="role" onChange={handleChange} value={formData.role}>
+        <option value="customer">Customer</option>
+        <option value="dealer">Dealer</option>
+        <option value="admin">Admin</option>
+      </select>
 
-          <div>
-            <label className="block text-gray-700">Mobile No.</label>
-            <input
-              type="tel"
-              name="mobile"
-              value={formData.mobile}
-              onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Enter your mobile number"
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block text-gray-700">Gender</label>
-            <div className="flex items-center space-x-4">
-              <label className="flex items-center">
-                <input
-                  type="radio"
-                  name="gender"
-                  value="Male"
-                  onChange={handleChange}
-                  className="text-blue-500 focus:ring-blue-500"
-                  required
-                />
-                <span className="ml-2 text-gray-700">Male</span>
-              </label>
-              <label className="flex items-center">
-                <input
-                  type="radio"
-                  name="gender"
-                  value="Female"
-                  onChange={handleChange}
-                  className="text-blue-500 focus:ring-blue-500"
-                  required
-                />
-                <span className="ml-2 text-gray-700">Female</span>
-              </label>
-              <label className="flex items-center">
-                <input
-                  type="radio"
-                  name="gender"
-                  value="Other"
-                  onChange={handleChange}
-                  className="text-blue-500 focus:ring-blue-500"
-                  required
-                />
-                <span className="ml-2 text-gray-700">Other</span>
-              </label>
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-gray-700">Place</label>
-            <select
-              name="place"
-              value={formData.place}
-              onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            >
-              <option value="" disabled>Select your city</option>
-              {cities.map((city, index) => (
-                <option key={index} value={city}>{city}</option>
-              ))}
-            </select>
-          </div>
-
-          <button
-            type="submit"
-            className="w-full py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-200"
-          >
-            Register
-          </button>
-        </form>
-        <p className="text-center text-gray-600 mt-4">
-          Already registered?{" "}
-          <a href="/login" className="text-blue-500 hover:underline">
-            Login here
-          </a>
-        </p>
-      </div>
-    </div>
+      <button type="submit">Register</button>
+    </form>
   );
 };
 

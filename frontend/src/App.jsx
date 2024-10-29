@@ -11,6 +11,8 @@ import Admin from './pages/Admin'
 import Coustomer from './pages/Customer'
 import NotFound from './pages/NotFound'
 import Feedback from './pages/Feedback'
+import Dealer from './pages/Dealer'
+
 
 
 const App = () => {
@@ -24,10 +26,14 @@ const App = () => {
         <Route path='/buy' element={<Buy/>} />
         <Route path='/login' element={<Login/>}/>
         <Route path='/register' element={<Register/>}/>
-        <Route path='/admin' element={<Admin/>}/>
-        <Route path='/customer' element={<Coustomer/>}/> 
+        <Route path='/admin/dashboard' element={<Admin/>}/>
+        <Route path='/customer/dashboard' element={<Coustomer/>}/> 
         <Route path='/feedback' element={<Feedback/>}/>
+        <Route path='/dealer/dashboard' element={<Dealer/>}/>
         <Route path='*' element={<NotFound/>}/> 
+        
+        
+        
       </Routes>
       <End/>
 
