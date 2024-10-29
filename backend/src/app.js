@@ -28,8 +28,9 @@ app.use(
 
 // importing routes
 import userRouter from "./routes/user.routes.js";
-
+import requestRouter from "../src/routes/request.routes.js";
 //route declaration
 app.use("/api/v1/users", userRouter);
+app.use("/api/v1/request", requestRouter);
 
 export { app };

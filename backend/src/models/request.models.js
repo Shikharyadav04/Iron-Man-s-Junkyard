@@ -34,7 +34,7 @@ const requestSchema = new Schema(
       type: mongoose.Schema.ObjectId,
       ref: "User",
     },
-    ScheduledPickupDate: {
+    scheduledPickupDate: {
       type: Date,
       required: true,
     },
