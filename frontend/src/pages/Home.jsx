@@ -1,5 +1,6 @@
 import React from 'react'
 import Header from '../components/Header'
+import FeedCard from '@/components/FeedCard'
 
  
  
@@ -10,8 +11,12 @@ import Header from '../components/Header'
 
 const Home = () => {
   return (
-    <div>
+    <div className=''>
       <Header/>
+      <div className='px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw]'>
+        <FeedCard/>
+      </div>
+      
      
       
       

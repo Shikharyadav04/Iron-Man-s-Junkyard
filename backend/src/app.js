@@ -3,6 +3,7 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import dotenv from "dotenv";
 
+
 dotenv.config(); // Load .env file
 
 const app = express();
@@ -25,8 +26,11 @@ app.use(express.static("public"));
 import userRouter from "./routes/user.routes.js";
 import requestRouter from "../src/routes/request.routes.js";
 import adminRouter from "../src/routes/admin.routes.js";
+import feedbackRoutes from '../src/routes/feedback.routes.js';
+
 
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/request", requestRouter);
 app.use("/api/v1/admin", adminRouter);
+app.use("/api/feedback", feedbackRoutes);
 export { app };
