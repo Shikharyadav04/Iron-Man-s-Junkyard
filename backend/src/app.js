@@ -24,7 +24,9 @@ app.use(express.static("public"));
 // Importing and setting up routes
 import userRouter from "./routes/user.routes.js";
 import requestRouter from "../src/routes/request.routes.js";
+import adminRouter from "../src/routes/admin.routes.js";
+
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/request", requestRouter);
-
+app.use("/api/v1/admin", adminRouter);
 export { app };

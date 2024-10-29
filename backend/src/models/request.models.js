@@ -38,6 +38,17 @@ const requestSchema = new Schema(
       type: Date,
       required: true,
     },
+    description: {
+      type: String,
+    },
+    image: {
+      type: String,
+    },
+    condition: {
+      type: String,
+      enum: ["new", "old", "damaged"],
+      required: true,
+    },
   },
   { timestamps: true }
 );

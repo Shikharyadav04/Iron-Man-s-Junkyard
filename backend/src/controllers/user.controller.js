@@ -99,13 +99,17 @@ const registerUser = asyncHandler(async (req, res) => {
 const loginUser = asyncHandler(async (req, res) => {
   const { username, email, password } = req.body;
 
-  // console.log("Request body:", req.body);
+  console.log("Request body data:", req.body);
+
+  if (!username && !email) {
+    throw new ApiError(400, "Please provide either username or email");
+  }
 
   const user = await User.findOne({
     $or: [{ username }, { email }],
   });
 
-  if (!user) throw new ApiError(401, "Invalid credentials");
+  if (!user) throw new ApiError(401, "User not found");
 
   const isPasswordCorrect = await user.isPasswordCorrect(password);
 
@@ -115,8 +119,8 @@ const loginUser = asyncHandler(async (req, res) => {
     user._id
   );
 
-  // console.log("Generated Access Token:", accessToken);
-  // console.log("Generated Refresh Token:", refreshToken);
+  console.log("Generated Access Token:", accessToken);
+  console.log("Generated Refresh Token:", refreshToken);
 
   const options = {
     httpOnly: true,
@@ -142,7 +146,7 @@ const loginUser = asyncHandler(async (req, res) => {
       )
     );
 
-  // console.log("Access and refresh tokens set as cookies.");
+  console.log("Access and refresh tokens set as cookies.");
 });
 
 const logoutUser = asyncHandler(async (req, res) => {

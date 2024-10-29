@@ -19,44 +19,29 @@ const scrapSchema = new Schema(
     category: {
       type: String,
       required: true,
-      enum: ["Metals", "Plastics", "Electronics", "Glass", "Paper"],
+      enum: Object.keys(categorySubcategoryMap), // Main categories as enum
     },
     subCategory: {
       type: String,
       required: true,
-      enum: Object.keys(categorySubcategoryMap),
     },
     pricePerUnit: {
       type: Number,
-      required: true,
-    },
-    condition: {
-      type: String,
-      enum: ["new", "old", "damaged"],
-      required: true,
-    },
-    description: {
-      type: String,
-      required: true,
-    },
-    image: {
-      type: String,
       required: true,
     },
   },
   { timestamps: true }
 );
 
-// Validation to check if the selected subcategory is valid for the chosen category
+// Custom validation to ensure subCategory is valid for the selected category
 scrapSchema.pre("validate", function (next) {
   const selectedCategory = this.category;
-  const selectedSubcategory = this.subcategory;
+  const selectedSubcategory = this.subCategory;
 
-  // Check if the subcategory is allowed for the category
+  // Check if the subcategory is valid for the chosen category
   if (categorySubcategoryMap[selectedCategory]?.includes(selectedSubcategory)) {
-    next(); // If valid, proceed to save
+    next(); // If valid, proceed
   } else {
-    // If invalid, throw an error
     next(
       new Error(
         `Invalid subcategory "${selectedSubcategory}" for category "${selectedCategory}".`
