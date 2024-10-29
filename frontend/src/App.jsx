@@ -1,56 +1,58 @@
-import React from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
-import Home from './pages/Home';
-import About from './pages/About';
-import Buy from './pages/Buy';
-import End from './components/End';
-import Navbar from './components/Navbar';
-import Login from './pages/Login';
-import Register from './pages/register'; // Fixed capitalization
-import Admin from './pages/Admin';
-import Customer from './pages/Customer'; // Fixed typo
-import NotFound from './pages/NotFound';
-import Feedback from './pages/Feedback';
-import Dealer from './pages/Dealer';
-import  { useAuth } from './context/AuthProvider'; // Correct import
+// App.jsx
+import React from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
+import { useAuth } from "./context/AuthProvider"; // Ensure this path is correct
+import Navbar from "./components/Navbar"; // Ensure you have this component
+import Home from "./pages/Home"; // Update to the correct path
+import About from "./pages/About"; // Update to the correct path
+import Buy from "./pages/Buy"; // Update to the correct path
+import Login from "./pages/Login"; // Update to the correct path
+import Register from "./pages/Register"; // Update to the correct path
+import Feedback from "./pages/Feedback"; // Update to the correct path
+import Admin from "./pages/Admin"; // Update to the correct path
+import Customer from "./pages/Customer"; // Update to the correct path
+import Dealer from "./pages/Dealer"; // Update to the correct path
+import NotFound from "./pages/NotFound"; // Update to the correct path
+import End from "./components/End"; // Update to the correct path
 
 const App = () => {
-  const { user } = useAuth(); // Access user state via useAuth hook
-  console.log(user);
+  const { user } = useAuth();
 
   return (
-   
-      <div
-        
-        
-      >
-        <Navbar />
+    <div>
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/buy" element={<Buy />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/feedback" element={<Feedback />} />
 
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/buy" element={<Buy />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route
-            path="/admin"
-            element={user ? <Admin /> : <Navigate to="/login" />}
-          />
-          <Route
-            path="/customer"
-            element={user ? <Customer /> : <Navigate to="/login" />}
-          />
-          <Route path="/feedback" element={<Feedback />} />
-          <Route
-            path="/dealer"
-            element={user ? <Dealer /> : <Navigate to="/login" />}
-          />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        {/* Role-based routes */}
+        <Route
+          path="/admin"
+          element={
+            user?.role === "admin" ? <Admin /> : <Navigate to="/login" />
+          }
+        />
+        <Route
+          path="/customer"
+          element={
+            user?.role === "customer" ? <Customer /> : <Navigate to="/login" />
+          }
+        />
+        <Route
+          path="/dealer"
+          element={
+            user?.role === "dealer" ? <Dealer /> : <Navigate to="/login" />
+          }
+        />
 
-        <End />
-      </div>
-    
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+      <End />
+    </div>
   );
 };
 
