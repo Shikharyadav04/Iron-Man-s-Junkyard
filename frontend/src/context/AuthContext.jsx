@@ -8,9 +8,13 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (credentials) => {
     try {
-      const response = await axios.post("http://localhost:5000/api/v1/users/login", credentials, {
-        withCredentials: true,
-      });
+      const response = await axios.post(
+        "http://localhost:8000/api/v1/users/login",
+        credentials,
+        {
+          withCredentials: true,
+        }
+      );
       setUser(response.data.user);
       return response.data;
     } catch (error) {
@@ -21,7 +25,7 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (userData) => {
     try {
-      const response = await axios.post("http://localhost:5000/api/v1/users/register", userData, {
+      const response = await axios.post("/api/v1/users/register", userData, {
         withCredentials: true,
       });
       setUser(response.data.user);
@@ -34,7 +38,11 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      await axios.post("http://localhost:8000/api/v1/users/logout", {}, { withCredentials: true });
+      await axios.post(
+        "http://localhost:8000/api/v1/users/logout",
+        {},
+        { withCredentials: true }
+      );
       setUser(null);
     } catch (error) {
       console.error("Logout failed:", error);
