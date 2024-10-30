@@ -6,7 +6,7 @@ const Login = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
   const [credentials, setCredentials] = useState({
-    identifier: "", // Changed from username to a more general identifier
+    identifier: "",
     password: "",
   });
   const [error, setError] = useState(null);
@@ -17,8 +17,6 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Check if the identifier contains "@" to determine if it's an email
     const loginData = {
       password: credentials.password,
       ...(credentials.identifier.includes("@")
@@ -30,14 +28,12 @@ const Login = () => {
       const user = await login(loginData);
       console.log("Logged in user:", user);
       if (user && user.role) {
-        if (user.role === "admin") navigate("/admin");
-        else if (user.role === "customer") navigate("/customer");
-        else if (user.role === "dealer") navigate("/dealer");
+        navigate(`/${user.role}`); // Navigate based on user role
       } else {
         setError("User role is undefined.");
       }
     } catch (err) {
-      setError(err.message);
+      setError(err.message); // Set the error message from the backend
     }
   };
 
@@ -47,8 +43,8 @@ const Login = () => {
         <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
           Login
         </h2>
-        {error && <p className="text-red-500 mb-4 text-center">{error}</p>}
-
+        {error && <p className="text-red-500 mb-4 text-center">{error}</p>}{" "}
+        {/* Display error message */}
         <form onSubmit={handleSubmit} className="space-y-4">
           <input
             type="text"

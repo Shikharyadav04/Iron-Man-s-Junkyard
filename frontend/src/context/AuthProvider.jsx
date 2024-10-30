@@ -24,11 +24,15 @@ const AuthProvider = ({ children }) => {
         throw new Error(response.data.message);
       }
     } catch (error) {
-      console.error(
-        "Login error:",
-        error.response ? error.response.data : error.message
-      );
-      throw new Error("Login failed. Please try again.");
+      // Extract specific error message from response
+      let errorMessage = "Login failed. Please try again."; // Default message
+      if (error.response && error.response.data) {
+        errorMessage = error.response.data.message || error.message; // Extract the message from the response
+        console.error("Login error:", errorMessage);
+      } else {
+        console.error("Login error:", error.message);
+      }
+      throw new Error(errorMessage); // Throw the specific error message
     }
   };
 
