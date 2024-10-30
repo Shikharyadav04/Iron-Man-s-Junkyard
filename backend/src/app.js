@@ -3,7 +3,7 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import dotenv from "dotenv";
 import { ApiError } from "../src/utils/ApiError.js"; // Adjust this path accordingly
-
+import multer from "multer";
 dotenv.config(); // Load .env file
 
 const app = express();
@@ -35,13 +35,17 @@ app.use("/api/v1/feedback", feedbackRouter);
 
 // Error handling middleware
 const errorHandler = (err, req, res, next) => {
+  console.error(err); // Log the full error to see what went wrong
   if (err instanceof ApiError) {
     return res.status(err.statusCode).json({
       success: false,
       message: err.message,
     });
   }
-
+  if (err instanceof multer.MulterError) {
+    return res.status(400).json({ message: err.message });
+  }
+  next(err);
   // Handle other types of errors (optional)
   return res.status(500).json({
     success: false,
