@@ -1,5 +1,7 @@
+import { assets } from '@/assets/assets'
 import Card from '@/components/Cards'
 import React from 'react'
+
 
 const Buy = () => {
   return (
@@ -7,10 +9,10 @@ const Buy = () => {
       <div>
         <h1 className='text-center text-2xl '>E-waste</h1>
         <div className='flex justify-evenly'>
-          <Card/>
-          <Card/>
-          <Card/>
-          <Card/>
+          <Card imageUrl={assets.ewaste} title="eWaste Project" buttonText="Buy Now" />
+          <Card imageUrl={assets.ewaste1} title="eWaste Project" buttonText="Buy Now" />
+          <Card imageUrl={assets.ewaste2} title="eWaste Project" buttonText="Buy Now" />
+          <Card imageUrl={assets.ewaste3} title="eWaste Project" buttonText="Buy Now" />
         </div>
         
       </div>
@@ -18,10 +20,10 @@ const Buy = () => {
       <div>
         <h1 className='text-center text-2xl'>E-waste</h1>
         <div className='flex justify-evenly'>
-          <Card/>
-          <Card/>
-          <Card/>
-          <Card/>
+          <Card imageUrl={assets.work} title="eWaste Project" buttonText="Buy Now" />
+          <Card imageUrl={assets.work} title="eWaste Project" buttonText="Buy Now" />
+          <Card imageUrl={assets.work} title="eWaste Project" buttonText="Buy Now" />
+          <Card imageUrl={assets.work} title="eWaste Project" buttonText="Buy Now" />
         </div>
 
       </div>
@@ -29,10 +31,10 @@ const Buy = () => {
       <div>
         <h1 className='text-center text-2xl'>E-waste</h1>
         <div className='flex justify-evenly'>
-          <Card/>
-          <Card/>
-          <Card/>
-          <Card/>
+          <Card imageUrl={assets.work} title="eWaste Project" buttonText="Buy Now" />
+          <Card imageUrl={assets.work} title="eWaste Project" buttonText="Buy Now" />
+          <Card imageUrl={assets.work} title="eWaste Project" buttonText="Buy Now" />
+          <Card imageUrl={assets.work} title="eWaste Project" buttonText="Buy Now" /> 
         </div>
 
       </div>
@@ -40,10 +42,10 @@ const Buy = () => {
       <div>
         <h1 className='text-center text-2xl'>E-waste</h1>
         <div className='flex justify-evenly'>
-          <Card/>
-          <Card/>
-          <Card/>
-          <Card/>
+          <Card imageUrl={assets.work} title="eWaste Project" buttonText="Buy Now" />
+          <Card imageUrl={assets.work} title="eWaste Project" buttonText="Buy Now" />
+          <Card imageUrl={assets.work} title="eWaste Project" buttonText="Buy Now" />
+          <Card imageUrl={assets.work} title="eWaste Project" buttonText="Buy Now" />
         </div>
 
       </div>
