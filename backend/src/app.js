@@ -6,9 +6,22 @@ import { ApiError } from "../src/utils/ApiError.js"; // Adjust this path accordi
 import multer from "multer";
 dotenv.config(); // Load .env file
 
+
+
+
+
 const app = express();
 
-// CORS configuration
+
+
+
+
+
+
+
+
+
+
 app.use(
   cors({
     origin: "http://localhost:5173",
@@ -27,11 +40,14 @@ import userRouter from "./routes/user.routes.js";
 import requestRouter from "../src/routes/request.routes.js";
 import adminRouter from "../src/routes/admin.routes.js";
 import feedbackRouter from "../src/routes/feedback.routes.js";
+import dealerRouter from "../src/routes/dealer.routes.js";
 
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/request", requestRouter);
 app.use("/api/v1/admin", adminRouter);
 app.use("/api/v1/feedback", feedbackRouter);
+app.use('/api/v1/dealers', dealerRouter);
+
 
 // Error handling middleware
 const errorHandler = (err, req, res, next) => {

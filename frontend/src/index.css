@@ -69,3 +69,15 @@ body{
   backdrop-filter: blur(4px);
   background-image: url(./Images/bg.jpeg);
 }
+/* CSS file or Tailwind classes */
+.relative {
+  position: relative;
+}
+
+.overflow-hidden {
+  overflow: hidden;
+}
+
+.h-64 {
+  height: 16rem; /* Adjust as needed */
+}
