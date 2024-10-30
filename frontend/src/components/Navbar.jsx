@@ -32,31 +32,25 @@ const Navbar = () => {
       <ul className='hidden sm:flex gap-5 text-sm'>
         <NavLink to='/' className='flex flex-col items-center gap-1'>
           <p>Home</p>
-          <hr className='w-2/4 border-none h-[1.5px] bg-gray-700 hidden' />
         </NavLink>
         <NavLink to='/about' className='flex flex-col items-center gap-1'>
           <p>ABOUT</p>
-          <hr className='w-2/4 border-none h-[1.5px] ' />
         </NavLink>
         <NavLink to='/buy' className='flex flex-col items-center gap-1'>
           <p>BUY</p>
-          <hr className='w-2/4 border-none h-[1.5px] bg-gray-700 hidden' />
         </NavLink>
         <NavLink to='/business' className='flex flex-col items-center gap-1'>
           <p>For Businesses</p>
-          <hr className='w-2/4 border-none h-[1.5px] ' />
         </NavLink>
         <NavLink to='/feedback' className='flex flex-col items-center gap-1'>
           <p>Feedback</p>
-          <hr className='w-2/4 border-none h-[1.5px] bg-gray-700 hidden' />
         </NavLink>
       </ul>
 
       <div className='flex items-center gap-6'>
-      <div className='group relative navbar'>
-        
+        <div className='group relative navbar flex gap-5'>
           {user ? (
-           onclick= <Logout /> // Show Logout button if user is logged in
+            <Logout /> // Show Logout button if user is logged in
           ) : (
             <>
               <img className='w-5 cursor-pointer' src={assets.profile_icon} alt='Profile' />
@@ -71,6 +65,26 @@ const Navbar = () => {
                 </div>
               </div>
             </>
+          )}
+
+          {user && (
+            <div className="px-6 py-2 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-600 transition duration-200 ease-in-out transform hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
+              {user.role === "admin" && (
+                <NavLink to='/admin'>
+                  <p className='cursor-pointer hover:text-black'>Admin</p>
+                </NavLink>
+              )}
+              {user.role === "customer" && (
+                <NavLink to='/customer'>
+                  <p className='cursor-pointer hover:text-black'>Customer</p>
+                </NavLink>
+              )}
+              {user.role === "dealer" && (
+                <NavLink to='/dealer'>
+                  <p className='cursor-pointer hover:text-black'>Dealer</p>
+                </NavLink>
+              )}
+            </div>
           )}
         </div>
 
