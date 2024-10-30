@@ -12,17 +12,29 @@ const requestSchema = new Schema(
       ref: "User",
       required: true,
     },
-    scrapId: {
-      type: mongoose.Schema.ObjectId,
-      ref: "Scrap",
-      required: true,
-    },
+    scraps: [
+      {
+        scrapId: {
+          type: mongoose.Schema.ObjectId,
+          ref: "Scrap",
+          required: true,
+        },
+        category: { type: String, required: true },
+        subCategory: { type: String, required: true },
+        quantity: { type: Number, required: true },
+      },
+    ],
     pickupLocation: {
       type: String,
       required: true,
     },
-    quantity: {
-      type: Number,
+    scheduledPickupDate: {
+      type: Date,
+      required: true,
+    },
+    condition: {
+      type: String,
+      enum: ["new", "old", "damaged"],
       required: true,
     },
     status: {
@@ -33,21 +45,6 @@ const requestSchema = new Schema(
     assignedDealerId: {
       type: mongoose.Schema.ObjectId,
       ref: "User",
-    },
-    scheduledPickupDate: {
-      type: Date,
-      required: true,
-    },
-    description: {
-      type: String,
-    },
-    image: {
-      type: String,
-    },
-    condition: {
-      type: String,
-      enum: ["new", "old", "damaged"],
-      required: true,
     },
   },
   { timestamps: true }
