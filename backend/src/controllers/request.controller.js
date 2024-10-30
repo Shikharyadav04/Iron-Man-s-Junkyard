@@ -11,22 +11,30 @@ const createRequest = asyncHandler(async (req, res) => {
     pickupLocation,
     quantity,
     scheduledPickupDate,
+    condition,
   } = req.body;
 
   // Check if category, subCategory, pickupLocation, and scheduledPickupDate are non-empty strings
   if (
-    [category, subCategory, pickupLocation, scheduledPickupDate].some(
-      (field) => typeof field !== "string" || field.trim() === ""
-    ) ||
-    typeof quantity !== "number" ||
-    isNaN(quantity) ||
-    quantity <= 0
+    [
+      category,
+      subCategory,
+      pickupLocation,
+      scheduledPickupDate,
+      condition,
+    ].some((field) => typeof field !== "string" || field.trim() === "")
   ) {
     throw new ApiError(
       400,
       "All fields are required and quantity must be a positive number"
     );
   }
+
+  if (typeof quantity !== "number" || isNaN(quantity) || quantity <= 0) {
+    throw new ApiError(400, "Quantity must be a positive number");
+  }
+
+  //TODO: frontend to set conditon ,new , old , damaged
 
   const userId = req.user._id;
   const requestId = `REQ-${Date.now()}`;
@@ -45,6 +53,7 @@ const createRequest = asyncHandler(async (req, res) => {
     pickupLocation,
     quantity,
     scheduledPickupDate,
+    condition,
   });
 
   // Check if newRequest was created successfully
@@ -60,15 +69,6 @@ const createRequest = asyncHandler(async (req, res) => {
 });
 
 const getAllRequest = asyncHandler(async (req, res) => {
-  // Check if user is a scrap dealer
-  const userRole = req.user.role;
-  if (userRole !== "dealer") {
-    throw new ApiError(
-      401,
-      "Unauthorized request: Only scrap dealers can access this route"
-    );
-  }
-
   // Get all pending requests
   const requests = await Request.find({ status: "pending" })
     .populate("userId", "fullName") // Populate user's full name
