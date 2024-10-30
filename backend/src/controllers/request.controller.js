@@ -5,49 +5,55 @@ import { Scrap } from "../models/scrap.models.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 
 const createRequest = asyncHandler(async (req, res) => {
-  const {
-    category,
-    subCategory,
-    pickupLocation,
-    quantity,
-    scheduledPickupDate,
-  } = req.body;
+  const { scraps, pickupLocation, scheduledPickupDate, condition } = req.body;
 
-  // Check if category, subCategory, pickupLocation, and scheduledPickupDate are non-empty strings
-  if (
-    [category, subCategory, pickupLocation, scheduledPickupDate].some(
-      (field) => typeof field !== "string" || field.trim() === ""
-    ) ||
-    typeof quantity !== "number" ||
-    isNaN(quantity) ||
-    quantity <= 0
-  ) {
-    throw new ApiError(
-      400,
-      "All fields are required and quantity must be a positive number"
-    );
+  // Validate the required fields
+  if (!Array.isArray(scraps) || scraps.length === 0) {
+    throw new ApiError(400, "Scraps array is required and cannot be empty");
   }
 
   const userId = req.user._id;
   const requestId = `REQ-${Date.now()}`;
 
-  // Find the scrap based on category and subCategory
-  const scrap = await Scrap.findOne({ category, subCategory });
-  if (!scrap) {
-    throw new ApiError(404, "Scrap category or subcategory not found");
+  // Fetch scrap details and validate each item
+  const validatedScraps = [];
+  for (const { category, subCategory, quantity } of scraps) {
+    if (
+      typeof category !== "string" ||
+      typeof subCategory !== "string" ||
+      typeof quantity !== "number" ||
+      quantity <= 0
+    ) {
+      throw new ApiError(400, "Invalid data in scraps array");
+    }
+
+    // Find scrap by category and subCategory
+    const scrap = await Scrap.findOne({ category, subCategory });
+    if (!scrap) {
+      throw new ApiError(
+        404,
+        `Scrap with category ${category} and subCategory ${subCategory} not found`
+      );
+    }
+
+    validatedScraps.push({
+      scrapId: scrap._id,
+      category,
+      subCategory,
+      quantity,
+    });
   }
 
   // Create the new request
   const newRequest = await Request.create({
     requestId,
     userId,
-    scrapId: scrap._id,
+    scraps: validatedScraps,
     pickupLocation,
-    quantity,
     scheduledPickupDate,
+    condition,
   });
 
-  // Check if newRequest was created successfully
   if (!newRequest) {
     throw new ApiError(500, "Failed to create new request");
   }
@@ -60,15 +66,6 @@ const createRequest = asyncHandler(async (req, res) => {
 });
 
 const getAllRequest = asyncHandler(async (req, res) => {
-  // Check if user is a scrap dealer
-  const userRole = req.user.role;
-  if (userRole !== "dealer") {
-    throw new ApiError(
-      401,
-      "Unauthorized request: Only scrap dealers can access this route"
-    );
-  }
-
   // Get all pending requests
   const requests = await Request.find({ status: "pending" })
     .populate("userId", "fullName") // Populate user's full name

@@ -39,4 +39,39 @@ const addScrap = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, newScrap, "Scrap added successfully"));
 });
 
-export { addScrap };
+const changeScrapPrice = asyncHandler(async (req, res) => {
+  //get scrap category and sub category
+  //get new price
+  //validate if values given or not
+  //check if scrap exist or not
+  //update scrap price
+  //return response
+
+  const { scrapCategory, scrapSubCategory, newPrice } = req.body;
+
+  // console.log(
+  //   `Scrap category : ${scrapCategory} and sub category : ${scrapSubCategory}`
+  // );
+
+  if (!scrapCategory || !scrapSubCategory) {
+    throw new ApiError(400, "Please provide scrap category and sub category");
+  }
+
+  const scrap = await Scrap.findOne({
+    category: scrapCategory,
+    subCategory: scrapSubCategory,
+  });
+
+  if (!scrap) {
+    throw new ApiError(404, "Scrap not found");
+  }
+
+  scrap.pricePerUnit = newPrice;
+  await scrap.save({ validateBeforeSave: false });
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, scrap, "Scrap price updated successfully"));
+});
+
+export { addScrap, changeScrapPrice };
