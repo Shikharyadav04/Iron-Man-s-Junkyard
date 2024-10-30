@@ -34,7 +34,8 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { username, email, password, fullName, role, address, avatar } = formData;
+    const { username, email, password, fullName, role, address, avatar } =
+      formData;
 
     const data = new FormData();
     data.append("username", username);
@@ -48,15 +49,7 @@ const Register = () => {
     }
 
     try {
-      const response = await register(data);
-      console.log("Registration response:", response);
-
-      if (response && response.data && response.data.user) {
-        alert("Registration successful! Redirecting to login...");
-        navigate("/login");
-      } else {
-        alert("Registration failed: Unexpected response from server");
-      }
+      await register(data); // Call the register function
     } catch (error) {
       console.error("Error registering user:", error);
       let message = "Registration failed. Please try again.";
@@ -69,8 +62,13 @@ const Register = () => {
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-transparent">
-      <form onSubmit={handleSubmit} className="w-full max-w-md p-6 bg-white rounded-lg shadow-lg space-y-4">
-        <h2 className="text-2xl font-bold text-center text-gray-800">Register</h2>
+      <form
+        onSubmit={handleSubmit}
+        className="w-full max-w-md p-6 bg-white rounded-lg shadow-lg space-y-4"
+      >
+        <h2 className="text-2xl font-bold text-center text-gray-800">
+          Register
+        </h2>
 
         <input
           type="text"

@@ -1,10 +1,12 @@
 import React, { createContext, useContext, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const navigate = useNavigate(); // Initialize useNavigate
 
   const login = async (credentials) => {
     try {
@@ -37,12 +39,25 @@ const AuthProvider = ({ children }) => {
         formData,
         {
           headers: {
-            "Content-Type": "multipart/form-data", // Added header to handle FormData
+            "Content-Type": "multipart/form-data", // Handle FormData
           },
         }
       );
 
       if (response.data.success) {
+        // Set the user state after successful registration
+        const registeredUser = response.data.data.user; // Assuming user data is returned
+        setUser(registeredUser); // Update the user state
+
+        // Navigate to the respective role-based page
+        if (registeredUser.role === "admin") {
+          navigate("/admin");
+        } else if (registeredUser.role === "dealer") {
+          navigate("/dealer");
+        } else {
+          navigate("/customer");
+        }
+
         return response.data; // Return the response data
       } else {
         console.error("Registration failed:", response.data.message);
