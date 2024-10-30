@@ -263,11 +263,6 @@ const getCurrentUser = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, req.user, "Current user fetched successfully"));
 });
 
-
-
-
-
-
 const updateUserDetails = asyncHandler(async (req, res) => {
   const { fullName, email, address } = req.body;
 

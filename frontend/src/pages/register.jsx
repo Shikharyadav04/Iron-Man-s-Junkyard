@@ -50,6 +50,7 @@ const Register = () => {
 
     try {
       await register(data); // Call the register function
+      alert("Registration successful!"); // Optional alert on success
     } catch (error) {
       console.error("Error registering user:", error);
       let message = "Registration failed. Please try again.";
