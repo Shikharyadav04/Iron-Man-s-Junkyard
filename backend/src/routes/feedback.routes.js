@@ -1,10 +1,10 @@
-// routes/feedbackRoutes.js
-import express from "express";
-import { Feedback } from "../models/feedback.models.js"; // Adjust the import path as needed
 
-const router = express.Router();
+import { Router } from "express"
+import { Feedback } from "../models/feedback.models.js"; // Adjust path as needed
 
-// Route to submit feedback
+const router = Router();
+
+// POST feedback
 router.post("/", async (req, res) => {
   const { transactionId, customerId, message, rating } = req.body;
 
@@ -15,21 +15,10 @@ router.post("/", async (req, res) => {
       message,
       rating,
     });
-
     await feedback.save();
-    res.status(201).json(feedback);
+    res.status(201).json({ message: "Feedback submitted successfully", feedback });
   } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
-});
-
-// Route to get feedback by transaction ID
-router.get("/:transactionId", async (req, res) => {
-  try {
-    const feedbacks = await Feedback.find({ transactionId: req.params.transactionId });
-    res.status(200).json(feedbacks);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(500).json({ error: "Error submitting feedback" });
   }
 });
 
