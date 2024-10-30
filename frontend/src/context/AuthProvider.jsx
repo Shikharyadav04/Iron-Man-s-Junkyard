@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
+import Cookies from "js-cookie"; // Import js-cookie
 
 const AuthContext = createContext();
 
@@ -17,14 +18,14 @@ const AuthProvider = ({ children }) => {
 
       if (response.data.success) {
         setUser(response.data.data.user);
-        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("jwttoken", response.data.token); // Change to jwttoken
+        Cookies.set("jwttoken", response.data.token, { expires: 7 }); // Change to jwttoken
         return response.data.data.user; // Return user object
       } else {
         console.error("Login failed:", response.data.message);
         throw new Error(response.data.message);
       }
     } catch (error) {
-      // Extract specific error message from response
       let errorMessage = "Login failed. Please try again."; // Default message
       if (error.response && error.response.data) {
         errorMessage = error.response.data.message || error.message; // Extract the message from the response
@@ -49,7 +50,6 @@ const AuthProvider = ({ children }) => {
       );
 
       if (response.data.success) {
-        // Set the user state after successful registration
         const registeredUser = response.data.data.user; // Assuming user data is returned
         setUser(registeredUser); // Update the user state
 
@@ -78,7 +78,8 @@ const AuthProvider = ({ children }) => {
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem("token");
+    localStorage.removeItem("jwttoken"); // Change to jwttoken
+    Cookies.remove("jwttoken"); // Change to jwttoken
   };
 
   return (
