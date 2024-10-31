@@ -16,7 +16,6 @@ const Register = () => {
     avatar: null,
   });
   const [loading, setLoading] = useState(false); // Loading state
-  const [success, setSuccess] = useState(false); // Success state
 
   useEffect(() => {
     if (user) {
@@ -38,32 +37,19 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true); // Set loading to true before registration attempt
-    const { username, email, password, fullName, role, address, avatar } =
-      formData;
 
     const data = new FormData();
-    data.append("username", username);
-    data.append("email", email);
-    data.append("password", password);
-    data.append("fullName", fullName);
-    data.append("role", role);
-    data.append("address", address);
-    if (avatar) {
-      data.append("avatar", avatar);
-    }
+    Object.entries(formData).forEach(([key, value]) => {
+      if (value) data.append(key, value);
+    });
 
     try {
       await register(data); // Call the register function
-      setSuccess(true); // Set success to true
       // Optionally redirect or show a success message
       setTimeout(() => navigate("/login"), 2000); // Redirect to login after 2 seconds
     } catch (error) {
       console.error("Error registering user:", error);
-      let message = "Registration failed. Please try again.";
-      if (error.response) {
-        message = error.response.data.message || "Unknown error";
-      }
-      alert(message); // Keep alert for error messages
+      alert(error.message || "Registration failed. Please try again.");
     } finally {
       setLoading(false); // Set loading to false after the attempt
     }

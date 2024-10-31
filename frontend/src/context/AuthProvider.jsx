@@ -18,7 +18,7 @@ const AuthProvider = ({ children }) => {
       if (response.data.success) {
         setUser(response.data.data.user);
         localStorage.setItem("jwttoken", response.data.token);
-        
+
         // Navigate to the user's role-based page
         navigate(`/${response.data.data.user.role}`);
 
@@ -47,12 +47,17 @@ const AuthProvider = ({ children }) => {
         "http://localhost:8000/api/v1/users/register",
         data
       );
+
       if (response.data.success) {
-        // Automatically log in the user after successful registration if desired
+        // Automatically log in the user after successful registration
         const userData = response.data.data.user;
-        setUser(userData);
-        localStorage.setItem("jwttoken", response.data.token);
+        setUser(userData); // Set the user state
+        localStorage.setItem("jwttoken", response.data.token); // Store the token
+
+        // Navigate to the user's role-based page after registration
         navigate(`/${userData.role}`);
+
+        return userData; // Optionally return user data
       } else {
         throw new Error(response.data.message || "Registration failed");
       }
