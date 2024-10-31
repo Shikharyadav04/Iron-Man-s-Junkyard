@@ -1,5 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
+import Alert from '@mui/joy/Alert';
+
 
 const Feedback = () => {
   const [transactionId, setTransactionId] = useState("");
@@ -24,7 +26,7 @@ const Feedback = () => {
       setMessage("");
       setRating(1);
     } catch (error) {
-      setFeedbackMsg("Error submitting feedback.");
+      setFeedbackMsg(<Alert variant="solid">"Error submitting feedback."</Alert>);
     }
   };
 

@@ -5,19 +5,15 @@ import { useAuth } from "../context/AuthProvider";
 import Logout from './Logout';
 
 const Navbar = () => {
-  const { user } = useAuth(); // Get the user state from Auth context
+  const { user } = useAuth();
   const [visible, setVisible] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
-  // Listen for scroll events to add/remove shadow effect
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
     };
-
     window.addEventListener('scroll', handleScroll);
-    
-    // Cleanup event listener on unmount
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
@@ -45,12 +41,15 @@ const Navbar = () => {
         <NavLink to='/feedback' className='flex flex-col items-center gap-1'>
           <p>Feedback</p>
         </NavLink>
+        <NavLink to='/contact' className='flex flex-col items-center gap-1'>
+          <p>Contact</p>
+        </NavLink>
       </ul>
 
       <div className='flex items-center gap-6'>
         <div className='group relative navbar flex gap-5'>
           {user ? (
-            <Logout /> // Show Logout button if user is logged in
+            <Logout />
           ) : (
             <>
               <img className='w-5 cursor-pointer' src={assets.profile_icon} alt='Profile' />
@@ -90,7 +89,8 @@ const Navbar = () => {
 
         <img onClick={() => setVisible(true)} src={assets.menu_icon} className='w-5 cursor-pointer sm:hidden' alt='Menu' />
 
-        <div className={`absolute top-0 right-0 bottom-0 overflow-hidden bg-white transition-all ${visible ? 'w-full' : 'w-0'}`}>
+        {/* Sidebar menu */}
+        <div className={`fixed top-0 right-0 bottom-0 bg-white transition-all duration-300 ${visible ? 'w-full z-50' : 'w-0 overflow-hidden'} sm:hidden`}>
           <div className='flex flex-col text-gray-600'>
             <div onClick={() => setVisible(false)} className='flex items-center gap-4 p-3'>
               <img className='h-4 rotate-180' src={assets.dropdown_icon} alt='Back' />

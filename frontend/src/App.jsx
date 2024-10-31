@@ -15,6 +15,8 @@ import Customer from "./pages/Customer"; // Update to the correct path
 import Dealer from "./pages/Dealer"; // Update to the correct path
 import NotFound from "./pages/NotFound"; // Update to the correct path
 import End from "./components/End"; // Update to the correct path
+import Business from "./pages/Business";
+import  Contact  from "./pages/Contact";
 
 const App = () => {
   const { user } = useAuth();
@@ -29,6 +31,7 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/feedback" element={<Feedback />} />
+        <Route path="/contact" element={<Contact />} />
        
      
 
@@ -71,6 +74,7 @@ const App = () => {
         />
 
         <Route path="*" element={<NotFound />} />
+        <Route path="/business" element={<Business />} />
       </Routes>
       <End />
     </div>

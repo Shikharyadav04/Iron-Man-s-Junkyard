@@ -9,6 +9,7 @@ import ewaste from './ewaste.png'
 import ewaste1 from './ewaste1.jpg'
 import ewaste2 from './ewaste2.png'
 import ewaste3 from './ewaste3.webp'
+import scrapman from './scrapman.png'
 
 
 
@@ -27,6 +28,7 @@ export const assets = {
     ewaste1,
     ewaste2,
     ewaste3,
+    scrapman
     
     
 

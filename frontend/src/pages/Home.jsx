@@ -1,6 +1,7 @@
 import React from 'react';
 import Header from '../components/Header';
 import ShareButtons from '@/components/ShareButton';
+import BackgroundBeams from '@/components/BackgroundBeams';
 
 const Home = () => {
   const url = 'http://localhost:5173/'; // Replace with your actual URL
@@ -20,6 +21,9 @@ const Home = () => {
         <div className="flex justify-center">
           <ShareButtons url={url} title={title} />
         </div>
+        
+        
+        
       </div>
     </div>
   );
