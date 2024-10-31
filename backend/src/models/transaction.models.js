@@ -1,67 +1,26 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose from "mongoose";
 
-const transactionSchema = new Schema(
+const transactionSchema = new mongoose.Schema(
   {
-    transactionId: {
-      type: String,
-      required: true,
-      unique: true,
-    },
-    requestId: {
-      type: mongoose.Schema.ObjectId,
-      ref: "Request",
-      required: true,
-    },
-    customerId: {
-      type: mongoose.Schema.ObjectId,
-      ref: "User",
-      required: true,
-    },
+    transactionId: String,
+    requestId: { type: mongoose.Schema.Types.ObjectId, ref: "Request" },
+    customerId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     dealerId: {
-      type: mongoose.Schema.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "User",
+      default: null,
     },
-    scrapDetails: [
+    totalAmount: Number,
+    initialPayment: Number,
+    remainingAmount: Number,
+    payments: [
       {
-        scrapId: {
-          type: mongoose.Schema.ObjectId,
-          ref: "Scrap",
-          required: true,
-        },
-        scrapQuantity: {
-          type: Number,
-          required: true,
-        },
+        amount: Number,
+        paymentMethod: String,
+        paymentStatus: String,
+        date: { type: Date, default: Date.now },
       },
     ],
-    subTotal: {
-      type: Number,
-      required: true,
-    },
-    discount: {
-      type: Number,
-      required: true,
-      default: 0,
-    },
-    tax: {
-      type: Number,
-      required: true,
-      default: 0,
-    },
-    totalAmount: {
-      type: Number,
-      required: true,
-    },
-    status: {
-      type: String,
-      enum: ["pending", "paid", "failed"],
-      default: "pending",
-    },
-    paymentMethod: {
-      type: String,
-      enum: ["cash", "card", "upi"],
-      required: true,
-    },
   },
   { timestamps: true }
 );
