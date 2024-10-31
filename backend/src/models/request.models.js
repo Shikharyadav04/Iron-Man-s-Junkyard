@@ -34,7 +34,7 @@ const requestSchema = new Schema(
     },
     condition: {
       type: String,
-      enum: ["new", "old", "damaged"],
+      enum: ["good", "old", "damaged"],
       required: true,
     },
     status: {
@@ -45,6 +45,15 @@ const requestSchema = new Schema(
     assignedDealerId: {
       type: mongoose.Schema.ObjectId,
       ref: "User",
+    },
+    isInitialPaymentMade: {
+      // New field to indicate if the initial payment is made
+      type: Boolean,
+      default: false,
+    },
+    isCompleted: {
+      type: Boolean,
+      default: false,
     },
   },
   { timestamps: true }
