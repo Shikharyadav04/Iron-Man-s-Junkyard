@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   createRequest,
   getAllRequest,
+  acceptRequest,
 } from "../controllers/request.controller.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 import { upload } from "../middlewares/multer.middleware.js";
@@ -14,4 +15,7 @@ router
   .route("/get-request")
   .post(verifyJWT, dealerAuthentication, getAllRequest);
 
+router
+  .route("/accept-request")
+  .post(verifyJWT, dealerAuthentication, acceptRequest);
 export default router;

@@ -85,4 +85,39 @@ const getAllRequest = asyncHandler(async (req, res) => {
     );
 });
 
-export { createRequest, getAllRequest };
+const acceptRequest = asyncHandler(async (req, res) => {
+  const requestId = req.body.requestId;
+  if (!requestId) {
+    throw new ApiError(400, "Request ID is required");
+  }
+  console.log("Request ID:", requestId);
+
+  const dealerId = req.user._id;
+
+  const request = await Request.findOne({ _id: requestId });
+
+  if (!request) {
+    throw new ApiError(404, "Request not found");
+  }
+
+  if (request.status !== "pending") {
+    throw new ApiError(400, "This request is already accepted or rejected");
+  }
+
+  request.assignedDealerId = dealerId;
+  request.status = "accepted";
+
+  await request.save();
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        request,
+        "Request accepted successfully. You are now assigned to this request"
+      )
+    );
+});
+
+export { createRequest, getAllRequest, acceptRequest };

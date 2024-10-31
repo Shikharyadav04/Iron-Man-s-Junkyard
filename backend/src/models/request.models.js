@@ -39,7 +39,7 @@ const requestSchema = new Schema(
     },
     status: {
       type: String,
-      enum: ["pending", "approved", "in-progress", "completed", "canceled"],
+      enum: ["pending", "accepted", "in-progress", "completed", "canceled"],
       default: "pending",
     },
     assignedDealerId: {
