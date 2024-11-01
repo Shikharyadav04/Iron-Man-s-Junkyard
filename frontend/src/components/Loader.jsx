@@ -3,7 +3,7 @@ const Loader = () => {
   return (
     <div className="flex items-center justify-center">
       <div className="loader"></div>
-      <style jsx>{`
+      <style >{`
         .loader {
           border: 4px solid rgba(255, 255, 255, 0.3); /* White border */
           border-top: 4px solid #007bff; /* Blue color */
