@@ -24,7 +24,7 @@ const Customer = () => {
     email: "",
     avatar: "",
   });
-  
+
   // State to hold scrap request data
   const [scrapRequest, setScrapRequest] = useState({
     scraps: [{ category: "", subCategory: "", quantity: 0 }],
@@ -32,6 +32,10 @@ const Customer = () => {
     scheduledPickupDate: "",
     condition: "",
   });
+
+  // State to handle submission loading
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
 
   useEffect(() => {
     if (user) {
@@ -57,40 +61,62 @@ const Customer = () => {
   const handleAddScrap = () => {
     setScrapRequest({
       ...scrapRequest,
-      scraps: [...scrapRequest.scraps, { category: "", subCategory: "", quantity: 0 }],
+      scraps: [
+        ...scrapRequest.scraps,
+        { category: "", subCategory: "", quantity: 0 },
+      ],
     });
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setIsSubmitting(true); // Start submitting state
+    setSuccessMessage(""); // Clear previous success message
 
-    // Construct the payload ensuring it matches the expected format
     const payload = {
-      scraps: scrapRequest.scraps.filter(scrap => scrap.category && scrap.subCategory && scrap.quantity > 0),
+      scraps: scrapRequest.scraps.filter(
+        (scrap) => scrap.category && scrap.subCategory && scrap.quantity > 0
+      ),
       pickupLocation: scrapRequest.pickupLocation,
       scheduledPickupDate: scrapRequest.scheduledPickupDate,
       condition: scrapRequest.condition,
+      userId: localStorage.getItem("userId"), // Get userId from local storage
     };
 
     console.log("Submitting scrap request:", payload); // Log the payload
 
     try {
-      const response = await fetch("http://localhost:8000/api/v1/request/request-creation", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
+      const response = await fetch(
+        "http://localhost:8000/api/v1/request/request-creation",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        }
+      );
       if (response.ok) {
         const data = await response.json();
         console.log("Request created successfully:", data);
+        setSuccessMessage("Request created successfully!"); // Set success message
+        // Reset the form
+        setScrapRequest({
+          scraps: [{ category: "", subCategory: "", quantity: 0 }],
+          pickupLocation: "",
+          scheduledPickupDate: "",
+          condition: "",
+        });
       } else {
         const errorData = await response.json(); // Get error details
         console.error("Error creating request:", errorData);
+        setError("Failed to create request. Please try again."); // Set error message
       }
     } catch (error) {
       console.error("Error:", error);
+      setError("An error occurred while submitting the request."); // Set error message
+    } finally {
+      setIsSubmitting(false); // End submitting state
     }
   };
 
@@ -115,6 +141,9 @@ const Customer = () => {
           <p className="text-gray-600">{userData.email}</p>
         </div>
       </div>
+      {successMessage && (
+        <div className="text-green-600 mb-4">{successMessage}</div>
+      )}
       <form onSubmit={handleSubmit} className="space-y-4 w-full">
         {scrapRequest.scraps.map((scrap, index) => (
           <div key={index} className="flex space-x-2">
@@ -125,7 +154,9 @@ const Customer = () => {
               className="p-2 border rounded"
               required
             >
-              <option value="" disabled>Select Category</option>
+              <option value="" disabled>
+                Select Category
+              </option>
               {Object.keys(categorySubcategoryMap).map((category) => (
                 <option key={category} value={category}>
                   {category}
@@ -140,7 +171,9 @@ const Customer = () => {
               disabled={!scrap.category} // Disable if no category is selected
               required
             >
-              <option value="" disabled>Select SubCategory</option>
+              <option value="" disabled>
+                Select SubCategory
+              </option>
               {scrap.category &&
                 categorySubcategoryMap[scrap.category].map((subCategory) => (
                   <option key={subCategory} value={subCategory}>
@@ -170,7 +203,12 @@ const Customer = () => {
           <input
             type="text"
             value={scrapRequest.pickupLocation}
-            onChange={(e) => setScrapRequest({ ...scrapRequest, pickupLocation: e.target.value })}
+            onChange={(e) =>
+              setScrapRequest({
+                ...scrapRequest,
+                pickupLocation: e.target.value,
+              })
+            }
             placeholder="Pickup Location"
             className="p-2 border rounded w-full"
             required
@@ -178,14 +216,21 @@ const Customer = () => {
           <input
             type="datetime-local"
             value={scrapRequest.scheduledPickupDate}
-            onChange={(e) => setScrapRequest({ ...scrapRequest, scheduledPickupDate: e.target.value })}
+            onChange={(e) =>
+              setScrapRequest({
+                ...scrapRequest,
+                scheduledPickupDate: e.target.value,
+              })
+            }
             className="p-2 border rounded w-full mt-2"
             required
           />
           <input
             type="text"
             value={scrapRequest.condition}
-            onChange={(e) => setScrapRequest({ ...scrapRequest, condition: e.target.value })}
+            onChange={(e) =>
+              setScrapRequest({ ...scrapRequest, condition: e.target.value })
+            }
             placeholder="Condition"
             className="p-2 border rounded w-full mt-2"
             required
@@ -193,9 +238,12 @@ const Customer = () => {
         </div>
         <button
           type="submit"
-          className="w-full py-2 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition duration-200"
+          className={`w-full py-2 ${
+            isSubmitting ? "bg-gray-600" : "bg-green-600"
+          } text-white font-semibold rounded-lg hover:bg-green-700 transition duration-200`}
+          disabled={isSubmitting} // Disable button during submission
         >
-          Submit Scrap Request
+          {isSubmitting ? "Submitting..." : "Submit Scrap Request"}
         </button>
       </form>
     </div>

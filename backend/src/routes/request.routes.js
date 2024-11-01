@@ -12,7 +12,7 @@ import { dealerAuthentication } from "../middlewares/dealer.auth.middleware.js";
 const router = Router();
 
 // Route for creating a new request
-router.route("/request-creation").post(verifyJWT, upload.none(), createRequest);
+router.route("/request-creation").post(upload.none(), createRequest);
 
 // Route for accepting a request
 router

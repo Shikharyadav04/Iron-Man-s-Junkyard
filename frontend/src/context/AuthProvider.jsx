@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
+import Cookies from "js-cookie"; // Import js-cookie for cookie handling
 
 const AuthContext = createContext();
 
@@ -12,17 +13,26 @@ const AuthProvider = ({ children }) => {
     try {
       const response = await axios.post(
         "http://localhost:8000/api/v1/users/login",
-        credentials
+        credentials,
+        { withCredentials: true }
       );
 
       if (response.data.success) {
-        setUser(response.data.data.user);
-        localStorage.setItem("jwttoken", response.data.token);
+        const loggedInUser = response.data.data.user;
+        setUser(loggedInUser);
+
+        // Save the user's ID in localStorage
+        localStorage.setItem("userId", loggedInUser._id);
+
+        // Save the access token in a cookie (expires in 1 day)
+        Cookies.set("accessToken", response.data.data.accessToken, {
+          expires: 1,
+        });
 
         // Navigate to the user's role-based page
-        navigate(`/${response.data.data.user.role}`);
+        navigate(`/${loggedInUser.role}`);
 
-        return response.data.data.user;
+        return loggedInUser;
       } else {
         throw new Error(response.data.message || "Login failed");
       }
@@ -37,7 +47,8 @@ const AuthProvider = ({ children }) => {
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem("jwttoken");
+    localStorage.removeItem("userId"); // Remove user ID from localStorage
+    Cookies.remove("accessToken"); // Remove access token cookie
     navigate("/login");
   };
 
@@ -49,10 +60,16 @@ const AuthProvider = ({ children }) => {
       );
 
       if (response.data.success) {
-        // Automatically log in the user after successful registration
         const userData = response.data.data.user;
         setUser(userData); // Set the user state
-        localStorage.setItem("jwttoken", response.data.token); // Store the token
+
+        // Save the user's ID in localStorage
+        localStorage.setItem("userId", userData._id);
+
+        // Save the access token in a cookie (expires in 1 day)
+        Cookies.set("accessToken", response.data.data.accessToken, {
+          expires: 1,
+        });
 
         // Navigate to the user's role-based page after registration
         navigate(`/${userData.role}`);
