@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthProvider.jsx";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import Cookies from "js-cookie";
 
 const categorySubcategoryMap = {
   Metals: ["Aluminum", "Copper", "Steel", "Brass"],
@@ -117,7 +118,10 @@ const Customer = () => {
       });
       setIsFormOpen(false);
     } catch (error) {
-      setError(error.response?.data.message || "An error occurred while submitting the request.");
+      setError(
+        error.response?.data.message ||
+          "An error occurred while submitting the request."
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -145,7 +149,10 @@ const Customer = () => {
       setUserData(response.data.data);
       setSuccessMessage("User details updated successfully!");
     } catch (error) {
-      setError(error.response?.data.message || "An error occurred while updating user details.");
+      setError(
+        error.response?.data.message ||
+          "An error occurred while updating user details."
+      );
     }
   };
 
@@ -157,15 +164,24 @@ const Customer = () => {
       newPassword,
     };
 
+    // Retrieve cookies
+    const accessToken = Cookies.get("accessToken"); // Replace with your actual cookie name
+    const refreshToken = Cookies.get("refreshToken"); // Replace with your actual cookie name
+
+    // Print cookies to the console
+    console.log("Access Token:", accessToken);
+    console.log("Refresh Token:", refreshToken);
+
     try {
-      const response = await axios.patch(
+      const response = await axios.post(
         "http://localhost:8000/api/v1/users/change-password",
         JSON.stringify(payload), // Updated to stringify the payload
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            // Removed Authorization header
           },
+          withCredentials: true, // This is important to send cookies with the request
         }
       );
 
@@ -174,7 +190,10 @@ const Customer = () => {
       setOldPassword("");
       setNewPassword("");
     } catch (error) {
-      setError(error.response?.data.message || "An error occurred while changing the password.");
+      setError(
+        error.response?.data.message ||
+          "An error occurred while changing the password."
+      );
     }
   };
 
@@ -197,7 +216,10 @@ const Customer = () => {
       setUserData(response.data.data);
       setSuccessMessage("Avatar updated successfully!");
     } catch (error) {
-      setError(error.response?.data.message || "An error occurred while updating the avatar.");
+      setError(
+        error.response?.data.message ||
+          "An error occurred while updating the avatar."
+      );
     }
   };
 
