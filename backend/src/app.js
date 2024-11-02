@@ -10,7 +10,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: "http://localhost:5175",
+    origin: "http://localhost:5173",
     credentials: true,
   })
 );
@@ -37,6 +37,7 @@ app.use("/api/v1/feedback", feedbackRouter);
 app.use("/api/v1/dealers", dealerRouter);
 app.use("/api/v1/payment", paymentRouter);
 app.use("/api/v1/news", newsRouter);
+
 
 // Error handling middleware
 const errorHandler = (err, req, res, next) => {

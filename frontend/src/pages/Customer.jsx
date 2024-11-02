@@ -1,22 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthProvider.jsx";
+import { useNavigate } from "react-router-dom";
 
 const categorySubcategoryMap = {
   Metals: ["Aluminum", "Copper", "Steel", "Brass"],
   Plastics: ["PET", "HDPE", "PVC", "LDPE"],
-  Electronics: [
-    "Laptops",
-    "Desktops",
-    "Computer Accessories",
-    "Smartphones",
-    "Tablets",
-  ],
+  Electronics: ["Laptops", "Desktops", "Computer Accessories", "Smartphones", "Tablets"],
   Glass: ["Bottles", "Windows", "Jars"],
   Paper: ["Office Paper", "Cardboard Boxes", "Newspaper"],
 };
 
 const Customer = () => {
-  const { user } = useAuth(); // Get user data from AuthContext
+  const { user } = useAuth();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [userData, setUserData] = useState({
@@ -25,7 +20,6 @@ const Customer = () => {
     avatar: "",
   });
 
-  // State to hold scrap request data
   const [scrapRequest, setScrapRequest] = useState({
     scraps: [{ category: "", subCategory: "", quantity: 0 }],
     pickupLocation: "",
@@ -33,9 +27,11 @@ const Customer = () => {
     condition: "",
   });
 
-  // State to handle submission loading
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
+  const [isFormOpen, setIsFormOpen] = useState(false); // Toggle form visibility
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (user) {
@@ -70,8 +66,8 @@ const Customer = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setIsSubmitting(true); // Start submitting state
-    setSuccessMessage(""); // Clear previous success message
+    setIsSubmitting(true);
+    setSuccessMessage("");
 
     const payload = {
       scraps: scrapRequest.scraps.filter(
@@ -80,10 +76,8 @@ const Customer = () => {
       pickupLocation: scrapRequest.pickupLocation,
       scheduledPickupDate: scrapRequest.scheduledPickupDate,
       condition: scrapRequest.condition,
-      userId: localStorage.getItem("userId"), // Get userId from local storage
+      userId: localStorage.getItem("userId"),
     };
-
-    console.log("Submitting scrap request:", payload); // Log the payload
 
     try {
       const response = await fetch(
@@ -96,27 +90,28 @@ const Customer = () => {
           body: JSON.stringify(payload),
         }
       );
-      if (response.ok) {
-        const data = await response.json();
-        console.log("Request created successfully:", data);
-        setSuccessMessage("Request created successfully!"); // Set success message
-        // Reset the form
-        setScrapRequest({
-          scraps: [{ category: "", subCategory: "", quantity: 0 }],
-          pickupLocation: "",
-          scheduledPickupDate: "",
-          condition: "",
-        });
-      } else {
-        const errorData = await response.json(); // Get error details
-        console.error("Error creating request:", errorData);
-        setError("Failed to create request. Please try again."); // Set error message
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to create request");
       }
+
+      const data = await response.json();
+      setSuccessMessage("Request created successfully!");
+
+      navigate(`/payment/${data.requestId}`, { state: { amount: 100, requestId: data.requestId } });
+      
+      setScrapRequest({
+        scraps: [{ category: "", subCategory: "", quantity: 0 }],
+        pickupLocation: "",
+        scheduledPickupDate: "",
+        condition: "",
+      });
+      setIsFormOpen(false); // Close the form after successful submission
     } catch (error) {
-      console.error("Error:", error);
-      setError("An error occurred while submitting the request."); // Set error message
+      setError(error.message || "An error occurred while submitting the request.");
     } finally {
-      setIsSubmitting(false); // End submitting state
+      setIsSubmitting(false);
     }
   };
 
@@ -129,7 +124,7 @@ const Customer = () => {
   }
 
   return (
-    <div className="flex flex-col items-center bg-gray-100 p-6 rounded-lg shadow-md">
+    <div className="flex flex-col items-center bg-gray-100 p-6 rounded-lg shadow-md max-w-lg mx-auto w-full">
       <div className="flex items-center space-x-4 mb-6">
         <img
           src={userData.avatar}
@@ -144,108 +139,117 @@ const Customer = () => {
       {successMessage && (
         <div className="text-green-600 mb-4">{successMessage}</div>
       )}
-      <form onSubmit={handleSubmit} className="space-y-4 w-full">
-        {scrapRequest.scraps.map((scrap, index) => (
-          <div key={index} className="flex space-x-2">
-            <select
-              name="category"
-              value={scrap.category}
-              onChange={(event) => handleScrapChange(index, event)}
-              className="p-2 border rounded"
-              required
-            >
-              <option value="" disabled>
-                Select Category
-              </option>
-              {Object.keys(categorySubcategoryMap).map((category) => (
-                <option key={category} value={category}>
-                  {category}
+      {error && <div className="text-red-600 mb-4">{error}</div>}
+
+      <button
+        onClick={() => setIsFormOpen(!isFormOpen)}
+        className="mb-4 py-2 px-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-200 w-full"
+      >
+        {isFormOpen ? "Close Request Form" : "Create Scrap Request"}
+      </button>
+
+      {isFormOpen && (
+        <form onSubmit={handleSubmit} className="space-y-4 w-full">
+          {scrapRequest.scraps.map((scrap, index) => (
+            <div key={index} className="flex space-x-2">
+              <select
+                name="category"
+                value={scrap.category}
+                onChange={(event) => handleScrapChange(index, event)}
+                className="p-2 border rounded w-full"
+                required
+              >
+                <option value="" disabled>
+                  Select Category
                 </option>
-              ))}
-            </select>
-            <select
-              name="subCategory"
-              value={scrap.subCategory}
-              onChange={(event) => handleScrapChange(index, event)}
-              className="p-2 border rounded"
-              disabled={!scrap.category} // Disable if no category is selected
-              required
-            >
-              <option value="" disabled>
-                Select SubCategory
-              </option>
-              {scrap.category &&
-                categorySubcategoryMap[scrap.category].map((subCategory) => (
-                  <option key={subCategory} value={subCategory}>
-                    {subCategory}
+                {Object.keys(categorySubcategoryMap).map((category) => (
+                  <option key={category} value={category}>
+                    {category}
                   </option>
                 ))}
-            </select>
+              </select>
+              <select
+                name="subCategory"
+                value={scrap.subCategory}
+                onChange={(event) => handleScrapChange(index, event)}
+                className="p-2 border rounded w-full"
+                disabled={!scrap.category}
+                required
+              >
+                <option value="" disabled>
+                  Select SubCategory
+                </option>
+                {scrap.category &&
+                  categorySubcategoryMap[scrap.category].map((subCategory) => (
+                    <option key={subCategory} value={subCategory}>
+                      {subCategory}
+                    </option>
+                  ))}
+              </select>
+              <input
+                type="number"
+                name="quantity"
+                placeholder="Quantity"
+                value={scrap.quantity}
+                onChange={(event) => handleScrapChange(index, event)}
+                className="p-2 border rounded w-full"
+                required
+              />
+            </div>
+          ))}
+          <button
+            type="button"
+            onClick={handleAddScrap}
+            className="w-full py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-200"
+          >
+            Add More Scraps
+          </button>
+          <div>
             <input
-              type="number"
-              name="quantity"
-              placeholder="Quantity"
-              value={scrap.quantity}
-              onChange={(event) => handleScrapChange(index, event)}
-              className="p-2 border rounded"
+              type="text"
+              value={scrapRequest.pickupLocation}
+              onChange={(e) =>
+                setScrapRequest({
+                  ...scrapRequest,
+                  pickupLocation: e.target.value,
+                })
+              }
+              placeholder="Pickup Location"
+              className="p-2 border rounded w-full"
+              required
+            />
+            <input
+              type="datetime-local"
+              value={scrapRequest.scheduledPickupDate}
+              onChange={(e) =>
+                setScrapRequest({
+                  ...scrapRequest,
+                  scheduledPickupDate: e.target.value,
+                })
+              }
+              className="p-2 border rounded w-full mt-2"
+              required
+            />
+            <input
+              type="text"
+              value={scrapRequest.condition}
+              onChange={(e) =>
+                setScrapRequest({ ...scrapRequest, condition: e.target.value })
+              }
+              placeholder="Condition"
+              className="p-2 border rounded w-full mt-2"
               required
             />
           </div>
-        ))}
-        <button
-          type="button"
-          onClick={handleAddScrap}
-          className="w-full py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-200"
-        >
-          Add More Scraps
-        </button>
-        <div>
-          <input
-            type="text"
-            value={scrapRequest.pickupLocation}
-            onChange={(e) =>
-              setScrapRequest({
-                ...scrapRequest,
-                pickupLocation: e.target.value,
-              })
-            }
-            placeholder="Pickup Location"
-            className="p-2 border rounded w-full"
-            required
-          />
-          <input
-            type="datetime-local"
-            value={scrapRequest.scheduledPickupDate}
-            onChange={(e) =>
-              setScrapRequest({
-                ...scrapRequest,
-                scheduledPickupDate: e.target.value,
-              })
-            }
-            className="p-2 border rounded w-full mt-2"
-            required
-          />
-          <input
-            type="text"
-            value={scrapRequest.condition}
-            onChange={(e) =>
-              setScrapRequest({ ...scrapRequest, condition: e.target.value })
-            }
-            placeholder="Condition"
-            className="p-2 border rounded w-full mt-2"
-            required
-          />
-        </div>
-        <button
-          type="submit"
-          className={`w-full py-2 ${
-            isSubmitting ? "bg-gray-600" : "bg-green-600"
-          } text-white font-semibold rounded-lg hover:bg-green-700 transition duration-200`}
-          disabled={isSubmitting} // Disable button during submission
-        >
-          {isSubmitting ? "Submitting..." : "Submit Scrap Request"}
-        </button>
-      </form>
+          <button
+            type="submit"
+            className={`w-full py-2 ${isSubmitting ? "bg-gray-600" : "bg-green-600"} text-white font-semibold rounded-lg hover:bg-green-700 transition duration-200`}
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? "Submitting..." : "Submit Scrap Request"}
+          </button>
+        </form>
+      )}
     </div>
   );
 };

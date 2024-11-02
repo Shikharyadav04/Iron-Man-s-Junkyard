@@ -14,9 +14,9 @@ const Header = () => {
       
       {/* Text Overlay */}
       <div className="absolute inset-0 flex flex-col justify-center items-center bg-black bg-opacity-40 text-white text-center">
-        <h1 className="text-4xl font-bold mb-2 bg-transparent">Lorem ipsum dolor sit</h1>
-        <p className="text-lg max-w-3xl bg-transparent">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempora, quasi tenetur deserunt repellendus ex amet nulla rem maxime sint officiis.
+        <h1 className="text-4xl  mb-2 bg-transparent font-playfair font-custom-weight">SCRAPMAN - TRANSFORMING WASTE INTO VALUE</h1>
+        <p className="text-lg max-w-3xl bg-transparent ">
+        At Scrapman, we’re dedicated to sustainable waste management, empowering communities to recycle responsibly. Join us in creating a cleaner, greener future by turning waste into opportunity.
         </p>
       </div>
     </section>

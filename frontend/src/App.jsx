@@ -15,8 +15,10 @@ import Customer from "./pages/Customer"; // Update to the correct path
 import Dealer from "./pages/Dealer"; // Update to the correct path
 import NotFound from "./pages/NotFound"; // Update to the correct path
 import End from "./components/End"; // Update to the correct path
-import Business from "./pages/Business";
-import  Contact  from "./pages/Contact";
+import Business from "./pages/Business"; // Update to the correct path
+import Contact from "./pages/Contact"; // Update to the correct path
+import News from "./components/News"; // Update to the correct path
+import Payment from "./pages/Payment"; // Update to the correct path
 
 const App = () => {
   const { user } = useAuth();
@@ -32,27 +34,25 @@ const App = () => {
         <Route path="/register" element={<Register />} />
         <Route path="/feedback" element={<Feedback />} />
         <Route path="/contact" element={<Contact />} />
-       
-     
+        <Route path="/news" element={<News />} />
+        <Route path="/business" element={<Business />} />
 
         {/* Role-based routes */}
         <Route
           path="/admin"
-          element={
-            user?.role === "admin" ? <Admin /> : <Navigate to="/login" />
-          }
+          element={user?.role === "admin" ? <Admin /> : <Navigate to="/login" />}
         />
         <Route
           path="/customer"
-          element={
-            user?.role === "customer" ? <Customer /> : <Navigate to="/login" />
-          }
+          element={user?.role === "customer" ? <Customer /> : <Navigate to="/login" />}
         />
         <Route
           path="/dealer"
-          element={
-            user?.role === "dealer" ? <Dealer /> : <Navigate to="/login" />
-          }
+          element={user?.role === "dealer" ? <Dealer /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/payment/:requestId" // Changed to dynamic route
+          element={user ? <Payment /> : <Navigate to="/login" />}
         />
 
         {/* Redirect based on user role when not logged in */}
@@ -74,7 +74,6 @@ const App = () => {
         />
 
         <Route path="*" element={<NotFound />} />
-        <Route path="/business" element={<Business />} />
       </Routes>
       <End />
     </div>

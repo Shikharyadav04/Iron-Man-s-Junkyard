@@ -5,12 +5,12 @@ import axios from "axios";
 
 const getLatestNews = asyncHandler(async (req, res) => {
   try {
-    // Make request to API
+    // Make request to the news API
     const response = await axios.get("https://newsdata.io/api/1/latest", {
       params: {
-        apikey: process.env.NEWS_API_KEY, // Ensure this is correct
+        apikey: process.env.NEWS_API_KEY, 
         q: 'pollution OR recycling OR "Swachh Bharat Abhiyan" OR "global warming" OR "scrap management"',
-        language: "en", // Ensure this is the correct language code
+        language: "en",
       },
     });
 
@@ -21,10 +21,11 @@ const getLatestNews = asyncHandler(async (req, res) => {
       throw new ApiError(500, "Failed to fetch news");
     }
 
-    // Map and structure the response data
+    // Map and structure the response data, including image URLs
     const articles = results.map((article) => ({
       title: article.title,
       link: article.link,
+      image_url: article.image_url || null, // Include image URL if available, otherwise null
     }));
 
     // Send structured response
@@ -32,7 +33,6 @@ const getLatestNews = asyncHandler(async (req, res) => {
       .status(200)
       .json(new ApiResponse(200, articles, "News fetched successfully"));
   } catch (error) {
-    // Log detailed error information
     console.error(
       "Error fetching news:",
       error.response ? error.response.data : error.message
