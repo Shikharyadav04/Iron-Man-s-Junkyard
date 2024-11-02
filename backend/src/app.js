@@ -28,6 +28,7 @@ import adminRouter from "../src/routes/admin.routes.js";
 import feedbackRouter from "../src/routes/feedback.routes.js";
 import dealerRouter from "../src/routes/dealer.routes.js";
 import paymentRouter from "../src/routes/payment.routes.js";
+import newsRouter from "../src/routes/news.routes.js";
 
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/request", requestRouter);
@@ -35,6 +36,7 @@ app.use("/api/v1/admin", adminRouter);
 app.use("/api/v1/feedback", feedbackRouter);
 app.use("/api/v1/dealers", dealerRouter);
 app.use("/api/v1/payment", paymentRouter);
+app.use("/api/v1/news", newsRouter);
 
 // Error handling middleware
 const errorHandler = (err, req, res, next) => {
