@@ -94,7 +94,7 @@ const Customer = () => {
     try {
       const response = await axios.post(
         "http://localhost:8000/api/v1/request/request-creation",
-        JSON.stringify(payload), // Updated to stringify the payload
+        payload,
         {
           headers: {
             "Content-Type": "application/json",
@@ -133,12 +133,13 @@ const Customer = () => {
     try {
       const response = await axios.patch(
         "http://localhost:8000/api/v1/users/update-account",
-        JSON.stringify(payload), // Updated to stringify the payload
+        JSON.stringify(payload),
         {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
+          withCredentials: true,
         }
       );
 
@@ -158,14 +159,15 @@ const Customer = () => {
     };
 
     try {
-      const response = await axios.patch(
+      const response = await axios.post(
         "http://localhost:8000/api/v1/users/change-password",
-        JSON.stringify(payload), // Updated to stringify the payload
+        payload,
         {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
+          withCredentials: true,
         }
       );
 
@@ -191,6 +193,7 @@ const Customer = () => {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
+          withCredentials: true,
         }
       );
 
@@ -278,73 +281,48 @@ const Customer = () => {
                 value={scrap.quantity}
                 onChange={(event) => handleScrapChange(index, event)}
                 placeholder="Quantity"
-                className="p-2 border rounded w-20"
+                className="p-2 border rounded w-full"
                 required
               />
             </div>
           ))}
-          <div className="flex justify-between">
-            <button
-              type="button"
-              onClick={handleAddScrap}
-              className="mt-4 py-2 px-4 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition duration-200"
-            >
-              Add More Scrap
-            </button>
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className={`mt-4 py-2 px-4 ${
-                isSubmitting ? "bg-gray-400" : "bg-blue-600"
-              } text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-200`}
-            >
-              {isSubmitting ? "Submitting..." : "Submit Request"}
-            </button>
-          </div>
-          <div>
-            <label className="block mt-4">Pickup Location:</label>
-            <input
-              type="text"
-              value={scrapRequest.pickupLocation}
-              onChange={(e) =>
-                setScrapRequest({
-                  ...scrapRequest,
-                  pickupLocation: e.target.value,
-                })
-              }
-              required
-              className="p-2 border rounded w-full"
-            />
-          </div>
-          <div>
-            <label className="block mt-4">Scheduled Pickup Date:</label>
-            <input
-              type="date"
-              value={scrapRequest.scheduledPickupDate}
-              onChange={(e) =>
-                setScrapRequest({
-                  ...scrapRequest,
-                  scheduledPickupDate: e.target.value,
-                })
-              }
-              required
-              className="p-2 border rounded w-full"
-            />
-          </div>
-          <div>
-            <label className="block mt-4">Condition:</label>
-            <textarea
-              value={scrapRequest.condition}
-              onChange={(e) =>
-                setScrapRequest({
-                  ...scrapRequest,
-                  condition: e.target.value,
-                })
-              }
-              required
-              className="p-2 border rounded w-full"
-            ></textarea>
-          </div>
+          <button
+            type="button"
+            onClick={handleAddScrap}
+            className="py-2 px-4 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition duration-200"
+          >
+            Add Another Scrap
+          </button>
+          <input
+            type="text"
+            value={scrapRequest.pickupLocation}
+            onChange={(e) => setScrapRequest({ ...scrapRequest, pickupLocation: e.target.value })}
+            placeholder="Pickup Location"
+            className="p-2 border rounded w-full"
+            required
+          />
+          <input
+            type="date"
+            value={scrapRequest.scheduledPickupDate}
+            onChange={(e) => setScrapRequest({ ...scrapRequest, scheduledPickupDate: e.target.value })}
+            className="p-2 border rounded w-full"
+            required
+          />
+          <textarea
+            value={scrapRequest.condition}
+            onChange={(e) => setScrapRequest({ ...scrapRequest, condition: e.target.value })}
+            placeholder="Condition of the scraps"
+            className="p-2 border rounded w-full"
+            required
+          ></textarea>
+          <button
+            type="submit"
+            className={`py-2 px-4 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition duration-200 w-full ${isSubmitting ? "opacity-50 cursor-not-allowed" : ""
+              }`}
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? "Submitting..." : "Submit Request"}
+          </button>
         </form>
       )}
 
@@ -352,40 +330,32 @@ const Customer = () => {
         onClick={() => setUpdateFormOpen(!updateFormOpen)}
         className="mb-4 py-2 px-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-200 w-full"
       >
-        {updateFormOpen ? "Close Update Form" : "Update User Details"}
+        {updateFormOpen ? "Close Update User Form" : "Update User Details"}
       </button>
 
       {updateFormOpen && (
         <form onSubmit={handleUpdateUserDetails} className="space-y-4 w-full">
-          <div>
-            <label className="block">Full Name:</label>
-            <input
-              type="text"
-              value={userData.fullName}
-              onChange={(e) =>
-                setUserData({ ...userData, fullName: e.target.value })
-              }
-              required
-              className="p-2 border rounded w-full"
-            />
-          </div>
-          <div>
-            <label className="block">Email:</label>
-            <input
-              type="email"
-              value={userData.email}
-              onChange={(e) =>
-                setUserData({ ...userData, email: e.target.value })
-              }
-              required
-              className="p-2 border rounded w-full"
-            />
-          </div>
+          <input
+            type="text"
+            value={userData.fullName}
+            onChange={(e) => setUserData({ ...userData, fullName: e.target.value })}
+            placeholder="Full Name"
+            className="p-2 border rounded w-full"
+            required
+          />
+          <input
+            type="email"
+            value={userData.email}
+            onChange={(e) => setUserData({ ...userData, email: e.target.value })}
+            placeholder="Email"
+            className="p-2 border rounded w-full"
+            required
+          />
           <button
             type="submit"
-            className="mt-4 py-2 px-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-200 w-full"
+            className="py-2 px-4 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition duration-200 w-full"
           >
-            Update Details
+            Update User
           </button>
         </form>
       )}
@@ -394,54 +364,53 @@ const Customer = () => {
         onClick={() => setPasswordFormOpen(!passwordFormOpen)}
         className="mb-4 py-2 px-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-200 w-full"
       >
-        {passwordFormOpen ? "Close Password Form" : "Change Password"}
+        {passwordFormOpen ? "Close Change Password Form" : "Change Password"}
       </button>
 
       {passwordFormOpen && (
         <form onSubmit={handleChangePassword} className="space-y-4 w-full">
-          <div>
-            <label className="block">Old Password:</label>
-            <input
-              type="password"
-              value={oldPassword}
-              onChange={(e) => setOldPassword(e.target.value)}
-              required
-              className="p-2 border rounded w-full"
-            />
-          </div>
-          <div>
-            <label className="block">New Password:</label>
-            <input
-              type="password"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              required
-              className="p-2 border rounded w-full"
-            />
-          </div>
+          <input
+            type="password"
+            value={oldPassword}
+            onChange={(e) => setOldPassword(e.target.value)}
+            placeholder="Old Password"
+            className="p-2 border rounded w-full"
+            required
+          />
+          <input
+            type="password"
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+            placeholder="New Password"
+            className="p-2 border rounded w-full"
+            required
+          />
           <button
             type="submit"
-            className="mt-4 py-2 px-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-200 w-full"
+            className="py-2 px-4 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition duration-200 w-full"
           >
             Change Password
           </button>
         </form>
       )}
 
+      <button
+        onClick={() => setAvatarFile(null)}
+        className="mb-4 py-2 px-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-200 w-full"
+      >
+        Change Avatar
+      </button>
+
       <form onSubmit={handleAvatarUpload} className="space-y-4 w-full">
-        <div>
-          <label className="block">Upload Avatar:</label>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={(e) => setAvatarFile(e.target.files[0])}
-            required
-            className="p-2 border rounded w-full"
-          />
-        </div>
+        <input
+          type="file"
+          accept="image/*"
+          onChange={(e) => setAvatarFile(e.target.files[0])}
+          className="p-2 border rounded w-full"
+        />
         <button
           type="submit"
-          className="mt-4 py-2 px-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-200 w-full"
+          className="py-2 px-4 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition duration-200 w-full"
         >
           Upload Avatar
         </button>
