@@ -30,11 +30,11 @@ const Navbar = () => {
           <p>Home</p>
         </NavLink>
         <NavLink to='/about' className='flex flex-col items-center gap-1'>
-          <p>ABOUT</p>
+          <p>About</p>
         </NavLink>
-        <NavLink to='/buy' className='flex flex-col items-center gap-1'>
-          <p>BUY</p>
-        </NavLink>
+        
+        
+        
         <NavLink to='/business' className='flex flex-col items-center gap-1'>
           <p>For Businesses</p>
         </NavLink>
@@ -43,6 +43,9 @@ const Navbar = () => {
         </NavLink>
         <NavLink to='/contact' className='flex flex-col items-center gap-1'>
           <p>Contact</p>
+        </NavLink>
+        <NavLink to='/news' className='flex flex-col items-center gap-1'>
+          <p>News</p>
         </NavLink>
       </ul>
 

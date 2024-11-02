@@ -1,4 +1,3 @@
-// tailwind.config.js
 import defaultTheme from "tailwindcss/defaultTheme";
 import colors from "tailwindcss/colors";
 import flattenColorPalette from "tailwindcss/lib/util/flattenColorPalette";
@@ -71,6 +70,44 @@ export default {
           '5': 'hsl(var(--chart-5))',
         },
       },
+      fontFamily: {
+        playfair: ['Playfair Display', 'serif'],
+      },
+      fontWeight: {
+        'custom-weight': 400, // Adjust this to your preferred weight (e.g., 400, 700)
+      },
+      animation: {
+        'slide-in': 'slideIn 20s linear infinite',
+      },
+      keyframes: {
+        slideIn: {
+          '0%': { transform: 'translateX(100%)', opacity: '1' },
+          '50%': { transform: 'translateX(0)', opacity: '1' },
+          '100%': { transform: 'translateX(-100%)', opacity: '1' },
+        },
+      },
+      
+      
+      
+    
+    
+    
+    
+      
+    
+    
+    
+      
+      
+     
+     
+     
+     
+     
+     
+     
+    
+  
     },
   },
   plugins: [tailwindcssAnimate, addVariablesForColors],

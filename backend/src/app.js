@@ -38,6 +38,7 @@ app.use("/api/v1/dealers", dealerRouter);
 app.use("/api/v1/payment", paymentRouter);
 app.use("/api/v1/news", newsRouter);
 
+
 // Error handling middleware
 const errorHandler = (err, req, res, next) => {
   console.error(err); // Log the full error to see what went wrong
