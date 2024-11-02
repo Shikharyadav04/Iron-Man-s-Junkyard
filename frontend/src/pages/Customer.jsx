@@ -101,6 +101,7 @@ const Customer = () => {
             "Content-Type": "application/json",
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
+          withCredentials:true,
         }
       );
 
@@ -415,12 +416,12 @@ const Customer = () => {
         </form>
       )}
 
-      <button
-        onClick={() => setAvatarFile(null)}
-        className="mb-4 py-2 px-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-200 w-full"
-      >
-        Change Avatar
-      </button>
+      
+      
+      
+      
+      
+      
 
       <form onSubmit={handleAvatarUpload} className="space-y-4 w-full">
         <input

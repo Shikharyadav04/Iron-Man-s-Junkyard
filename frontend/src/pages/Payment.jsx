@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+import axios from 'axios';
 
 const Payment = () => {
   const { requestId } = useParams();
@@ -33,34 +34,31 @@ const Payment = () => {
     const payload = { requestId, amount, paymentMethod };
 
     try {
-      const response = await fetch("http://localhost:8000/api/v1/payment/complete-payment", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
-        body: JSON.stringify(payload),
-      });
+      const response = await axios.post(
+        "http://localhost:8000/api/v1/payment/complete-payment",
+        payload,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
+      );
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Failed to complete payment");
-      }
-
-      const data = await response.json();
-      console.log("Payment completed successfully:", data);
+      console.log("Payment completed successfully:", response.data);
       navigate("/success");
     } catch (err) {
       console.error("Payment error:", err);
-      setError(err.message || "An error occurred while processing the payment.");
+      setError(err.response?.data?.message || "An error occurred while processing the payment.");
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const handleInitialPayment = async () => {
-    if (!transactionId || amount <= 0) {
-      setError("Invalid transaction ID or amount.");
+    if (amount <= 0) {
+      setError("Invalid amount.");
       return;
     }
 
@@ -68,31 +66,29 @@ const Payment = () => {
     setError("");
 
     const payload = {
-      transactionId,
+      requestId, // Pass requestId if required
       paymentDetails: { amount, paymentMethod },
     };
 
     try {
-      const response = await fetch("http://localhost:8000/api/v1/payment/complete-initial-payment", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
-        body: JSON.stringify(payload),
-      });
+      const response = await axios.post(
+        "http://localhost:8000/api/v1/payment/complete-initial-payment",
+        payload,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
+      );
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Failed to make initial payment");
-      }
-
-      const data = await response.json();
-      console.log("Initial payment completed successfully:", data);
+      console.log("Initial payment completed successfully:", response.data);
+      setTransactionId(response.data.transactionId); // Extract transaction ID from response
       navigate("/success");
     } catch (err) {
       console.error("Initial payment error:", err);
-      setError(err.message || "An error occurred while processing the initial payment.");
+      setError(err.response?.data?.message || "An error occurred while processing the initial payment.");
     } finally {
       setIsSubmitting(false);
     }
@@ -127,8 +123,9 @@ const Payment = () => {
             id="transactionId"
             value={transactionId}
             onChange={(e) => setTransactionId(e.target.value)}
-            placeholder="Enter Transaction ID for Initial Payment"
+            placeholder="Transaction ID for Initial Payment"
             className="w-full p-3 border rounded-md shadow-sm focus:ring focus:ring-indigo-200"
+            readOnly // Prevent user modification
           />
         </div>
         

@@ -93,7 +93,7 @@ const Home = () => {
         </div>
         
         {/* Apply the Tailwind animation class here */}
-        <div className="animate-slide-in flex gap-5">
+        <div className="animate-slide-in flex gap-5 ">
           {feedbacks.map((feedback, index) => (
             <Feedbackcard key={index} heading={feedback.heading} content={feedback.content} />
           ))}
