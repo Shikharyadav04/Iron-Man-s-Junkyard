@@ -180,8 +180,9 @@ const Customer = () => {
         {
           headers: {
             "Content-Type": "application/json",
-            // Removed Authorization header
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
+          withCredentials: true
         }
       );
 
