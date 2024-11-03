@@ -49,6 +49,9 @@ const requestSchema = new Schema(
       type: Number,
       required: true,
     },
+    transactionId: {
+      type: String,
+    },
   },
   { timestamps: true }
 );

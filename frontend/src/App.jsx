@@ -18,10 +18,13 @@ import End from "./components/End"; // Update to the correct path
 import Business from "./pages/Business"; // Update to the correct path
 import Contact from "./pages/Contact"; // Update to the correct path
 import News from "./components/News"; // Update to the correct path
-import Payment from "./pages/Payment"; // Update to the correct path
 import RequestCreation from "./pages/customer/requestCreation"; // Update to the correct path
 import BillPage from "./pages/customer/bill/BillPage"; // Import the BillPage component
 import getRequest from "./pages/dealer/getRequest";
+import GetAcceptedRequest from "./pages/acceptedRequest/getAcceptedRequest";
+import AcceptedBillPage from "./pages/customer/bill/AcceptedRequests";
+import CompletedBillPage from "./pages/customer/bill/CompletedBillPage";
+
 const App = () => {
   const { user } = useAuth();
 
@@ -64,6 +67,18 @@ const App = () => {
         <Route
           path="/dealer/requests"
           element={renderRoleBasedRoute("dealer", getRequest)} // Adjust role as needed
+        />
+        <Route
+          path="/dealer/acceptedRequests"
+          element={renderRoleBasedRoute("dealer", GetAcceptedRequest)} // Adjust role as needed
+        />
+        <Route
+          path="/customer/acceptedRequests"
+          element={renderRoleBasedRoute("customer", AcceptedBillPage)} // Adjust role as needed
+        />
+        <Route
+          path="/customer/completedRequests"
+          element={renderRoleBasedRoute("customer", CompletedBillPage)} // Adjust role as needed
         />
 
         <Route

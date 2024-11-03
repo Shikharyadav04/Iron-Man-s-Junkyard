@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import BillCard from "./BillCard"; // Ensure this component exists
 import axios from "axios"; // Make sure to import axios
 
-const BillPage = () => {
+const CompletedBillPage = () => {
   const [bills, setBills] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -10,7 +10,7 @@ const BillPage = () => {
   const fetchBills = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/v1/request/get-user-request",
+        "http://localhost:8000/api/v1/request/get-completed-pickup",
         {},
         {
           headers: { "Content-Type": "application/json" },
@@ -20,6 +20,10 @@ const BillPage = () => {
 
       console.log("Fetched bills:", response.data); // Log the entire response
       const fetchedBills = response.data.data; // Store the fetched bills
+
+      // Log IDs to check for duplicates
+      const ids = fetchedBills.map((bill) => bill.id);
+      console.log("Fetched bill IDs:", ids);
 
       setBills(fetchedBills); // Set state with the bills
     } catch (err) {
@@ -55,4 +59,4 @@ const BillPage = () => {
   );
 };
 
-export default BillPage;
+export default CompletedBillPage;

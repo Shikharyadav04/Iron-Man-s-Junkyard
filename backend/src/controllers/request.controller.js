@@ -4,7 +4,6 @@ import { Request } from "../models/request.models.js";
 import { Scrap } from "../models/scrap.models.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { Transaction } from "../models/transaction.models.js";
-import { response } from "express";
 
 const createRequest = asyncHandler(async (req, res) => {
   const { scraps, pickupLocation, scheduledPickupDate, condition } = req.body;
@@ -54,6 +53,9 @@ const createRequest = asyncHandler(async (req, res) => {
     totalAmount,
   });
 
+  const transactionId = newTransaction._id;
+  newRequest.transactionId = transactionId;
+  await newRequest.save();
   res
     .status(200)
     .json(
@@ -83,7 +85,6 @@ const getPendingRequest = asyncHandler(async (req, res) => {
 });
 
 const acceptRequest = asyncHandler(async (req, res) => {
-  console.log("sadjjadskbsdksbakjbdskakjadsjbkdsadsadasdsa");
   const requestId = req.body.requestId;
   console.log(`requestId : ${requestId}`);
   if (!requestId) {
@@ -149,24 +150,31 @@ const closeRequest = asyncHandler(async (req, res) => {
   //update the request status to completed
   //return response
 
-  const requestId = req.body.requestId;
-  if (!requestId) {
-    throw new ApiError(400, "Request ID is required");
+  const transactionId = req.body.transactionId;
+  console.log(transactionId);
+  if (!transactionId) {
+    throw new ApiError(400, "Transaction ID is required");
   }
 
-  const request = await Request.findOne({ requestId: requestId });
+  const request = await Request.findOne({
+    transactionId: transactionId,
+  });
 
   if (!request) {
     throw new ApiError(404, "Request not found");
   }
+  if (request.status === "completed") {
+    throw new ApiError(400, "Request is already closed");
+  }
+  const requestId = request.requestId;
 
-  const transaction = await Transaction.findOne({ requestId: requestId });
+  const transaction = await Transaction.findById(transactionId);
 
   if (!transaction) {
     throw new ApiError(404, "Transaction not found");
   }
 
-  if (transaction.status !== "completed") {
+  if (transaction.isCompleted !== true) {
     throw new ApiError(
       400,
       "Transactions are not completed please complete your payment"
@@ -198,6 +206,41 @@ const getUserRequest = asyncHandler(async (req, res) => {
   return res.status(200).json(new ApiResponse(200, requests, "User requests."));
 });
 
+const getAcceptedRequest = asyncHandler(async (req, res) => {
+  //get userId
+  //apply aggregation pipelines to find the request
+  //if not found the throw error
+  // return response
+  const userId = req.user._id;
+  if (!userId) {
+    throw new ApiError(401, "User not authenticated");
+  }
+
+  const acceptedRequest = await Request.aggregate([
+    {
+      $match: {
+        $or: [{ userId: userId }, { assignedDealerId: userId }],
+      },
+    },
+    {
+      $match: {
+        status: "accepted",
+      },
+    },
+    {
+      $sort: { createdAt: -1 },
+    },
+  ]);
+
+  if (!acceptedRequest) {
+    throw new ApiError(404, "No accepted requests found");
+  }
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, acceptedRequest, "User's accepted requests."));
+});
+
 export {
   createRequest,
   getPendingRequest,
@@ -205,4 +248,5 @@ export {
   getCompletedPickup,
   closeRequest,
   getUserRequest,
+  getAcceptedRequest,
 };

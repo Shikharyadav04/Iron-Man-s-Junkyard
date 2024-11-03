@@ -6,6 +6,7 @@ import {
   getCompletedPickup,
   closeRequest,
   getUserRequest,
+  getAcceptedRequest,
 } from "../controllers/request.controller.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 import { upload } from "../middlewares/multer.middleware.js";
@@ -26,10 +27,13 @@ router
   .route("/get-pending-request")
   .post(verifyJWT, dealerAuthentication, getPendingRequest);
 
-router.route("/get-completed-pickup").get(verifyJWT, getCompletedPickup);
+router.route("/get-completed-pickup").post(verifyJWT, getCompletedPickup);
 router
   .route("/close-request")
   .post(verifyJWT, dealerAuthentication, closeRequest);
 
 router.route("/get-user-request").post(verifyJWT, getUserRequest);
+
+router.route("/get-accepted-request").post(verifyJWT, getAcceptedRequest);
+
 export default router;
