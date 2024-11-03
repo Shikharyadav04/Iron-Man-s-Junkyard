@@ -38,7 +38,7 @@ const requestSchema = new Schema(
     },
     status: {
       type: String,
-      enum: ["pending", "accepted", "in-progress", "completed", "canceled"],
+      enum: ["pending", "accepted", "completed", "canceled"],
       default: "pending",
     },
     assignedDealerId: {
@@ -48,10 +48,6 @@ const requestSchema = new Schema(
     totalAmount: {
       type: Number,
       required: true,
-    },
-    isCompleted: {
-      type: Boolean,
-      default: false,
     },
   },
   { timestamps: true }

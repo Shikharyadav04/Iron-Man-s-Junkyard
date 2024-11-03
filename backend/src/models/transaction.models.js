@@ -30,7 +30,10 @@ const transactionSchema = new mongoose.Schema(
       enum: ["Pending", "Completed", "Failed"],
       default: "Pending",
     },
-
+    isCompleted: {
+      type: Boolean,
+      default: false,
+    },
     completedAt: {
       type: Date,
       default: null,

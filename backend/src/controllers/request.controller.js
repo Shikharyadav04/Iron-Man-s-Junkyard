@@ -4,6 +4,7 @@ import { Request } from "../models/request.models.js";
 import { Scrap } from "../models/scrap.models.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { Transaction } from "../models/transaction.models.js";
+import { response } from "express";
 
 const createRequest = asyncHandler(async (req, res) => {
   const { scraps, pickupLocation, scheduledPickupDate, condition } = req.body;
@@ -36,8 +37,6 @@ const createRequest = asyncHandler(async (req, res) => {
       scrapTotalAmount,
     });
   }
-
-  const initialPayment = totalAmount * 0.3;
   const newRequest = await Request.create({
     requestId,
     userId,
@@ -61,20 +60,20 @@ const createRequest = asyncHandler(async (req, res) => {
       new ApiResponse(
         200,
         { newRequest, newTransaction },
-        "Request created successfully. Please complete the initial payment."
+        "Request created successfully"
       )
     );
 });
 
-const getPendingRequestsWithInitialPayment = asyncHandler(async (req, res) => {
+const getPendingRequest = asyncHandler(async (req, res) => {
   const requests = await Request.find({
-    isInitialPaymentMade: true,
     status: "pending",
   })
     .populate("userId", "fullName")
     .select(
-      "requestId scheduledPickupDate userId scraps pickupLocation condition status totalAmount initialPayment"
-    );
+      "requestId scheduledPickupDate userId scraps pickupLocation condition status totalAmount"
+    )
+    .sort({ createdAt: -1 });
 
   res
     .status(200)
@@ -110,13 +109,7 @@ const acceptRequest = asyncHandler(async (req, res) => {
 
   res
     .status(200)
-    .json(
-      new ApiResponse(
-        200,
-        request,
-        "Request accepted successfully. You can now proceed with the rest of the payment."
-      )
-    );
+    .json(new ApiResponse(200, request, "Request accepted successfully"));
 });
 
 const getCompletedPickup = asyncHandler(async (req, res) => {
@@ -135,7 +128,7 @@ const getCompletedPickup = asyncHandler(async (req, res) => {
         status: "completed",
       },
     },
-  ]);
+  ]).sort({ createdAt: -1 });
 
   if (!completedRequests) {
     throw new ApiError(404, "No completed requests found");
@@ -146,9 +139,50 @@ const getCompletedPickup = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, completedRequests, "Completed pickups."));
 });
 
+const closeRequest = asyncHandler(async (req, res) => {
+  //get request Id from user
+  //find the request
+  //check if transactions is completed or not
+  //if not throw error
+  //update the request status to completed
+  //return response
+
+  const requestId = req.body.requestId;
+  if (!requestId) {
+    throw new ApiError(400, "Request ID is required");
+  }
+
+  const request = await Request.findOne({ requestId: requestId });
+
+  if (!request) {
+    throw new ApiError(404, "Request not found");
+  }
+
+  const transaction = await Transaction.findOne({ requestId: requestId });
+
+  if (!transaction) {
+    throw new ApiError(404, "Transaction not found");
+  }
+
+  if (transaction.status !== "completed") {
+    throw new ApiError(
+      400,
+      "Transactions are not completed please complete your payment"
+    );
+  }
+
+  request.status = "completed";
+  await request.save();
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, request, "Request closed successfully"));
+});
+
 export {
   createRequest,
-  getPendingRequestsWithInitialPayment,
+  getPendingRequest,
   acceptRequest,
   getCompletedPickup,
+  closeRequest,
 };

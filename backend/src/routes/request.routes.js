@@ -2,8 +2,9 @@ import { Router } from "express";
 import {
   createRequest,
   acceptRequest,
-  getPendingRequestsWithInitialPayment,
+  getPendingRequest,
   getCompletedPickup,
+  closeRequest,
 } from "../controllers/request.controller.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 import { upload } from "../middlewares/multer.middleware.js";
@@ -21,9 +22,12 @@ router
 
 // New route for getting pending requests with paid initial payment
 router
-  .route("/get-pending-initial-payment")
-  .get(verifyJWT, dealerAuthentication, getPendingRequestsWithInitialPayment);
+  .route("/get-pending-request")
+  .get(verifyJWT, dealerAuthentication, getPendingRequest);
 
 router.route("/get-completed-pickup").get(verifyJWT, getCompletedPickup);
+router
+  .route("/close-request")
+  .post(verifyJWT, dealerAuthentication, closeRequest);
 
 export default router;
