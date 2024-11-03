@@ -6,8 +6,8 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { Transaction } from "../models/transaction.models.js";
 
 const createRequest = asyncHandler(async (req, res) => {
-  const { scraps, pickupLocation, scheduledPickupDate, condition, userId } =
-    req.body;
+  const { scraps, pickupLocation, scheduledPickupDate, condition } = req.body;
+  const userId = req.user._id;
   console.log(`userId : ${userId}`);
   if (!Array.isArray(scraps) || scraps.length === 0) {
     throw new ApiError(400, "Scraps array is required and cannot be empty");
@@ -46,7 +46,6 @@ const createRequest = asyncHandler(async (req, res) => {
     scheduledPickupDate,
     condition,
     totalAmount,
-    initialPayment,
   });
 
   const newTransaction = await Transaction.create({
@@ -54,9 +53,6 @@ const createRequest = asyncHandler(async (req, res) => {
     requestId: newRequest._id,
     customerId: userId,
     totalAmount,
-    initialPayment,
-    remainingAmount: totalAmount - initialPayment,
-    payments: [],
   });
 
   res

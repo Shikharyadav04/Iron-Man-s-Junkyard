@@ -99,9 +99,8 @@ const Customer = () => {
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
-          withCredentials:true,
+          withCredentials: true,
         }
       );
 
@@ -183,7 +182,7 @@ const Customer = () => {
             "Content-Type": "application/json",
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
-          withCredentials: true
+          withCredentials: true,
         }
       );
 
@@ -318,7 +317,12 @@ const Customer = () => {
           <input
             type="text"
             value={scrapRequest.pickupLocation}
-            onChange={(e) => setScrapRequest({ ...scrapRequest, pickupLocation: e.target.value })}
+            onChange={(e) =>
+              setScrapRequest({
+                ...scrapRequest,
+                pickupLocation: e.target.value,
+              })
+            }
             placeholder="Pickup Location"
             className="p-2 border rounded w-full"
             required
@@ -326,21 +330,29 @@ const Customer = () => {
           <input
             type="date"
             value={scrapRequest.scheduledPickupDate}
-            onChange={(e) => setScrapRequest({ ...scrapRequest, scheduledPickupDate: e.target.value })}
+            onChange={(e) =>
+              setScrapRequest({
+                ...scrapRequest,
+                scheduledPickupDate: e.target.value,
+              })
+            }
             className="p-2 border rounded w-full"
             required
           />
           <textarea
             value={scrapRequest.condition}
-            onChange={(e) => setScrapRequest({ ...scrapRequest, condition: e.target.value })}
+            onChange={(e) =>
+              setScrapRequest({ ...scrapRequest, condition: e.target.value })
+            }
             placeholder="Condition of the scraps"
             className="p-2 border rounded w-full"
             required
           ></textarea>
           <button
             type="submit"
-            className={`py-2 px-4 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition duration-200 w-full ${isSubmitting ? "opacity-50 cursor-not-allowed" : ""
-              }`}
+            className={`py-2 px-4 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition duration-200 w-full ${
+              isSubmitting ? "opacity-50 cursor-not-allowed" : ""
+            }`}
             disabled={isSubmitting}
           >
             {isSubmitting ? "Submitting..." : "Submit Request"}
@@ -360,7 +372,9 @@ const Customer = () => {
           <input
             type="text"
             value={userData.fullName}
-            onChange={(e) => setUserData({ ...userData, fullName: e.target.value })}
+            onChange={(e) =>
+              setUserData({ ...userData, fullName: e.target.value })
+            }
             placeholder="Full Name"
             className="p-2 border rounded w-full"
             required
@@ -368,7 +382,9 @@ const Customer = () => {
           <input
             type="email"
             value={userData.email}
-            onChange={(e) => setUserData({ ...userData, email: e.target.value })}
+            onChange={(e) =>
+              setUserData({ ...userData, email: e.target.value })
+            }
             placeholder="Email"
             className="p-2 border rounded w-full"
             required
@@ -415,13 +431,6 @@ const Customer = () => {
           </button>
         </form>
       )}
-
-      
-      
-      
-      
-      
-      
 
       <form onSubmit={handleAvatarUpload} className="space-y-4 w-full">
         <input

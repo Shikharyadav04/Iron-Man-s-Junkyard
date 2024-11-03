@@ -30,7 +30,6 @@ const requestSchema = new Schema(
     },
     scheduledPickupDate: {
       type: Date,
-      required: true,
     },
     condition: {
       type: String,
@@ -46,10 +45,9 @@ const requestSchema = new Schema(
       type: mongoose.Schema.ObjectId,
       ref: "User",
     },
-    isInitialPaymentMade: {
-      // New field to indicate if the initial payment is made
-      type: Boolean,
-      default: false,
+    totalAmount: {
+      type: Number,
+      required: true,
     },
     isCompleted: {
       type: Boolean,

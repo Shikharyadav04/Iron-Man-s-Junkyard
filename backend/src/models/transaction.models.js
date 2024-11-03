@@ -3,24 +3,38 @@ import mongoose from "mongoose";
 const transactionSchema = new mongoose.Schema(
   {
     transactionId: String,
-    requestId: { type: mongoose.Schema.Types.ObjectId, ref: "Request" },
-    customerId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    requestId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Request",
+    },
+    customerId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
     dealerId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       default: null,
     },
-    totalAmount: Number,
-    initialPayment: Number,
-    remainingAmount: Number,
-    payments: [
-      {
-        amount: Number,
-        paymentMethod: String,
-        paymentStatus: String,
-        date: { type: Date, default: Date.now },
-      },
-    ],
+    totalAmount: {
+      type: Number,
+      required: true,
+    },
+    paymentMethod: {
+      type: String,
+      enum: ["Card", "Bank Transfer", "PayPal", "Other"],
+    },
+
+    paymentStatus: {
+      type: String,
+      enum: ["Pending", "Completed", "Failed"],
+      default: "Pending",
+    },
+
+    completedAt: {
+      type: Date,
+      default: null,
+    },
   },
   { timestamps: true }
 );
