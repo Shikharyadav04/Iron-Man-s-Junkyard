@@ -19,8 +19,11 @@ const BillCard = ({ bill }) => {
 
   return (
     <div className="bg-transparent shadow-md rounded-lg p-4 mb-4 transition-transform duration-300 transform hover:scale-105">
+      <p className="text-2xl font-bold text-gray-800 shadow-glow mb-2">
+        <span className="font-bold">Total Amount:</span> ₹{bill.totalAmount}
+      </p>
       <h3 className="text-lg font-semibold">
-        Bill ID: <span className="font-bold">{bill.requestId}</span>
+        <span className="font-bold">Bill ID:</span> {bill.requestId}
       </h3>
       <p className="text-gray-700">
         <span className="font-bold">Pickup Location:</span>{" "}
@@ -39,9 +42,6 @@ const BillCard = ({ bill }) => {
         )} shadow-lg`}
       >
         Status: {bill.status}
-      </p>
-      <p className="text-gray-700">
-        <span className="font-bold">Total Amount:</span> ₹{bill.totalAmount}
       </p>
       <h4 className="text-md font-semibold mt-4">Scraps:</h4>
       <ul className="list-disc ml-6">
