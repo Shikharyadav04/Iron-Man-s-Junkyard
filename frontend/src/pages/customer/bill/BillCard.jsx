@@ -36,13 +36,18 @@ const BillCard = ({ bill }) => {
       <p className="text-gray-700">
         <span className="font-bold">Condition:</span> {bill.condition}
       </p>
+      <p className="text-gray-700">
+        <span className="font-bold">Created At </span>{" "}
+        {new Date(bill.createdAt).toLocaleString()}
+      </p>
       <p
-        className={`font-bold uppercase ${getStatusStyle(
+        className={`font-bold uppercase mt-1  ${getStatusStyle(
           bill.status
         )} shadow-lg`}
       >
         Status: {bill.status}
       </p>
+
       <h4 className="text-md font-semibold mt-4">Scraps:</h4>
       <ul className="list-disc ml-6">
         {bill.scraps.map((scrap) => (

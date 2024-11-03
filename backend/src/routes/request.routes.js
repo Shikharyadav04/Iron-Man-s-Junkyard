@@ -24,7 +24,7 @@ router
 // New route for getting pending requests with paid initial payment
 router
   .route("/get-pending-request")
-  .get(verifyJWT, dealerAuthentication, getPendingRequest);
+  .post(verifyJWT, dealerAuthentication, getPendingRequest);
 
 router.route("/get-completed-pickup").get(verifyJWT, getCompletedPickup);
 router

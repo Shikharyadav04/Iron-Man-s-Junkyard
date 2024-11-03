@@ -10,5 +10,6 @@ export const dealerAuthentication = asyncHandler(async (req, res, next) => {
     );
   }
 
+  console.log("        verify dealerAuthentication passed            ");
   next();
 });

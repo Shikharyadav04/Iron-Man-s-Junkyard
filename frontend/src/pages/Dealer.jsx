@@ -3,7 +3,6 @@ import { useAuth } from "../context/AuthProvider.jsx";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-
 const Dealer = () => {
   const { user } = useAuth();
   const [loading, setLoading] = useState(true);
@@ -52,7 +51,6 @@ const Dealer = () => {
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
           withCredentials: true,
         }
@@ -83,7 +81,6 @@ const Dealer = () => {
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
           withCredentials: true,
         }
@@ -111,7 +108,7 @@ const Dealer = () => {
         formData,
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "application/json",
           },
           withCredentials: true,
         }
@@ -136,7 +133,7 @@ const Dealer = () => {
   }
 
   return (
-    <div className="flex flex-col items-center bg-gray-100 p-6 rounded-lg shadow-md max-w-lg mx-auto w-full">
+    <div className="flex flex-col items-center bg-gray-50 p-6 rounded-lg shadow-md max-w-lg mx-auto w-full">
       <div className="flex items-center space-x-4 mb-6">
         <img
           src={userData.avatar}
@@ -165,7 +162,9 @@ const Dealer = () => {
           <input
             type="text"
             value={userData.fullName}
-            onChange={(e) => setUserData({ ...userData, fullName: e.target.value })}
+            onChange={(e) =>
+              setUserData({ ...userData, fullName: e.target.value })
+            }
             placeholder="Full Name"
             className="p-2 border rounded w-full"
             required
@@ -173,7 +172,9 @@ const Dealer = () => {
           <input
             type="email"
             value={userData.email}
-            onChange={(e) => setUserData({ ...userData, email: e.target.value })}
+            onChange={(e) =>
+              setUserData({ ...userData, email: e.target.value })
+            }
             placeholder="Email"
             className="p-2 border rounded w-full"
             required
@@ -235,6 +236,12 @@ const Dealer = () => {
           Upload Avatar
         </button>
       </form>
+      <button
+        onClick={() => navigate("/dealer/requests")}
+        className="mb-4 mt-4 py-2 px-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-200 w-full"
+      >
+        View Available Requests
+      </button>
     </div>
   );
 };

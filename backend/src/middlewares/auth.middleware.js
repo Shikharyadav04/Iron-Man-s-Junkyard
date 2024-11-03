@@ -9,9 +9,9 @@ export const verifyJWT = asyncHandler(async (req, res, next) => {
       req.cookies?.accessToken ||
       req.header("Authorization")?.replace("Bearer ", "");
 
-    console.log("AccessToken Cookie:", req.cookies?.accessToken);
-    console.log("Authorization Header:", req.header("Authorization"));
-    console.log("Token received:", token); // Check if token is retrieved
+    // console.log("AccessToken Cookie:", req.cookies?.accessToken);
+    // console.log("Authorization Header:", req.header("Authorization"));
+    // console.log("Token received:", token); // Check if token is retrieved
 
     if (!token || typeof token !== "string") {
       throw new ApiError(401, "Unauthorized request: Token missing or invalid");
@@ -29,6 +29,7 @@ export const verifyJWT = asyncHandler(async (req, res, next) => {
     }
 
     req.user = user;
+    console.log("        verify jwt passed     ");
     next();
   } catch (error) {
     // console.error("Error verifying token:", error);

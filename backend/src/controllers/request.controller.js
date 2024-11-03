@@ -83,7 +83,9 @@ const getPendingRequest = asyncHandler(async (req, res) => {
 });
 
 const acceptRequest = asyncHandler(async (req, res) => {
+  console.log("sadjjadskbsdksbakjbdskakjadsjbkdsadsadasdsa");
   const requestId = req.body.requestId;
+  console.log(`requestId : ${requestId}`);
   if (!requestId) {
     throw new ApiError(400, "Request ID is required");
   }

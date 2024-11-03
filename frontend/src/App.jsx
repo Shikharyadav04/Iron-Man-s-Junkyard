@@ -21,7 +21,7 @@ import News from "./components/News"; // Update to the correct path
 import Payment from "./pages/Payment"; // Update to the correct path
 import RequestCreation from "./pages/customer/requestCreation"; // Update to the correct path
 import BillPage from "./pages/customer/bill/BillPage"; // Import the BillPage component
-
+import getRequest from "./pages/dealer/getRequest";
 const App = () => {
   const { user } = useAuth();
 
@@ -60,11 +60,12 @@ const App = () => {
           path="/customer/bills"
           element={renderRoleBasedRoute("customer", BillPage)} // Adjust role as needed
         />
-
+        {/* RequestPage route */}
         <Route
-          path="/payment/:requestId"
-          element={user ? <Payment /> : <Navigate to="/login" />}
+          path="/dealer/requests"
+          element={renderRoleBasedRoute("dealer", getRequest)} // Adjust role as needed
         />
+
         <Route
           path="/customer/request-creation"
           element={renderRoleBasedRoute("customer", RequestCreation)}
