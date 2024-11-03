@@ -19,9 +19,16 @@ import Business from "./pages/Business"; // Update to the correct path
 import Contact from "./pages/Contact"; // Update to the correct path
 import News from "./components/News"; // Update to the correct path
 import Payment from "./pages/Payment"; // Update to the correct path
+import RequestCreation from "./pages/customer/requestCreation"; // Update to the correct path
+import BillPage from "./pages/customer/bill/BillPage"; // Import the BillPage component
 
 const App = () => {
   const { user } = useAuth();
+
+  // Function to render role-based routes
+  const renderRoleBasedRoute = (role, Component) => {
+    return user?.role === role ? <Component /> : <Navigate to="/login" />;
+  };
 
   return (
     <div>
@@ -38,21 +45,29 @@ const App = () => {
         <Route path="/business" element={<Business />} />
 
         {/* Role-based routes */}
-        <Route
-          path="/admin"
-          element={user?.role === "admin" ? <Admin /> : <Navigate to="/login" />}
-        />
+        <Route path="/admin" element={renderRoleBasedRoute("admin", Admin)} />
         <Route
           path="/customer"
-          element={user?.role === "customer" ? <Customer /> : <Navigate to="/login" />}
+          element={renderRoleBasedRoute("customer", Customer)}
         />
         <Route
           path="/dealer"
-          element={user?.role === "dealer" ? <Dealer /> : <Navigate to="/login" />}
+          element={renderRoleBasedRoute("dealer", Dealer)}
+        />
+
+        {/* BillPage route */}
+        <Route
+          path="/customer/bills"
+          element={renderRoleBasedRoute("customer", BillPage)} // Adjust role as needed
+        />
+
+        <Route
+          path="/payment/:requestId"
+          element={user ? <Payment /> : <Navigate to="/login" />}
         />
         <Route
-          path="/payment/:requestId" // Changed to dynamic route
-          element={user ? <Payment /> : <Navigate to="/login" />}
+          path="/customer/request-creation"
+          element={renderRoleBasedRoute("customer", RequestCreation)}
         />
 
         {/* Redirect based on user role when not logged in */}

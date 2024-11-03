@@ -33,7 +33,7 @@ const requestSchema = new Schema(
     },
     condition: {
       type: String,
-      enum: ["good", "old", "damaged"],
+      enum: ["Good", "Old", "Damaged"],
       required: true,
     },
     status: {

@@ -179,10 +179,28 @@ const closeRequest = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, request, "Request closed successfully"));
 });
 
+const getUserRequest = asyncHandler(async (req, res) => {
+  //get user Id from request
+  //find all requests of user
+  //return response
+  const userId = req.user._id;
+  if (!userId) {
+    throw new ApiError(401, "User not authenticated");
+  }
+  const requests = await Request.find({
+    userId: userId,
+  }).sort({ createdAt: -1 });
+  if (!requests) {
+    throw new ApiError(404, "No requests found");
+  }
+  return res.status(200).json(new ApiResponse(200, requests, "User requests."));
+});
+
 export {
   createRequest,
   getPendingRequest,
   acceptRequest,
   getCompletedPickup,
   closeRequest,
+  getUserRequest,
 };

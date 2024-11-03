@@ -5,6 +5,7 @@ import {
   getPendingRequest,
   getCompletedPickup,
   closeRequest,
+  getUserRequest,
 } from "../controllers/request.controller.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 import { upload } from "../middlewares/multer.middleware.js";
@@ -30,4 +31,5 @@ router
   .route("/close-request")
   .post(verifyJWT, dealerAuthentication, closeRequest);
 
+router.route("/get-user-request").post(verifyJWT, getUserRequest);
 export default router;
