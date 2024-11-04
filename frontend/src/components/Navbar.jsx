@@ -20,9 +20,9 @@ const Navbar = () => {
   }, []);
 
   return (
-    <div className={`flex items-center justify-evenly py-1 font-medium sticky top-0 w-full z-50 transition-shadow ${isScrolled ? 'shadow-lg bg-[#1F2937] text-white' : 'bg-transparent text-black'}`}>
+    <div className={`flex items-center justify-evenly py-1 font-medium sticky top-0 w-full z-50 transition-shadow shadow-lg bg-[#1F2937] text-white`}>
       <Link to='/'>
-        <img src={assets.logo} className='w-20' alt="Logo" />
+         <h1 className='h-5px w-6px bold py-5'>SCRAPMAN</h1> 
       </Link>
 
       <ul className='hidden sm:flex gap-5 text-sm'>
@@ -32,9 +32,6 @@ const Navbar = () => {
         <NavLink to='/about' className='flex flex-col items-center gap-1'>
           <p>About</p>
         </NavLink>
-        
-        
-        
         <NavLink to='/business' className='flex flex-col items-center gap-1'>
           <p>For Businesses</p>
         </NavLink>
@@ -55,7 +52,11 @@ const Navbar = () => {
             <Logout />
           ) : (
             <>
-              <img className='w-5 cursor-pointer' src={assets.profile_icon} alt='Profile' />
+              <img 
+                className='w-5 cursor-pointer' 
+                src={ assets.icon1 }
+                alt="User Icon"
+              />
               <div className='group-hover:block hidden absolute z-20 dropdown-menu right-0 pt-4'>
                 <div className='flex flex-col gap-2 w-36 py-3 px-5 bg-slate-100 text-gray-500 rounded'>
                   <NavLink to='/login'>

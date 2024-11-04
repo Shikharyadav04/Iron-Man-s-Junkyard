@@ -26,48 +26,48 @@ const Home = () => {
       content: 'The interface is clean and easy to navigate.',
     },
     {
-      heading: 'Easy to Navigate!',
-      content: 'The interface is clean and easy to navigate.',
+      heading: 'Great Experience!',
+      content: 'I had a wonderful time using this platform. Highly recommend!',
+    },
+    {
+      heading: 'Amazing Features!',
+      content: 'The features offered are fantastic and very user-friendly.',
+    },
+    {
+      heading: 'Supportive Community!',
+      content: 'The community here is very helpful and supportive.',
     },
     {
       heading: 'Easy to Navigate!',
       content: 'The interface is clean and easy to navigate.',
     },
     {
-      heading: 'Easy to Navigate!',
-      content: 'The interface is clean and easy to navigate.',
+      heading: 'Great Experience!',
+      content: 'I had a wonderful time using this platform. Highly recommend!',
+    },
+    {
+      heading: 'Amazing Features!',
+      content: 'The features offered are fantastic and very user-friendly.',
+    },
+    {
+      heading: 'Supportive Community!',
+      content: 'The community here is very helpful and supportive.',
     },
     {
       heading: 'Easy to Navigate!',
       content: 'The interface is clean and easy to navigate.',
     },
     {
-      heading: 'Easy to Navigate!',
-      content: 'The interface is clean and easy to navigate.',
+      heading: 'Great Experience!',
+      content: 'I had a wonderful time using this platform. Highly recommend!',
     },
     {
-      heading: 'Easy to Navigate!',
-      content: 'The interface is clean and easy to navigate.',
+      heading: 'Amazing Features!',
+      content: 'The features offered are fantastic and very user-friendly.',
     },
     {
-      heading: 'Easy to Navigate!',
-      content: 'The interface is clean and easy to navigate.',
-    },
-    {
-      heading: 'Easy to Navigate!',
-      content: 'The interface is clean and easy to navigate.',
-    },
-    {
-      heading: 'Easy to Navigate!',
-      content: 'The interface is clean and easy to navigate.',
-    },
-    {
-      heading: 'Easy to Navigate!',
-      content: 'The interface is clean and easy to navigate.',
-    },
-    {
-      heading: 'Easy to Navigate!',
-      content: 'The interface is clean and easy to navigate.',
+      heading: 'Supportive Community!',
+      content: 'The community here is very helpful and supportive.',
     },
     {
       heading: 'Easy to Navigate!',

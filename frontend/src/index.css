@@ -66,8 +66,9 @@
 }
 body{
   /*background-color: 	#f4f0ee;*/
-  backdrop-filter: blur(4px);
-  background-image: url(./Images/bg.jpeg);
+  background-image: url(./Images/bg.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
 }
 /* CSS file or Tailwind classes */
 .relative {

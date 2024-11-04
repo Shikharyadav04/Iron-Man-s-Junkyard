@@ -8,14 +8,14 @@ const End = () => {
 
             <div >
                 <img src={assets.logo} className='mb-5 w-32' alt=''/>
-                <p className='w-full md:w-2/3 text-gray-600'>
+                <p className='w-full md:w-2/3 text-white'>
                     Lorem ipsum dolor sit amet consectetur adipisicing elit. Ullam rerum dolore quo cum consequuntur! Quibusdam aperiam, sunt officiis ipsum dolor suscipit quam tenetur labore odit, ad enim quae assumenda error.
                 </p>
             </div>
 
             <div>
-                <p className='text-xl font-medium mb-5'>COMPANY</p>
-                <ul className='flex flex-col gap-1 text-gray-600'>
+                <p className='text-xl font-medium  text-white mb-5'>COMPANY</p>
+                <ul className='flex flex-col gap-1 text-white'>
                     <li>Home</li>
                     <li>About us</li>
                     <li>Delivery</li>
@@ -24,8 +24,8 @@ const End = () => {
             </div>
 
             <div>
-                <p className='text-xl font-medium mb-5'>GET IN TOUCH</p>
-                <ul className='flex flex-col gap-1 text-gray-600'>
+                <p className='text-xl font-medium  text-white mb-5'>GET IN TOUCH</p>
+                <ul className='flex flex-col gap-1 text-white'>
                     <li>+1-212-456-7890</li>
                     <li>contact@ScrapMan.com</li>
 
@@ -38,7 +38,7 @@ const End = () => {
 
         <div >
             <hr/>
-            <p className='py-5 text-sm text-center'>Copyright 2024@ ScrapMan.com - All Right Reserved</p>
+            <p className='py-5 text-sm  text-white text-center'>Copyright 2024@ ScrapMan.com - All Right Reserved</p>
 
         </div>
     </div>
