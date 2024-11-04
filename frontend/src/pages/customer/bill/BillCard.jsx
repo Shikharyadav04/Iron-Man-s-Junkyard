@@ -1,6 +1,9 @@
-import React from "react";
-
+import React, { useState } from "react";
+import axios from "axios";
 const BillCard = ({ bill }) => {
+  const [successMessage, setSuccessMessage] = useState("");
+  const [error, setError] = useState(null);
+
   // Function to determine the status style based on the status value
   const getStatusStyle = (status) => {
     switch (status.toLowerCase()) {
@@ -17,8 +20,34 @@ const BillCard = ({ bill }) => {
     }
   };
 
+  const CancelRequest = async (requestId) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:8000/api/v1/request/cancel-request",
+        { requestId }, // Sending as an object directly
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      );
+      setSuccessMessage(response.data.message);
+      setError(null);
+    } catch (err) {
+      console.log(err);
+      const errorMessage = err.response?.data?.message || "An error occurred";
+      setError(`{ success: "false", message: "${errorMessage}" }`);
+      setSuccessMessage("");
+    }
+  };
+
   return (
     <div className="bg-transparent shadow-md rounded-lg p-4 mb-4 transition-transform duration-300 transform hover:scale-105">
+      {successMessage && (
+        <div className="text-green-600 mb-4">{successMessage}</div>
+      )}
+      {error && <div className="text-red-600 mb-4">{error}</div>}
       <p className="text-2xl font-bold text-gray-800 shadow-glow mb-2">
         <span className="font-bold">Total Amount:</span> ₹{bill.totalAmount}
       </p>
@@ -59,6 +88,12 @@ const BillCard = ({ bill }) => {
           </li>
         ))}
       </ul>
+      <button
+        onClick={() => CancelRequest(bill.requestId)}
+        className="py-1 px-2 bg-red-600 mt-4 text-white font-semibold rounded-lg hover:bg-red-700 transition duration-200 w-full"
+      >
+        Cancel Request
+      </button>
     </div>
   );
 };

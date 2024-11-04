@@ -241,6 +241,32 @@ const getAcceptedRequest = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, acceptedRequest, "User's accepted requests."));
 });
 
+const cancelRequest = asyncHandler(async (req, res) => {
+  console.log("Cancelled request received");
+  console.log("Request body:", req.body); // Log entire req.body to inspect
+
+  const { requestId } = req.body; // Update this line to destructure directly from req.body
+  if (!requestId) {
+    throw new ApiError(400, "Request ID is required");
+  }
+
+  // Continue with your existing logic
+  const request = await Request.findOne({ requestId });
+  if (!request) {
+    throw new ApiError(404, "Request not found");
+  }
+  if (request.status === "completed" || request.status === "canceled") {
+    throw new ApiError(400, `Request is already ${request.status}`);
+  }
+
+  request.status = "canceled";
+  await request.save();
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, request, "Request canceled successfully"));
+});
+
 export {
   createRequest,
   getPendingRequest,
@@ -249,4 +275,5 @@ export {
   closeRequest,
   getUserRequest,
   getAcceptedRequest,
+  cancelRequest,
 };

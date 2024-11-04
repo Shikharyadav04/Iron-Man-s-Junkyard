@@ -7,6 +7,7 @@ import {
   closeRequest,
   getUserRequest,
   getAcceptedRequest,
+  cancelRequest,
 } from "../controllers/request.controller.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 import { upload } from "../middlewares/multer.middleware.js";
@@ -35,5 +36,7 @@ router
 router.route("/get-user-request").post(verifyJWT, getUserRequest);
 
 router.route("/get-accepted-request").post(verifyJWT, getAcceptedRequest);
+
+router.route("/cancel-request").post(cancelRequest);
 
 export default router;
