@@ -32,7 +32,7 @@ const Feedback = () => {
   };
 
   return (
-    <>
+   
         <form onSubmit={submitFeedback} className="p-4 max-w-md mx-auto bg-white shadow-md rounded-md">
           <h2 className="text-lg font-bold mb-4">Submit Feedback</h2>
 
@@ -79,8 +79,8 @@ const Feedback = () => {
         )}
 
       </form>
-      <BackgroundBeams/>
-    </>
+      
+    
   );
 };
 
