@@ -43,7 +43,7 @@ const BillCard = ({ bill }) => {
   };
 
   return (
-    <div className="bg-transparent shadow-md rounded-lg p-4 mb-4 transition-transform duration-300 transform hover:scale-105">
+    <div className="bg-white shadow-md rounded-lg p-4 mb-4 transition-transform duration-300 transform hover:scale-105">
       {successMessage && (
         <div className="text-green-600 mb-4">{successMessage}</div>
       )}
