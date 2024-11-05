@@ -2,6 +2,8 @@ import React from 'react';
 import Header from '../components/Header';
 import ShareButtons from '@/components/ShareButton';
 import Feedbackcard from '../components/Feedbackcard';
+import BackgroundBeams from '@/components/BackgroundBeams';
+import { assets } from '@/assets/assets';
 
 const Home = () => {
   const url = 'http://localhost:5173/'; // Replace with your actual URL
@@ -76,9 +78,28 @@ const Home = () => {
   ];
 
   return (
-    <div className="bg-transparent min-h-screen">
+    <div className="bg-transparent overflow-hidden min-h-screen">
       <Header />
-      <div className="max-w-3xl mx-auto p-6 bg-transparent rounded-lg mt-10">
+      <div>
+        
+        <div className='min-h-screen min-w-screen flex justify-evenly  items-center bg-transparent'>
+      
+
+          <div className='flex justify-evenly space-x-4 '>
+            <div className='border border-gray-300 w-[60vh] h-[70vh]  shadow-lg rounded-md'>
+              <img src={assets.dp1} className='w-[70vh] h-[70vh] object-fit rounded-md' />
+            </div>
+            <div className='border border-gray-300 w-[60vh] h-[70vh] shadow-lg rounded-md'>
+              <img src={assets.dp2} className='w-[70vh] h-[70vh] object-fit rounded-md' />
+            </div>
+            <div className='border border-gray-300 w-[60vh] h-[70vh] shadow-lg rounded-md'>
+              <img src={assets.dp3} className='w-[60vh] h-[70vh] object-fit rounded-md' />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="w-full mx-auto p-6 bg-transparent rounded-lg ">
         <h1 className="text-3xl text-center text-gray-800 mb-4 font-playfair font-custom-weight">
           Welcome to My Website
         </h1>
@@ -93,11 +114,12 @@ const Home = () => {
         </div>
         
         {/* Apply the Tailwind animation class here */}
-        <div className="animate-slide-in flex gap-5 ">
+        <div className="animate-slide-in bg-transparent flex gap-5 ">
           {feedbacks.map((feedback, index) => (
             <Feedbackcard key={index} heading={feedback.heading} content={feedback.content} />
           ))}
         </div>
+        <BackgroundBeams />
       </div>
     </div>
   );

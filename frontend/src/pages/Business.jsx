@@ -83,7 +83,7 @@ const Business = () => {
         <Scroll content={content} />
       </div>
 
-        
+      <BackgroundBeams/> 
         
         
     </div>

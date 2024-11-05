@@ -106,7 +106,7 @@ export const BackgroundBeams = memo(({ className }) => {
                 duration: Math.random() * 10 + 10,
                 ease: "easeInOut",
                 repeat: Infinity,
-                delay: Math.random() * 10,
+                delay: Math.random() ,
               }}
             >
               <stop stopColor="#18CCFC" stopOpacity="0" />
