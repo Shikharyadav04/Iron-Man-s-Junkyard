@@ -47,7 +47,7 @@ const AcceptedBillPage = () => {
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
+    <div className=" grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4 bg-white">
       {bills.length > 0 ? (
         bills.map((bill, index) => (
           <BillCard key={`${bill.id}-${index}`} bill={bill} /> // Ensure unique key using id and index

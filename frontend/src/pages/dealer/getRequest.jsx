@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios"; // Make sure to import axios
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import RequestCard from "./RequestCard";
-const getRequest = () => {
+
+const GetRequest = () => {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [response, setResponse] = useState("");
+  const navigate = useNavigate(); // Initialize useNavigate hook
 
   const fetchRequests = async () => {
     try {
@@ -42,16 +44,26 @@ const getRequest = () => {
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
-      {requests.length > 0 ? (
-        requests.map((request, index) => (
-          <RequestCard key={`${request.id}-${index}`} request={request} /> // Ensure unique key using id and index
-        ))
-      ) : (
-        <div>No requests available...</div> // Message for no bills
-      )}
+    <div className="p-4 ">
+      {/* Back button to navigate to dealer page */}
+      <button
+        onClick={() => navigate("/dealer")}
+        className="mb-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
+      >
+        Back to Dealer Page
+      </button>
+      
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {requests.length > 0 ? (
+          requests.map((request, index) => (
+            <RequestCard key={`${request.id}-${index}`} request={request} /> // Ensure unique key using id and index
+          ))
+        ) : (
+          <div>No requests available...</div> // Message for no requests
+        )}
+      </div>
     </div>
   );
 };
 
-export default getRequest;
+export default GetRequest;
