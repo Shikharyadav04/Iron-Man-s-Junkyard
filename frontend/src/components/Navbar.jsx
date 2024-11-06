@@ -20,7 +20,7 @@ const Navbar = () => {
   }, []);
 
   return (
-    <div className={`flex items-center justify-evenly py-1 font-medium sticky top-0 w-full z-50 transition-shadow shadow-lg bg-[#1F2937] text-white`}>
+    <div className='flex items-center justify-evenly py-1 font-medium sticky top-0 w-full z-50 transition-shadow shadow-lg bg-gray-800 text-white'>
       <Link to='/'>
          <h1 className='h-5px w-6px bold py-5'>SCRAPMAN</h1> 
       </Link>

@@ -4,6 +4,8 @@ import ShareButtons from '@/components/ShareButton';
 import Feedbackcard from '../components/Feedbackcard';
 import BackgroundBeams from '@/components/BackgroundBeams';
 import { assets } from '@/assets/assets';
+import Service from '@/components/Service';
+import WasteDisposalSection from '@/components/WasteDisposalSection';
 
 const Home = () => {
   const url = 'http://localhost:5173/'; // Replace with your actual URL
@@ -56,9 +58,17 @@ const Home = () => {
 
       {/* Charity Events Section */}
       <div className="w-full">
-        <h1 className="text-6xl text-center text-white mb-4 font-bold">
-          EVENTS
+        <h1 className="text-6xl text-center text-black mb-4 font-bold">
+          <div className='flex justify-center gap-5'>
+            <div className='h-20 w-20 bg-green-100 rounded-lg py-2'>E</div>
+            <div className='h-20 w-20 bg-green-100 rounded-lg py-2'>V</div>
+            <div className='h-20 w-20 bg-green-100 rounded-lg py-2'>E</div>
+            <div className='h-20 w-20 bg-green-100 rounded-lg py-2'>N</div>
+            <div className='h-20 w-20 bg-green-100 rounded-lg py-2'>T</div>
+            <div className='h-20 w-20 bg-green-100 rounded-lg py-2'>S</div>
+          </div>  
         </h1>
+
         
         {/* Full-width images stacked without spacing */}
         <div>
@@ -88,6 +98,13 @@ const Home = () => {
             <Feedbackcard key={index} heading={feedback.heading} content={feedback.content} />
           ))}
         </div>
+      </div>
+      
+      <div>
+        <Service/>
+      </div>
+      <div>
+        <WasteDisposalSection/>
       </div>
     </div>
   );

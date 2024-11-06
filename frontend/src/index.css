@@ -65,10 +65,10 @@
   }
 }
 body{
-  /*background-color: 	#f4f0ee;*/
-  background-image: url(./Images/bg.jpg);
-  background-size: cover;
-  background-repeat: no-repeat;
+  background-color: #FFFFFF;
+  
+  
+  
 }
 /* CSS file or Tailwind classes */
 .relative {

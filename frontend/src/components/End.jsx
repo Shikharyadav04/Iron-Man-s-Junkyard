@@ -1,48 +1,83 @@
-import React from 'react'
-import { assets } from '../assets/assets'
+import { assets } from "@/assets/assets";
+import React from "react";
 
 const End = () => {
   return (
-    <div className='px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw]'>
-        <div className="flex flex-col justify-between sm:flex-row sm:justify-between grid-cols-[3fr_1fr_1fr] gap-8 my-10 mt-40 text-sm">
-
-            <div >
-                <img src={assets.logo} className='mb-5 w-32' alt=''/>
-                <p className='w-full md:w-2/3 text-black'>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Ullam rerum dolore quo cum consequuntur! Quibusdam aperiam, sunt officiis ipsum dolor suscipit quam tenetur labore odit, ad enim quae assumenda error.
-                </p>
-            </div>
-
-            <div>
-                <p className='text-xl font-medium  text-black mb-5'>COMPANY</p>
-                <ul className='flex flex-col gap-1 text-black'>
-                    <li>Home</li>
-                    <li>About us</li>
-                    <li>Delivery</li>
-                    <li>Privacy Policy</li>
-                </ul>
-            </div>
-
-            <div>
-                <p className='text-xl font-medium  text-black mb-5'>GET IN TOUCH</p>
-                <ul className='flex flex-col gap-1 text-black'>
-                    <li>+1-212-456-7890</li>
-                    <li>contact@ScrapMan.com</li>
-
-                </ul>
-            </div>
-
-
-
+    <footer className="bg-gray-800 text-white py-5 px-5">
+      <div className="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-6 px-10">
+        {/* Logo and Description */}
+        <div className="space-y-3">
+          <div className="flex items-center">
+            <h1 className="text-white text-center font-bold">SCRAPMAN</h1>
+            
+          </div>
+          <p className="text-sm leading-relaxed">
+            Lorem ipsum dolor sit amet consectetur diam ultricies leo etiam nibh
+            tristique.
+          </p>
+          <p className="text-sm leading-relaxed mt-2">
+            Odio feugiat vitae libero vestibulum viverra elementum luctus.
+          </p>
         </div>
 
-        <div >
-            <hr/>
-            <p className='py-5 text-sm  text-black text-center'>Copyright 2024@ ScrapMan.com - All Right Reserved</p>
-
+        {/* Links */}
+        <div>
+          <h3 className="font-semibold text-lg mb-4">Links</h3>
+          <ul className="space-y-2">
+            <li>About Us</li>
+            <li>Services</li>
+            <li>Case</li>
+            <li>Request Pickup</li>
+            <li>Contact Us</li>
+          </ul>
         </div>
-    </div>
-  )
-}
+
+        {/* Working Hours */}
+        <div>
+          <h3 className="font-semibold text-lg mb-4">Working Hours</h3>
+          <p className="text-sm leading-relaxed">
+            Tincidunt neque pretium lectus donec risus.
+          </p>
+          <p className="text-sm leading-relaxed mt-2">
+            Mon - Fri: 9:00AM - 6:00PM
+          </p>
+          <p className="text-sm leading-relaxed">Sat - Sun: 8:00AM - 4:00PM</p>
+        </div>
+
+        {/* Get In Touch */}
+        <div>
+          <h3 className="font-semibold text-lg mb-4">Get In Touch</h3>
+          <p className="text-sm leading-relaxed">
+            <span role="img" aria-label="Location">📍</span> Add: New Hyde Park, NY 11040
+          </p>
+          <p className="text-sm leading-relaxed mt-2">
+            <span role="img" aria-label="Email">📧</span> Email: example@info.com
+          </p>
+          <p className="text-sm leading-relaxed">
+            <span role="img" aria-label="Phone">📞</span> Phone: 333 666 0000
+          </p>
+          <div className="flex space-x-5 mt-4">
+            <span className="bg-gray-700 p-2 rounded-lg">
+              {/* Social Icons (use Font Awesome or similar icons) */}
+              <i className="fab fa-facebook-f"></i>
+            </span>
+            <span className="bg-gray-700 p-2 rounded-lg">
+              <i className="fab fa-twitter"></i>
+            </span>
+            <span className="bg-gray-700 p-2 rounded-lg">
+              <i className="fab fa-instagram"></i>
+            </span>
+            <span className="bg-gray-700 p-2 rounded-lg">
+              <i className="fab fa-linkedin-in"></i>
+            </span>
+          </div>
+        </div>
+      </div>
+      <div className="text-center text-sm mt-10">
+        <p>Copyright 2023 by wastix template All Rights Reserved.</p>
+      </div>
+    </footer>
+  );
+};
 
 export default End;
