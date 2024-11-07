@@ -1,7 +1,8 @@
 import React from 'react';
 
 import { video } from '@/videos/video';
-import BackgroundBeams from '@/components/BackgroundBeams';
+import ServicesSection from '@/components/ServicesSection';
+
 
 const About = () => {
   return (
@@ -31,6 +32,10 @@ const About = () => {
           <source src={video.video3} type="video/mp4" />
           Your browser does not support the video tag.
         </video>
+      </div>
+      <div>
+        <ServicesSection/>
+        
       </div>
       
     </div>

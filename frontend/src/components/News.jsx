@@ -26,7 +26,7 @@ const News = () => {
   if (error) return <p className="text-center text-red-500">{error}</p>;
 
   return (
-    <div className="bg-transparent min-h-screen p-6">
+    <div className="bg-[#F2FBF6] min-h-screen p-6">
       <h2 className="text-3xl font-bold text-center mb-6 text-blue-600">Latest News</h2>
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {news.map((article, index) => (

@@ -17,6 +17,10 @@ import event1 from './event1.png'
 import event2 from './event2.png'
 import event3 from './event3.png'
 import SERVICE from './SERVICE.png'
+import  e1  from './e1.jpg'
+import  e2  from './e2.jpg'
+import  e3  from './e3.jpg'
+
 
 
 
@@ -48,7 +52,10 @@ export const assets = {
     event1,
     event2,
     event3,
-    SERVICE
+    SERVICE,
+    e1,
+    e2,
+    e3
     
     
    
