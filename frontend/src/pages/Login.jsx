@@ -7,7 +7,7 @@ const Login = () => {
   const { user, login } = useAuth();
   const navigate = useNavigate();
   const [credentials, setCredentials] = useState({
-    username: "",
+    identifier: "", // Single field for either username or email
     password: "",
   });
   const [loading, setLoading] = useState(false); // Loading state
@@ -28,7 +28,13 @@ const Login = () => {
     setLoading(true); // Set loading to true before login attempt
 
     try {
-      await login(credentials); // Call the login function
+      // Check if the identifier is an email or username
+      const isEmail = credentials.identifier.includes("@");
+      const loginData = isEmail
+        ? { email: credentials.identifier, password: credentials.password }
+        : { username: credentials.identifier, password: credentials.password };
+
+      await login(loginData); // Pass the correct data structure to login
     } catch (error) {
       console.error("Error logging in:", error);
       alert(error.message || "Login failed. Please try again.");
@@ -51,9 +57,9 @@ const Login = () => {
           <>
             <input
               type="text"
-              name="username"
+              name="identifier" // Single input for both username or email
               onChange={handleChange}
-              placeholder="Username"
+              placeholder="Username or Email"
               required
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
             />

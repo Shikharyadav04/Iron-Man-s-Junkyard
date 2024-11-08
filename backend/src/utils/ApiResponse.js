@@ -1,4 +1,3 @@
-// this utility helps to write response
 class ApiResponse {
   constructor(statusCode, data, message = "Success") {
     this.statusCode = statusCode;
