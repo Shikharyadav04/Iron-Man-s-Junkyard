@@ -109,16 +109,16 @@ const registerUser = asyncHandler(async (req, res) => {
 });
 
 const loginUser = asyncHandler(async (req, res) => {
-  const { username, email, password } = req.body;
+  const { identifier, password } = req.body;
 
   console.log("Request body data:", req.body);
 
-  if (!username && !email) {
+  if (!identifier) {
     throw new ApiError(400, "Please provide either username or email");
   }
 
   const user = await User.findOne({
-    $or: [{ username }, { email }],
+    $or: [{ username: identifier }, { email: identifier }],
   });
 
   if (!user) throw new ApiError(401, "User not found");
@@ -401,7 +401,7 @@ const acceptDealerRegistration = asyncHandler(async (req, res) => {
 
   const newUser = await User.create({
     username,
-    newPassword,
+    password: newPassword,
     fullName,
     email,
     avatar,
@@ -412,11 +412,11 @@ const acceptDealerRegistration = asyncHandler(async (req, res) => {
   if (!newUser) {
     throw new ApiError(400, "Failed to create new dealer account");
   }
-
+  await request.save();
   const sendEmail = await sendMail({
-    to: user.email,
+    to: email,
     subject: "Welcome to ScrapMan - Dealer Registration Success",
-    text: `Hello ${user.fullName},\n\nWelcome to ScrapMan! Your request to be a dealer in our family has been approved and  your dealer account has been successfully created. Below are your account details:\n\nUsername: ${username}\nPassword: ${randomPassword}\n\nPlease make sure to keep your password safe. If you need any assistance or have any questions, feel free to reach out to our support team.\n\nBest regards,\nThe ScrapMan Team`,
+    text: `Hello ${fullName},\n\nWelcome to ScrapMan! Your request to be a dealer in our family has been approved and  your dealer account has been successfully created. Below are your account details:\n\nUsername: ${username}\nPassword: ${randomPassword}\n\nPlease make sure to keep your password safe. If you need any assistance or have any questions, feel free to reach out to our support team.\n\nBest regards,\nThe ScrapMan Team`,
   });
 
   return res
