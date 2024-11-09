@@ -4,6 +4,9 @@ import { User } from "../models/user.models.js";
 import { uploadonCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import jwt from "jsonwebtoken";
+import { sendMail } from "../utils/mail.js";
+import crypto from "crypto";
+import { DealerRequest } from "../models/dealerRequest.model.js";
 
 const generateAccessAndRefreshToken = async (userId) => {
   try {
@@ -43,12 +46,15 @@ const registerUser = asyncHandler(async (req, res) => {
   ) {
     throw new ApiError(400, "All fields are required");
   }
-  const existedUser = await User.findOne({
-    $or: [{ username }, { email }],
-  });
+  const existedUser = await User.findOne({ username });
 
   if (existedUser) {
-    throw new ApiError(400, "User already exists");
+    throw new ApiError(400, "User with given username already exists");
+  }
+
+  const againcheck = await User.findOne({ email });
+  if (againcheck) {
+    throw new ApiError(400, "User with given email already exists");
   }
 
   const avatarLocalPath = req.files?.avatar[0]?.path;
@@ -80,6 +86,11 @@ const registerUser = asyncHandler(async (req, res) => {
   if (!createdUser) {
     throw new ApiError(500, "Failed to create user");
   }
+  const Sendemail = await sendMail({
+    to: user.email,
+    subject: "Welcome to ScrapMan - Registration Success",
+    text: `Hello ${user.fullName},\n\nWelcome to ScrapMan! Your registration has been successfully completed. We're excited to have you on board and ready to start your journey with us.\n\nYou can now explore features like scrap pickups, view available scrap categories, and much more. Together, we’re making scrap management easier and more sustainable.\n\nIf you have any questions or need assistance, don’t hesitate to reach out to our support team.\n\nBest regards,\nThe ScrapMan Team`,
+  });
 
   return res.status(201).json(
     new ApiResponse(
@@ -127,7 +138,6 @@ const loginUser = asyncHandler(async (req, res) => {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
   };
-
   res
     .status(200)
     .cookie("accessToken", accessToken, options)
@@ -244,6 +254,11 @@ const changeCurrentPassword = asyncHandler(async (req, res) => {
 
   user.password = newPassword;
   await user.save({ validateBeforeSave: false });
+  const Sendemail = await sendMail({
+    to: user.email,
+    subject: "ScrapMan - Password Changed Successfully",
+    text: `Hello ${user.fullName},\n\nYour password has been successfully changed on ScrapMan. If you didn't make this change, please contact our support team immediately.\n\nBest regards,\nThe ScrapMan Team`,
+  });
   return res
     .status(200)
     .json(new ApiResponse(200, {}, "password changed successfully"));
@@ -306,6 +321,125 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, user, "User avatar updated successfully"));
 });
 
+const askDealerRegistration = asyncHandler(async (req, res) => {
+  const { fullName, email, avatar, address, contact } = req.body;
+  if (
+    [fullName, email, avatar, address, contact].some(
+      (filed) => filed?.trim() == ""
+    )
+  ) {
+    throw new ApiError(400, "All fields are required");
+  }
+  const existedUser = await User.findOne({ email });
+  if (existedUser) {
+    throw new ApiError(400, "Dealer with the same email already exists");
+  }
+
+  const avatarLocalPath = req.files?.avatar[0]?.path;
+
+  if (!avatarLocalPath) {
+    throw new ApiError(400, "Please provide an avatar");
+  }
+
+  const uploadonCloudinary = await uploadonCloudinary(avatarLocalPath);
+
+  if (!updateUserAvatar) {
+    throw new ApiError(400, "Error while uploading avatar");
+  }
+
+  const newRequest = await DealerRequest.create({
+    fullName,
+    email,
+    avatar: uploadonCloudinary.url,
+    address,
+    contact,
+    status: "pending",
+  });
+
+  if (!newRequest) {
+    throw new ApiError(400, "Failed to create dealer request");
+  }
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        newRequest,
+        "Dealer registration request submitted successfully"
+      )
+    );
+});
+
+const acceptDealerRegistration = asyncHandler(async (req, res) => {
+  const requestId = req.body;
+
+  if (!requestId) {
+    throw new ApiError(400, "Request ID is required");
+  }
+
+  const request = await DealerRequest.findById(requestId);
+
+  if (!request) {
+    throw new ApiError(404, "Request not found");
+  }
+
+  if (request.status !== "pending") {
+    throw new ApiError(400, "Request is not pending");
+  }
+
+  request.status = "accepted";
+
+  const fullName = request.fullName;
+  const email = request.email;
+  const avatar = request.avatar;
+  const address = request.address;
+  const contact = request.contact;
+
+  const username = `${fullName.toLowerCase().replace(/ /g, "")}${Math.floor(Math.random() * 10000)}`;
+  const newPassword = crypto.randomBytes(8).toString("hex");
+
+  const newUser = await User.create({
+    username,
+    newPassword,
+    fullName,
+    email,
+    avatar,
+    address,
+    role: "dealer",
+  });
+
+  if (!newUser) {
+    throw new ApiError(400, "Failed to create new dealer account");
+  }
+
+  const sendEmail = await sendMail({
+    to: user.email,
+    subject: "Welcome to ScrapMan - Dealer Registration Success",
+    text: `Hello ${user.fullName},\n\nWelcome to ScrapMan! Your request to be a dealer in our family has been approved and  your dealer account has been successfully created. Below are your account details:\n\nUsername: ${username}\nPassword: ${randomPassword}\n\nPlease make sure to keep your password safe. If you need any assistance or have any questions, feel free to reach out to our support team.\n\nBest regards,\nThe ScrapMan Team`,
+  });
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(200, newUser, "Dealer registration accepted successfully")
+    );
+});
+
+const getdealerRequests = asyncHandler(async (req, res) => {
+  const requests = await DealerRequest.find({
+    status: "pending",
+  });
+
+  if (!requests) {
+    throw new ApiError(404, "No pending requests found");
+  }
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, requests, "Pending dealer requests."));
+});
+
 export {
   registerUser,
   loginUser,
@@ -315,4 +449,7 @@ export {
   getCurrentUser,
   updateUserDetails,
   updateUserAvatar,
+  askDealerRegistration,
+  acceptDealerRegistration,
+  getdealerRequests,
 };

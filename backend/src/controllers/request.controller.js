@@ -4,7 +4,7 @@ import { Request } from "../models/request.models.js";
 import { Scrap } from "../models/scrap.models.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { Transaction } from "../models/transaction.models.js";
-
+import { sendMail } from "../utils/mail.js";
 const createRequest = asyncHandler(async (req, res) => {
   const { scraps, pickupLocation, scheduledPickupDate, condition } = req.body;
   const userId = req.user._id;
@@ -56,6 +56,11 @@ const createRequest = asyncHandler(async (req, res) => {
   const transactionId = newTransaction._id;
   newRequest.transactionId = transactionId;
   await newRequest.save();
+  const Sendemail = await sendMail({
+    to: req.user.email,
+    subject: "ScrapMan - Scrap Pickup Request Created Successfully",
+    text: `Hello ${req.user.fullName},\n\nYour scrap pickup request has been successfully created on ScrapMan. Here are the details of your request:\n\nRequest ID: ${newRequest.requestId}\nScheduled Pickup Date: ${newRequest.scheduledPickupDate}\nTotal Amount: ${newRequest.totalAmount}\n\nWe will notify you once your pickup has been scheduled. Thank you for using ScrapMan!\n\nBest regards,\nThe ScrapMan Team`,
+  });
   res
     .status(200)
     .json(
@@ -261,7 +266,11 @@ const cancelRequest = asyncHandler(async (req, res) => {
 
   request.status = "canceled";
   await request.save();
-
+  const Sendemail = await sendMail({
+    to: req.user.email,
+    subject: "ScrapMan - Scrap Pickup Request Canceled",
+    text: `Hello ${req.user.fullName},\n\nWe’ve received your request to cancel the scrap pickup with Request ID: ${request.requestId}. Your request has been successfully canceled.\n\nIf you need further assistance, feel free to contact us.\n\nThank you for using ScrapMan.\n\nBest regards,\nThe ScrapMan Team`,
+  });
   return res
     .status(200)
     .json(new ApiResponse(200, request, "Request canceled successfully"));
