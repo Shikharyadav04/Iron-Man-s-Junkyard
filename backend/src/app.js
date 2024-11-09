@@ -10,7 +10,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: "http://localhost:5174",
     credentials: true,
   })
 );
@@ -30,7 +30,7 @@ import dealerRouter from "../src/routes/dealer.routes.js";
 import paymentRouter from "../src/routes/payment.routes.js";
 import newsRouter from "../src/routes/news.routes.js";
 import tweetRouter from "../src/routes/tweet.routes.js";
-
+import chatRouter from "../src/routes/chat.routes.js";
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/request", requestRouter);
 app.use("/api/v1/admin", adminRouter);
@@ -39,7 +39,7 @@ app.use("/api/v1/dealers", dealerRouter);
 app.use("/api/v1/payment", paymentRouter);
 app.use("/api/v1/news", newsRouter);
 app.use("/api/v1/tweet", tweetRouter);
-
+app.use("/api/v1/chat", chatRouter);
 // Error handling middleware
 const errorHandler = (err, req, res, next) => {
   console.error(err); // Log the full error to see what went wrong

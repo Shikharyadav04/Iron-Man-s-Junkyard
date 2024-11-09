@@ -23,7 +23,7 @@ import getRequest from "./pages/dealer/getRequest";
 import GetAcceptedRequest from "./pages/acceptedRequest/getAcceptedRequest";
 import AcceptedBillPage from "./pages/customer/bill/AcceptedRequests";
 import CompletedBillPage from "./pages/customer/bill/CompletedBillPage";
-
+import ChatList from "./components/ChatList";
 const App = () => {
   const { user } = useAuth();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -38,9 +38,9 @@ const App = () => {
 
   return (
     <div>
-      <Navbar 
-        isSidebarOpen={isSidebarOpen} 
-        toggleSidebar={toggleSidebar} 
+      <Navbar
+        isSidebarOpen={isSidebarOpen}
+        toggleSidebar={toggleSidebar}
         user={user} // Pass user prop to check if logged in
       />
       <Routes>
@@ -83,6 +83,7 @@ const App = () => {
           path="/customer/acceptedRequests"
           element={renderRoleBasedRoute("customer", AcceptedBillPage)} // Adjust role as needed
         />
+
         <Route
           path="/customer/completedRequests"
           element={renderRoleBasedRoute("customer", CompletedBillPage)} // Adjust role as needed
@@ -92,7 +93,7 @@ const App = () => {
           path="/customer/request-creation"
           element={renderRoleBasedRoute("customer", RequestCreation)}
         />
-
+        <Route path="/chats" element={<ChatList userId={user?._id} />} />
         {/* Redirect based on user role when not logged in */}
         <Route
           path="/redirect"
@@ -110,7 +111,7 @@ const App = () => {
             )
           }
         />
-          
+
         <Route path="*" element={<NotFound />} />
       </Routes>
       <End />

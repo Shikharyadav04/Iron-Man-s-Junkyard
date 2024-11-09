@@ -5,6 +5,7 @@ import { Scrap } from "../models/scrap.models.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { Transaction } from "../models/transaction.models.js";
 import { sendMail } from "../utils/mail.js";
+import { Chat } from "../models/chat.models.js";
 const createRequest = asyncHandler(async (req, res) => {
   const { scraps, pickupLocation, scheduledPickupDate, condition } = req.body;
   const userId = req.user._id;
@@ -114,6 +115,16 @@ const acceptRequest = asyncHandler(async (req, res) => {
   if (!request) {
     throw new ApiError(404, "Request not found or already accepted");
   }
+
+  const newChat = await Chat.create({
+    requestId,
+    dealerId,
+    customerId: request.userId,
+    messages: [],
+  });
+  // TODO: create notification
+  io.to(customerId.toString()).emit("chatCreated", { requestId, dealerId });
+  io.to(dealerId.toString()).emit("chatCreated", { requestId, dealerId });
 
   res
     .status(200)

@@ -3,7 +3,7 @@ import { useAuth } from "../context/AuthProvider.jsx";
 import Profile from "../components/Profile.jsx";
 import { useNavigate } from "react-router-dom";
 import { assets } from "@/assets/assets.js";
-import Sidebar from "../components/Sidebar.jsx"; // Import Sidebar component
+import Sidebar from "../components/Sidebar.jsx";
 
 const Customer = () => {
   const { user } = useAuth();
@@ -20,8 +20,10 @@ const Customer = () => {
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
-        sidebarRef.current && !sidebarRef.current.contains(event.target) &&
-        menuIconRef.current && !menuIconRef.current.contains(event.target)
+        sidebarRef.current &&
+        !sidebarRef.current.contains(event.target) &&
+        menuIconRef.current &&
+        !menuIconRef.current.contains(event.target)
       ) {
         setIsSidebarOpen(false); // Close the sidebar if clicked outside
       }
@@ -34,6 +36,11 @@ const Customer = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  // Function to handle "See Chats" button click
+  const handleSeeChatsClick = () => {
+    navigate("/chats"); // Navigate to the Chat page
+  };
 
   return (
     <div className="flex h-screen w-screen bg-gray-100 overflow-hidden">
@@ -60,11 +67,7 @@ const Customer = () => {
                 className="absolute top-4 left-4 z-50 p-2 bg-transparent"
                 ref={menuIconRef} // Reference for the menu icon
               >
-                <img
-                  src={assets.menu_icon}
-                  alt="Menu"
-                  className="w-6 h-6"
-                />
+                <img src={assets.menu_icon} alt="Menu" className="w-6 h-6" />
               </button>
             )}
             <div className="text-center">
@@ -80,6 +83,14 @@ const Customer = () => {
         </div>
         <div className="flex-1 p-6 overflow-y-auto">
           <Profile user={user} />
+
+          {/* See Chats Button */}
+          <button
+            onClick={handleSeeChatsClick}
+            className="mt-6 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+          >
+            See Chats
+          </button>
         </div>
       </div>
     </div>

@@ -29,7 +29,6 @@ export const verifyJWT = asyncHandler(async (req, res, next) => {
     }
 
     req.user = user;
-    console.log("        verify jwt passed     ");
     next();
   } catch (error) {
     // console.error("Error verifying token:", error);
