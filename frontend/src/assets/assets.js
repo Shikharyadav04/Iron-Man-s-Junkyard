@@ -20,9 +20,11 @@ import SERVICE from './SERVICE.png'
 import  e1  from './e1.jpg'
 import  e2  from './e2.jpg'
 import  e3  from './e3.jpg'
+import theme from './theme.jpg'
+import userbanner from './userbanner.png'
 
-
-
+import avatar from './avatar.jpg'
+import password from './password.jpg'
 
 
 
@@ -55,7 +57,11 @@ export const assets = {
     SERVICE,
     e1,
     e2,
-    e3
+    e3,
+    theme,
+    userbanner,
+    avatar,
+    password
     
     
    

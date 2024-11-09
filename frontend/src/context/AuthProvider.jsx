@@ -1,13 +1,37 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
-import Cookies from "js-cookie"; // Import js-cookie for cookie handling
+import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 
 const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
+
+  // Check for user session on mount
+  useEffect(() => {
+    const checkUserSession = async () => {
+      const storedUserId = localStorage.getItem("userId");
+      const accessToken = Cookies.get("accessToken");
+
+      if (storedUserId && accessToken) {
+        try {
+          // Optionally fetch user details from the backend
+          const response = await axios.get(
+            "http://localhost:8000/api/v1/users/refreshToken",
+            { headers: { Authorization: `Bearer ${accessToken}` } }
+          );
+          setUser(response.data.data.user);
+        } catch (error) {
+          console.error("Failed to fetch user data:", error);
+          logout(); // If fetching user data fails, clear the session
+        }
+      }
+    };
+
+    checkUserSession();
+  }, []);
 
   const login = async (credentials) => {
     try {
@@ -21,17 +45,14 @@ const AuthProvider = ({ children }) => {
         const loggedInUser = response.data.data.user;
         setUser(loggedInUser);
 
-        // Save the user's ID in localStorage
+        // Save user data to persist session
         localStorage.setItem("userId", loggedInUser._id);
-
-        // Save the access token in a cookie (expires in 1 day)
         Cookies.set("accessToken", response.data.data.accessToken, {
           expires: 1,
         });
 
-        // Navigate to the user's role-based page
+        // Navigate based on user role
         navigate(`/${loggedInUser.role}`);
-
         return loggedInUser;
       } else {
         throw new Error(response.data.message || "Login failed");
@@ -47,8 +68,8 @@ const AuthProvider = ({ children }) => {
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem("userId"); // Remove user ID from localStorage
-    Cookies.remove("accessToken"); // Remove access token cookie
+    localStorage.removeItem("userId");
+    Cookies.remove("accessToken");
     navigate("/login");
   };
 
@@ -61,20 +82,15 @@ const AuthProvider = ({ children }) => {
 
       if (response.data.success) {
         const userData = response.data.data.user;
-        setUser(userData); // Set the user state
+        setUser(userData);
 
-        // Save the user's ID in localStorage
         localStorage.setItem("userId", userData._id);
-
-        // Save the access token in a cookie (expires in 1 day)
         Cookies.set("accessToken", response.data.data.accessToken, {
           expires: 1,
         });
 
-        // Navigate to the user's role-based page after registration
         navigate(`/${userData.role}`);
-
-        return userData; // Optionally return user data
+        return userData;
       } else {
         throw new Error(response.data.message || "Registration failed");
       }

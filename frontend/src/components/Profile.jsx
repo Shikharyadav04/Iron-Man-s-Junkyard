@@ -3,6 +3,7 @@ import { useAuth } from "../context/AuthProvider.jsx";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Cookies from "js-cookie";
+import { assets } from "@/assets/assets.js";
 
 const Profile = () => {
   const { user } = useAuth();
@@ -17,7 +18,7 @@ const Profile = () => {
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
-
+  const [activeForm, setActiveForm] = useState(null); // Form toggle state
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -27,7 +28,7 @@ const Profile = () => {
           setUserData({
             fullName: user.fullName,
             email: user.email,
-            avatar: user.avatar || "/default-avatar.png", // Use default avatar if none exists
+            avatar: user.avatar || "/default-avatar.png",
           });
         } else {
           throw new Error("User not found");
@@ -131,78 +132,124 @@ const Profile = () => {
   if (loading) return <div>Loading user data...</div>;
 
   return (
-    <div className="flex flex-col items-center bg-gray-100 p-6 rounded-lg shadow-md max-w-lg mx-auto w-full">
-      <div className="flex items-center space-x-4 mb-6">
-        <img
-          src={userData.avatar}
-          alt="User Avatar"
-          className="w-24 h-24 rounded-full border-2 border-indigo-600"
-        />
-        <div>
-          <h1 className="text-2xl font-semibold">{userData.fullName}</h1>
-          <p className="text-gray-600">{userData.email}</p>
-        </div>
-      </div>
+    <div className="relative flex flex-col items-center bg-gray-100 p-6 rounded-lg shadow-md max-w-3xl mx-auto w-full ">
+      
+      
+      
+      
+
+      
+    
+
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
 
       {successMessage && <div className="text-green-600 mb-4">{successMessage}</div>}
       {error && <div className="text-red-600 mb-4">{error}</div>}
 
-      {/* Update Username */}
-      <form onSubmit={handleUpdateUserDetails} className="space-y-4 w-full">
-        <input
-          type="text"
-          value={userData.fullName}
-          onChange={(e) => setUserData({ ...userData, fullName: e.target.value })}
-          placeholder="Full Name"
-          className="p-2 border rounded w-full"
-        />
-        <button type="submit" className="bg-blue-600 text-white py-2 px-4 rounded w-full">
-          Update Username
-        </button>
-      </form>
+      {/* Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+        {/* Change Password Card */}
+        <div className="bg-white p-4 rounded shadow">
+          <img className='' src={assets.password}/>
+          <button
+            onClick={() => setActiveForm(activeForm === "password" ? null : "password")}
+            className="bg-green-600 text-white py-2 px-4 rounded w-full"
+          >
+            Change Password
+          </button>
+          {activeForm === "password" && (
+            <form onSubmit={handleChangePassword} className="space-y-4 mt-4">
+              <input
+                type="password"
+                value={oldPassword}
+                onChange={(e) => setOldPassword(e.target.value)}
+                placeholder="Old Password"
+                className="p-2 border rounded w-full"
+              />
+              <input
+                type="password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                placeholder="New Password"
+                className="p-2 border rounded w-full"
+              />
+              <button type="submit" className="bg-green-600 text-white py-2 px-4 rounded w-full">
+                Submit
+              </button>
+            </form>
+          )}
+        </div>
 
-      {/* Change Password */}
-      <form onSubmit={handleChangePassword} className="space-y-4 mt-4 w-full">
-        <input
-          type="password"
-          value={oldPassword}
-          onChange={(e) => setOldPassword(e.target.value)}
-          placeholder="Old Password"
-          className="p-2 border rounded w-full"
-        />
-        <input
-          type="password"
-          value={newPassword}
-          onChange={(e) => setNewPassword(e.target.value)}
-          placeholder="New Password"
-          className="p-2 border rounded w-full"
-        />
-        <button type="submit" className="bg-green-600 text-white py-2 px-4 rounded w-full">
-          Change Password
-        </button>
-      </form>
+        {/* Upload Avatar Card */}
+        <div className="bg-white p-4 rounded shadow">
+          <img src={assets.avatar}/>
+          <button
+            onClick={() => setActiveForm(activeForm === "avatar" ? null : "avatar")}
+            className="bg-indigo-600 text-white py-2 px-4 rounded w-full"
+          >
+            Change Avatar
+          </button>
+          {activeForm === "avatar" && (
+            <form onSubmit={handleAvatarUpload} className="space-y-4 mt-4">
+              <input
+                type="file"
+                onChange={(e) => setAvatarFile(e.target.files[0])}
+                className="p-2 border rounded w-full"
+              />
+              <button type="submit" className="bg-indigo-600 text-white py-2 px-4 rounded w-full">
+                Upload
+              </button>
+            </form>
+          )}
+        </div>
 
-      {/* Avatar Upload */}
-      <form onSubmit={handleAvatarUpload} className="space-y-4 mt-4 w-full">
-        <input
-          type="file"
-          onChange={(e) => setAvatarFile(e.target.files[0])}
-          className="p-2 border rounded w-full"
-        />
-        <button type="submit" className="bg-indigo-600 text-white py-2 px-4 rounded w-full">
-          Upload Avatar
-        </button>
-      </form>
+        {/* Update Username Card */}
+        <div className="bg-white p-4 rounded shadow">
+          <button
+            onClick={() => setActiveForm(activeForm === "username" ? null : "username")}
+            className="bg-blue-600 text-white py-2 px-4 rounded w-full"
+          >
+            Update Username
+          </button>
+          {activeForm === "username" && (
+            <form onSubmit={handleUpdateUserDetails} className="space-y-4 mt-4">
+              <input
+                type="text"
+                value={userData.fullName}
+                onChange={(e) => setUserData({ ...userData, fullName: e.target.value })}
+                placeholder="Full Name"
+                className="p-2 border rounded w-full"
+              />
+              <button type="submit" className="bg-blue-600 text-white py-2 px-4 rounded w-full">
+                Update
+              </button>
+            </form>
+          )}
+        </div>
 
-      {/* Button to Create New Request */}
-      {user?.role === "customer" && ( // Fixed condition to check if the role is "customer"
-        <button
-          onClick={() => navigate("/customer/request-creation")}
-          className="py-2 px-4 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition duration-200 w-full mt-4"
-        >
-          Create New Request
-        </button>
-      )}
+        {/* Create Scrap Request Card */}
+        {user?.role === "customer" && (
+          <div className="bg-white p-4 rounded shadow">
+            <button
+              onClick={() => navigate("/customer/request-creation")}
+              className="py-2 px-4 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition duration-200 w-full"
+            >
+              Create Scrap Request
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

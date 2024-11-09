@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthProvider";
 import { useNavigate } from "react-router-dom";
 import Loader from "../components/Loader"; // Import the Loader component
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Login = () => {
   const { user, login } = useAuth();
@@ -15,6 +17,7 @@ const Login = () => {
   useEffect(() => {
     if (user) {
       navigate(`/${user.role}`); // Redirect based on user role
+      toast.success(`Welcome back, ${user.role}!`); // Success toast on successful login
     }
   }, [user, navigate]);
 
@@ -29,16 +32,17 @@ const Login = () => {
 
     try {
       await login(credentials); // Call the login function
+      toast.success("Login successful!");
     } catch (error) {
       console.error("Error logging in:", error);
-      alert(error.message || "Login failed. Please try again.");
+      toast.error(error.message || "Login failed. Please try again.");
     } finally {
       setLoading(false); // Set loading to false after the attempt
     }
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-[#F2FBF6]">
+    <div className="bg-[url('https://i.pinimg.com/564x/80/d9/c0/80d9c0b74a6402241de02b16fc9df20c.jpg')] bg-cover backdrop-blur-xl flex justify-center items-center min-h-screen">
       <form
         onSubmit={handleSubmit}
         className="w-full max-w-md p-6 bg-white rounded-lg shadow-lg space-y-4"
@@ -76,6 +80,7 @@ const Login = () => {
           </>
         )}
       </form>
+      <ToastContainer />
     </div>
   );
 };

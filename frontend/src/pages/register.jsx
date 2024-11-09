@@ -56,7 +56,7 @@ const Register = () => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-[#F2FBF6]">
+    <div className="bg-[url('https://i.pinimg.com/564x/80/d9/c0/80d9c0b74a6402241de02b16fc9df20c.jpg')] bg-cover backdrop-blur-xl flex justify-center items-center min-h-screen bg-[#F2FBF6]">
       <form
         onSubmit={handleSubmit}
         className="w-full max-w-md p-6 bg-white rounded-lg shadow-lg space-y-4"

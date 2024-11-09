@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const categorySubcategoryMap = {
   Metals: ["Aluminum", "Copper", "Steel", "Brass"],
@@ -15,7 +17,6 @@ function RequestCreation() {
   const [pickupLocation, setPickupLocation] = useState("");
   const [scheduledPickupDate, setScheduledPickupDate] = useState("");
   const [condition, setCondition] = useState("");
-  const [message, setMessage] = useState("");
   const [summary, setSummary] = useState(null);
 
   const navigate = useNavigate();
@@ -39,7 +40,7 @@ function RequestCreation() {
     e.preventDefault();
 
     if (scraps.some((scrap) => scrap.quantity <= 0)) {
-      setMessage("Quantity must be greater than 0 for all scraps.");
+      toast.error("Quantity must be greater than 0 for all scraps.");
       return;
     }
 
@@ -52,13 +53,13 @@ function RequestCreation() {
 
       if (response.data.success) {
         setSummary(response.data.request);
-        setMessage("Request created successfully.");
+        toast.success("Request created successfully.");
       } else {
-        setMessage(response.data.message);
+        toast.error(response.data.message);
       }
     } catch (error) {
       console.error("Error creating request:", error);
-      setMessage("Error creating request. Please try again.");
+      toast.error("Error creating request. Please try again.");
     }
   };
 
@@ -168,15 +169,6 @@ function RequestCreation() {
             Create Request
           </button>
         </form>
-        {message && (
-          <div
-            className={`mt-4 p-2 rounded-md text-center ${
-              message.includes("Error") ? "bg-red-100 text-red-600" : "bg-green-100 text-green-600"
-            }`}
-          >
-            {message}
-          </div>
-        )}
         {summary && (
           <div className="mt-6">
             <h3 className="text-lg font-semibold">Request Summary</h3>
@@ -191,6 +183,7 @@ function RequestCreation() {
           </div>
         )}
       </div>
+      <ToastContainer />
     </div>
   );
 }

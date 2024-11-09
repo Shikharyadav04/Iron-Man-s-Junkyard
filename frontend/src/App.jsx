@@ -1,6 +1,5 @@
 import "./index.css"; // or './App.css' if that's where Tailwind is imported
-
-import React from "react";
+import React, { useState } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useAuth } from "./context/AuthProvider"; // Ensure this path is correct
 import Navbar from "./components/Navbar"; // Ensure you have this component
@@ -8,7 +7,7 @@ import Home from "./pages/Home"; // Update to the correct path
 import About from "./pages/About"; // Update to the correct path
 import Buy from "./pages/Buy"; // Update to the correct path
 import Login from "./pages/Login"; // Update to the correct path
-import Register from "./pages/Register"; // Update to the correct path
+import Register from "./pages/register"; // Update to the correct path
 import Feedback from "./pages/Feedback"; // Update to the correct path
 import Admin from "./pages/Admin"; // Update to the correct path
 import Customer from "./pages/Customer"; // Update to the correct path
@@ -27,6 +26,10 @@ import CompletedBillPage from "./pages/customer/bill/CompletedBillPage";
 
 const App = () => {
   const { user } = useAuth();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  // Function to toggle the sidebar
+  const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
   // Function to render role-based routes
   const renderRoleBasedRoute = (role, Component) => {
@@ -35,7 +38,11 @@ const App = () => {
 
   return (
     <div>
-      <Navbar />
+      <Navbar 
+        isSidebarOpen={isSidebarOpen} 
+        toggleSidebar={toggleSidebar} 
+        user={user} // Pass user prop to check if logged in
+      />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
@@ -103,11 +110,10 @@ const App = () => {
             )
           }
         />
-
+          
         <Route path="*" element={<NotFound />} />
       </Routes>
       <End />
-      
     </div>
   );
 };

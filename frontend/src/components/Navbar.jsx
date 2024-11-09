@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { assets } from '../assets/assets';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from "../context/AuthProvider";
 import Logout from './Logout';
 
@@ -8,6 +8,7 @@ const Navbar = () => {
   const { user } = useAuth();
   const [visible, setVisible] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const navigate = useNavigate(); // To navigate programmatically
 
   useEffect(() => {
     const handleScroll = () => {
@@ -19,16 +20,45 @@ const Navbar = () => {
     };
   }, []);
 
+  const handleHomeClick = () => {
+    // Redirect user to their specific role's page
+    if (user) {
+      switch (user.role) {
+        case 'admin':
+          navigate('/admin');
+          break;
+        case 'customer':
+          navigate('/customer');
+          break;
+        case 'dealer':
+          navigate('/dealer');
+          break;
+        default:
+          navigate('/');
+          break;
+      }
+    } else {
+      navigate('/');
+    }
+  };
+
   return (
     <div className='flex items-center justify-evenly py-1 font-medium sticky top-0 w-full z-50 transition-shadow shadow-lg bg-gray-800 text-white'>
       <Link to='/'>
-         <h1 className='h-5px w-6px bold py-5'>SCRAPMAN</h1> 
+        <h1 className='h-5px w-6px bold py-5'>SCRAPMAN</h1>
       </Link>
 
       <ul className='hidden sm:flex gap-5 text-sm'>
-        <NavLink to='/' className='flex flex-col items-center gap-1'>
-          <p>Home</p>
-        </NavLink>
+        {/* Dynamically render Home or user role page */}
+        <li className='flex flex-col items-center gap-1'>
+          <p onClick={handleHomeClick} className="cursor-pointer">
+            {user ? 
+              (user.role === 'admin' ? 'Admin' : 
+              user.role === 'customer' ? 'Customer' : 
+              user.role === 'dealer' ? 'Dealer' : 'Home') 
+              : 'Home'}
+          </p>
+        </li>
         <NavLink to='/about' className='flex flex-col items-center gap-1'>
           <p>About</p>
         </NavLink>
@@ -68,26 +98,6 @@ const Navbar = () => {
                 </div>
               </div>
             </>
-          )}
-
-          {user && (
-            <div className="px-6 py-2 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-600 transition duration-200 ease-in-out transform hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
-              {user.role === "admin" && (
-                <NavLink to='/admin'>
-                  <p className='cursor-pointer hover:text-black'>Admin</p>
-                </NavLink>
-              )}
-              {user.role === "customer" && (
-                <NavLink to='/customer'>
-                  <p className='cursor-pointer hover:text-black'>Customer</p>
-                </NavLink>
-              )}
-              {user.role === "dealer" && (
-                <NavLink to='/dealer'>
-                  <p className='cursor-pointer hover:text-black'>Dealer</p>
-                </NavLink>
-              )}
-            </div>
           )}
         </div>
 
