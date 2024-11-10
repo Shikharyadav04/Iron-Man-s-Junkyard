@@ -1,5 +1,5 @@
 import React from "react";
-import { useAuth } from "../context/AuthProvider.jsx";
+import { useAuth } from "@/context/AuthProvider.jsx";
 import Profile from "../components/Profile.jsx";
 import { useNavigate } from "react-router-dom";
 
@@ -26,7 +26,7 @@ const Sidebar = ({ onNavigate }) => {
         View Accepted Requests
       </button>
       <button
-        onClick={() => onNavigate("/dealerChats")}
+        onClick={() => onNavigate("/chats")}
         className="block w-full text-left py-2 px-4 rounded hover:bg-gray-700"
       >
         Chat

@@ -1,13 +1,15 @@
 import { Router } from "express";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 import {
-  getCustomerChats,
-  getDealerChats,
+  sendMessage,
+  getChatMessages,
+  getChatRooms,
 } from "../controllers/chat.controller.js";
 
 const router = Router();
 
-router.route("/get-chats-for-dealer").post(verifyJWT, getDealerChats);
-router.route("/get-chats-for-customer").post(verifyJWT, getCustomerChats);
+router.route("/rooms").get(verifyJWT, getChatRooms);
+router.route("/:chatId/messages").get(verifyJWT, getChatMessages);
+router.route("/:chatId/message").post(verifyJWT, sendMessage);
 
 export default router;

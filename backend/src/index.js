@@ -18,6 +18,7 @@ connectDB()
       cors: {
         origin: "http://localhost:5174",
         credentials: true,
+        methods: ["GET", "POST"],
       },
     });
 

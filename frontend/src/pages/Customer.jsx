@@ -9,14 +9,13 @@ const Customer = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const sidebarRef = useRef(null); // Reference for the sidebar
-  const menuIconRef = useRef(null); // Reference for the menu icon
+  const sidebarRef = useRef(null);
+  const menuIconRef = useRef(null);
 
   const toggleSidebar = (state) => {
-    setIsSidebarOpen(state); // Toggle sidebar visibility
+    setIsSidebarOpen(state);
   };
 
-  // Close sidebar if clicked outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
@@ -25,33 +24,29 @@ const Customer = () => {
         menuIconRef.current &&
         !menuIconRef.current.contains(event.target)
       ) {
-        setIsSidebarOpen(false); // Close the sidebar if clicked outside
+        setIsSidebarOpen(false);
       }
     };
 
     document.addEventListener("mousedown", handleClickOutside);
 
-    // Cleanup event listener
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
-  // Function to handle "See Chats" button click
-  
-  
-  
+  const handleSeeChats = () => {
+    navigate("/customer/chats");
+  };
 
   return (
     <div className="flex h-screen w-screen bg-gray-100 overflow-hidden">
-      {/* Sidebar Component */}
       <Sidebar
         isSidebarOpen={isSidebarOpen}
         toggleSidebar={toggleSidebar}
-        sidebarRef={sidebarRef} // Pass ref to Sidebar
+        sidebarRef={sidebarRef}
       />
 
-      {/* Main content */}
       <div className="flex flex-col flex-1 overflow-hidden">
         <div className="relative h-40">
           <img
@@ -60,12 +55,11 @@ const Customer = () => {
             className="object-cover w-full h-full"
           />
           <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 text-white">
-            {/* Menu icon at the top-left, hide when sidebar is open */}
             {!isSidebarOpen && (
               <button
-                onClick={() => toggleSidebar(true)} // Open sidebar
+                onClick={() => toggleSidebar(true)}
                 className="absolute top-4 left-4 z-50 p-2 bg-transparent"
-                ref={menuIconRef} // Reference for the menu icon
+                ref={menuIconRef}
               >
                 <img src={assets.menu_icon} alt="Menu" className="w-6 h-6" />
               </button>
@@ -85,16 +79,13 @@ const Customer = () => {
         <div className="flex flex-col items-center py-10 px-6">
           <Profile user={user} />
 
-          {/* See Chats Button Section */}
-
-
-
-
-
-
-
-
-
+          {/* See Chats Button */}
+          <button
+            onClick={handleSeeChats}
+            className="mt-6 bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-all"
+          >
+            See Chats
+          </button>
         </div>
       </div>
     </div>
