@@ -38,12 +38,12 @@ const Customer = () => {
   }, []);
 
   // Function to handle "See Chats" button click
-  const handleSeeChatsClick = () => {
-    navigate("/chats"); // Navigate to the Chat page
-  };
+  
+  
+  
 
   return (
-    <div className="flex h-screen w-screen bg-gray-100 overflow-hidden">
+    <div className="flex h-screen w-screen bg-gray-100 overflow-hidden ">
       {/* Sidebar Component */}
       <Sidebar
         isSidebarOpen={isSidebarOpen}
@@ -52,7 +52,7 @@ const Customer = () => {
       />
 
       {/* Main content */}
-      <div className="flex flex-col flex-1 overflow-hidden">
+      <div className="flex flex-col flex-1 overflow-hidden ">
         <div className="relative h-40">
           <img
             src={assets.userbanner}
@@ -84,13 +84,13 @@ const Customer = () => {
         <div className="flex-1 p-6 overflow-y-auto">
           <Profile user={user} />
 
-          {/* See Chats Button */}
-          <button
-            onClick={handleSeeChatsClick}
-            className="mt-6 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-          >
-            See Chats
-          </button>
+          
+          
+          
+          
+          
+          
+          
         </div>
       </div>
     </div>

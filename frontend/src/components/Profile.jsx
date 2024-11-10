@@ -128,6 +128,9 @@ const Profile = () => {
       );
     }
   };
+  const handleSeeChatsClick = () => {
+    navigate("/chats"); // Navigate to the Chat page
+  };
 
   if (loading) return <div>Loading user data...</div>;
 
@@ -158,7 +161,7 @@ const Profile = () => {
       {error && <div className="text-red-600 mb-4">{error}</div>}
 
       {/* Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-4 w-full">
         {/* Change Password Card */}
         <div className="bg-white p-4 rounded shadow">
           <img className='' src={assets.password}/>
@@ -249,6 +252,18 @@ const Profile = () => {
             </button>
           </div>
         )}
+        <div className="flex-1 p-6 overflow-y-auto">
+         
+         
+          <button
+            onClick={handleSeeChatsClick}
+            className="mt-6 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+          >
+            See Chats
+          </button>
+        </div>
+
+        
       </div>
     </div>
   );

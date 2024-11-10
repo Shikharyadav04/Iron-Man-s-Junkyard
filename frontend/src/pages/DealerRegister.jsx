@@ -45,7 +45,7 @@ const DealerPage = () => {
       await registerDealer(data);
       setSuccess("Registration successful!");
       setError(null);
-      navigate("/sucess");
+      navigate("/success");
     } catch (err) {
       setError(err.message || "Something went wrong");
       setSuccess(null);
