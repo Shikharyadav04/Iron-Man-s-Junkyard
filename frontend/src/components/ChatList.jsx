@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import io from "socket.io-client";
 import ChatWindow from "./ChatWindow";
+
+const socket = io("http://localhost:8000");
 
 const ChatList = () => {
   const [chats, setChats] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedChat, setSelectedChat] = useState(
-    JSON.parse(localStorage.getItem("selectedChat")) || null // Load from localStorage
+    JSON.parse(localStorage.getItem("selectedChat")) || null
   );
 
   const fetchChats = async () => {
@@ -17,7 +20,6 @@ const ChatList = () => {
         {},
         { withCredentials: true }
       );
-
       const chatsData = response.data.data.chats;
       setChats(Array.isArray(chatsData) ? chatsData : [chatsData]);
     } catch (error) {
@@ -29,16 +31,32 @@ const ChatList = () => {
 
   useEffect(() => {
     fetchChats();
+
+    // Listen for new messages
+    socket.on("receiveMessage", (message) => {
+      // Update chats state to reflect the new message
+      setChats((prevChats) =>
+        prevChats.map((chat) =>
+          chat._id === message.chatId
+            ? { ...chat, messages: [...chat.messages, message] }
+            : chat
+        )
+      );
+    });
+
+    return () => {
+      socket.off("receiveMessage");
+    };
   }, []);
 
   const handleChatClick = (chat) => {
     setSelectedChat(chat);
-    localStorage.setItem("selectedChat", JSON.stringify(chat)); // Save selected chat to localStorage
+    localStorage.setItem("selectedChat", JSON.stringify(chat));
   };
 
   const handleBackToList = () => {
     setSelectedChat(null);
-    localStorage.removeItem("selectedChat"); // Remove from localStorage
+    localStorage.removeItem("selectedChat");
   };
 
   return (

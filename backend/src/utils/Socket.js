@@ -1,5 +1,6 @@
-let io; // Declare io globally
 import { Chat } from "../models/chat.models.js";
+
+let io; // Declare io globally
 
 export const setSocket = (socketIoInstance) => {
   io = socketIoInstance; // Set the io instance globally
@@ -22,6 +23,11 @@ export const setSocket = (socketIoInstance) => {
         content, // Ensure 'content' is set correctly
         timestamp: new Date(),
       };
+
+      // Ensure the content array exists
+      if (!chat.content) {
+        chat.content = []; // Create content array if it doesn't exist
+      }
 
       chat.content.push(newMessage); // Push to "content" array in schema
 

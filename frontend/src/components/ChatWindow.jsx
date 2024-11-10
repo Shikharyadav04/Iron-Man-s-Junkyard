@@ -4,13 +4,14 @@ import io from "socket.io-client";
 const socket = io("http://localhost:8000");
 
 const ChatWindow = ({ chat, onBack }) => {
-  const [messages, setMessages] = useState(chat?.content || []); // Default to empty array if chat.content is undefined
+  const [messages, setMessages] = useState(chat?.messages || []);
   const [newMessage, setNewMessage] = useState("");
-  console.log(chat);
+
   useEffect(() => {
     if (chat?.requestId) {
       socket.emit("joinRoom", chat.requestId);
 
+      // Listen for incoming messages
       socket.on("receiveMessage", (message) => {
         setMessages((prevMessages) => [...prevMessages, message]);
       });
@@ -20,21 +21,23 @@ const ChatWindow = ({ chat, onBack }) => {
         socket.emit("leaveRoom", chat.requestId);
       };
     }
-  }, [chat?.requestId, chat]); // Ensure chat object is available
+  }, [chat?.requestId]);
 
   const handleSendMessage = () => {
     if (newMessage.trim()) {
       const messageData = {
+        chatId: chat._id,
         roomId: chat.requestId,
         senderId: socket.id,
         content: newMessage,
       };
 
-      // Optimistically update messages state
+      // Optimistically add the message to the chat
       setMessages((prevMessages) => [...prevMessages, messageData]);
       setNewMessage("");
 
-      socket.emit("sendMessage", messageData); // Send to server
+      // Emit the message to the server to broadcast to the other user
+      socket.emit("sendMessage", messageData);
     }
   };
 
@@ -46,19 +49,18 @@ const ChatWindow = ({ chat, onBack }) => {
 
       <div className="bg-white p-6 rounded-lg shadow-lg flex flex-col h-full">
         <div className="flex-1 overflow-y-auto mb-6">
-          {Array.isArray(messages) &&
-            messages.map((msg, index) => (
-              <div
-                key={index}
-                className={`p-4 mb-3 rounded-lg ${
-                  msg.senderId === socket.id
-                    ? "bg-blue-500 text-white self-end"
-                    : "bg-gray-200 text-black self-start"
-                }`}
-              >
-                <p>{msg.content}</p>
-              </div>
-            ))}
+          {messages.map((msg, index) => (
+            <div
+              key={index}
+              className={`p-4 mb-3 rounded-lg ${
+                msg.senderId === socket.id
+                  ? "bg-blue-500 text-white self-end"
+                  : "bg-gray-200 text-black self-start"
+              }`}
+            >
+              <p>{msg.content}</p>
+            </div>
+          ))}
         </div>
 
         <div className="flex">
