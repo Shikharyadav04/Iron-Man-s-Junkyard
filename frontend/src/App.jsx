@@ -25,6 +25,8 @@ import AcceptedBillPage from "./pages/customer/bill/AcceptedRequests";
 import CompletedBillPage from "./pages/customer/bill/CompletedBillPage";
 import ChatList from "./components/ChatList";
 import DealerChatList from "./components/DealerChatList";
+import DealerRegister from "./pages/DealerRegister";
+import Success from "./pages/Success";
 const App = () => {
   const { user } = useAuth();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -50,6 +52,8 @@ const App = () => {
         <Route path="/buy" element={<Buy />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/dealerreg" element={<DealerRegister />} />
+        <Route path="/success" element={<Success />} />
         <Route path="/feedback" element={<Feedback />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/news" element={<News />} />

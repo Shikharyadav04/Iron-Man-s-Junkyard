@@ -98,8 +98,30 @@ const AuthProvider = ({ children }) => {
     }
   };
 
+  const registerDealer = async (data) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:8000/api/v1/users/get-dealer-request",
+        data,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+  
+      if (response.data.success) {
+        return response.data; // Return the API response data
+      } else {
+        throw new Error(response.data.message || "Registration failed");
+      }
+    } catch (error) {
+      throw new Error(error.response?.data?.message || "Registration failed");
+    }
+  };
+  
   return (
-    <AuthContext.Provider value={{ user, login, logout, register }}>
+    <AuthContext.Provider value={{ user, login, logout, register,registerDealer }}>
       {children}
     </AuthContext.Provider>
   );

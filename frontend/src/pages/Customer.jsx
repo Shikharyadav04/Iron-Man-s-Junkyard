@@ -38,9 +38,9 @@ const Customer = () => {
   }, []);
 
   // Function to handle "See Chats" button click
-  const handleSeeChatsClick = () => {
-    navigate("/chats"); // Navigate to the Chat page
-  };
+  
+  
+  
 
   return (
     <div className="flex h-screen w-screen bg-gray-100 overflow-hidden">
@@ -74,23 +74,27 @@ const Customer = () => {
               <img
                 src={user?.avatar || "/default-avatar.png"}
                 alt="User Avatar"
-                className="w-16 h-16 rounded-full mx-auto mb-2 border-2 border-white"
+                className="w-24 h-24 rounded-full mx-auto mb-2 border-4 border-white"
               />
-              <h1 className="text-xl font-semibold">{user?.fullName}</h1>
-              <p className="text-sm">{user?.email}</p>
+              <h1 className="text-2xl font-semibold">{user?.fullName}</h1>
+              <p className="text-md">{user?.email}</p>
             </div>
           </div>
         </div>
-        <div className="flex-1 p-6 overflow-y-auto">
+
+        <div className="flex flex-col items-center py-10 px-6">
           <Profile user={user} />
 
-          {/* See Chats Button */}
-          <button
-            onClick={handleSeeChatsClick}
-            className="mt-6 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-          >
-            See Chats
-          </button>
+          {/* See Chats Button Section */}
+
+
+
+
+
+
+
+
+
         </div>
       </div>
     </div>

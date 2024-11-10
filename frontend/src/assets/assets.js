@@ -22,9 +22,10 @@ import  e2  from './e2.jpg'
 import  e3  from './e3.jpg'
 import theme from './theme.jpg'
 import userbanner from './userbanner.png'
-
+import notice from './notice.jpg'
 import avatar from './avatar.jpg'
 import password from './password.jpg'
+import chat from './chat.jpg'
 
 
 
@@ -61,7 +62,9 @@ export const assets = {
     theme,
     userbanner,
     avatar,
-    password
+    password,
+    chat,
+    notice
     
     
    
