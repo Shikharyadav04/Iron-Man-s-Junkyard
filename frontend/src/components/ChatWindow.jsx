@@ -1,22 +1,22 @@
 import React, { useEffect, useState } from "react";
 import io from "socket.io-client";
 
-const socket = io("http://localhost:8000"); // Update with your server URL
+const socket = io("http://localhost:8000");
 
-const ChatWindow = ({ chat, onBack, role }) => {
+const ChatWindow = ({ chat, onBack }) => {
   const [messages, setMessages] = useState(chat.messages);
   const [newMessage, setNewMessage] = useState("");
 
   useEffect(() => {
-    socket.emit("joinRoom", chat.requestId); // Join chat room by requestId
+    socket.emit("joinRoom", chat.requestId);
 
     socket.on("receiveMessage", (message) => {
-      setMessages((prevMessages) => [...prevMessages, message]); // Append new message from server
+      setMessages((prevMessages) => [...prevMessages, message]);
     });
 
     return () => {
       socket.off("receiveMessage");
-      socket.emit("leaveRoom", chat.requestId); // Leave room on component unmount
+      socket.emit("leaveRoom", chat.requestId);
     };
   }, [chat.requestId]);
 
@@ -24,15 +24,15 @@ const ChatWindow = ({ chat, onBack, role }) => {
     if (newMessage.trim()) {
       const messageData = {
         roomId: chat.requestId,
-        senderId: socket.id, // Use socket ID for sender
-        message: newMessage,
+        senderId: socket.id,
+        content: newMessage,
       };
 
-      // Emit message to the server
-      socket.emit("sendMessage", messageData);
+      // Optimistically update messages state
+      setMessages((prevMessages) => [...prevMessages, messageData]);
+      setNewMessage("");
 
-      // Do not immediately update local state here
-      setNewMessage(""); // Clear input field
+      socket.emit("sendMessage", messageData); // Send to server
     }
   };
 
