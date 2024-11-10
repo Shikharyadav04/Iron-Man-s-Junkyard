@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthProvider.jsx";
 
 const categorySubcategoryMap = {
@@ -15,7 +15,7 @@ const categorySubcategoryMap = {
   Paper: ["Office Paper", "Cardboard Boxes", "Newspaper"],
 };
 
-const ScrapManagement = () => {
+const Admin = () => {
   const [scrapData, setScrapData] = useState({
     scrapCategory: "",
     scrapSubCategory: "",
@@ -32,6 +32,33 @@ const ScrapManagement = () => {
   const [showChangePriceForm, setShowChangePriceForm] = useState(false);
 
   const [subCategories, setSubCategories] = useState([]);
+  const [stats, setStats] = useState({
+    totalScraps: 0,
+    totalRequestsMade: 0,
+    totalRequestsCancelled: 0,
+    totalRequestsCompleted: 0,
+    totalPriceChanges: 0,
+    activeRequests: 0,
+  });
+
+  // Simulating data fetching
+  useEffect(() => {
+    // You can replace this with actual API calls to get stats from your backend
+    const fetchStats = async () => {
+      // Example stats data
+      const response = {
+        totalScraps: 50,
+        totalRequestsMade: 200,
+        totalRequestsCancelled: 50,
+        totalRequestsCompleted: 150,
+        totalPriceChanges: 10,
+        activeRequests: 20,
+      };
+      setStats(response);
+    };
+
+    fetchStats();
+  }, []);
 
   const handleAddScrapClick = () => {
     setShowAddScrapForm(!showAddScrapForm);
@@ -98,7 +125,27 @@ const ScrapManagement = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between">
+      {/* Stats Section */}
+      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div className="bg-indigo-600 text-white p-6 rounded-xl shadow-lg flex flex-col items-center justify-center">
+          <h3 className="text-xl font-semibold">Total Scraps</h3>
+          <p className="text-3xl">{stats.totalScraps}</p>
+        </div>
+        <div className="bg-yellow-600 text-white p-6 rounded-xl shadow-lg flex flex-col items-center justify-center">
+          <h3 className="text-xl font-semibold">Total Requests Made</h3>
+          <p className="text-3xl">{stats.totalRequestsMade}</p>
+        </div>
+        <div className="bg-red-600 text-white p-6 rounded-xl shadow-lg flex flex-col items-center justify-center">
+          <h3 className="text-xl font-semibold">Requests Cancelled</h3>
+          <p className="text-3xl">{stats.totalRequestsCancelled}</p>
+        </div>
+        <div className="bg-green-600 text-white p-6 rounded-xl shadow-lg flex flex-col items-center justify-center">
+          <h3 className="text-xl font-semibold">Requests Completed</h3>
+          <p className="text-3xl">{stats.totalRequestsCompleted}</p>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <button
           onClick={handleAddScrapClick}
           className="py-3 px-8 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 focus:outline-none transform transition-all duration-300 hover:scale-105"
@@ -187,29 +234,30 @@ const ScrapManagement = () => {
             ))}
           </select>
 
-          {priceData.scrapCategory && (
-            <select
-              name="scrapSubCategory"
-              value={priceData.scrapSubCategory}
-              onChange={(e) =>
-                setPriceData({ ...priceData, scrapSubCategory: e.target.value })
-              }
-              required
-              className="p-4 border rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-indigo-600"
-            >
-              <option value="">Select Subcategory</option>
-              {subCategories.map((subCategory) => (
-                <option key={subCategory} value={subCategory}>
-                  {subCategory}
-                </option>
-              ))}
-            </select>
-          )}
+          <select
+            name="scrapSubCategory"
+            value={priceData.scrapSubCategory}
+            onChange={(e) =>
+              setPriceData({
+                ...priceData,
+                scrapSubCategory: e.target.value,
+              })
+            }
+            required
+            className="p-4 border rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-indigo-600"
+          >
+            <option value="">Select Subcategory</option>
+            {subCategories.map((subCategory) => (
+              <option key={subCategory} value={subCategory}>
+                {subCategory}
+              </option>
+            ))}
+          </select>
 
           <input
             type="number"
             name="newPrice"
-            placeholder="New Price"
+            placeholder="New Price Per Unit"
             value={priceData.newPrice}
             onChange={(e) =>
               setPriceData({ ...priceData, newPrice: e.target.value })
@@ -222,18 +270,15 @@ const ScrapManagement = () => {
             type="submit"
             className="py-3 px-8 bg-indigo-600 text-white font-semibold rounded-lg w-full hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition duration-200"
           >
-            Change Scrap Price
+            Change Price
           </button>
         </form>
       )}
-    </div>
-  );
-};
 
-const Admin = () => {
-  return (
-    <div className="space-y-6">
-      <ScrapManagement />
+      {/* Footer Section */}
+      <footer className="bg-gray-800 text-white text-center py-4 mt-12">
+        <p>&copy; 2024 Iron Man's Junkyard | All Rights Reserved</p>
+      </footer>
     </div>
   );
 };
