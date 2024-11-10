@@ -23,6 +23,8 @@ import getRequest from "./pages/dealer/getRequest";
 import GetAcceptedRequest from "./pages/acceptedRequest/getAcceptedRequest";
 import AcceptedBillPage from "./pages/customer/bill/AcceptedRequests";
 import CompletedBillPage from "./pages/customer/bill/CompletedBillPage";
+import Sucess from "./pages/Sucess";
+import DealerRegister from "./pages/DealerRegister";
 
 const App = () => {
   const { user } = useAuth();
@@ -49,10 +51,12 @@ const App = () => {
         <Route path="/buy" element={<Buy />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/dealerreg" element={<DealerRegister />} />
         <Route path="/feedback" element={<Feedback />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/news" element={<News />} />
         <Route path="/business" element={<Business />} />
+        <Route path="/sucess" element={<Sucess />} />
 
         {/* Role-based routes */}
         <Route path="/admin" element={renderRoleBasedRoute("admin", Admin)} />

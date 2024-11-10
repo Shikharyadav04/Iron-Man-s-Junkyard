@@ -25,6 +25,7 @@ import userbanner from './userbanner.png'
 
 import avatar from './avatar.jpg'
 import password from './password.jpg'
+import notice from './notice.jpg'
 
 
 
@@ -61,7 +62,8 @@ export const assets = {
     theme,
     userbanner,
     avatar,
-    password
+    password,
+    notice
     
     
    

@@ -15,6 +15,7 @@ import {
 import { upload } from "../middlewares/multer.middleware.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 import { adminAuthentication } from "../middlewares/admin.auth.middleware.js";
+import { dealerAuthentication } from "../middlewares/dealer.auth.middleware.js";
 
 const router = Router();
 
@@ -50,6 +51,6 @@ router.route("/dealer-request").post(
 
 router
   .route("/get-dealer-request")
-  .post(adminAuthentication, getdealerRequests);
+  .post( getdealerRequests);
 
 export default router;

@@ -121,7 +121,6 @@ const Register = () => {
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
             >
               <option value="customer">Customer</option>
-              <option value="dealer">Dealer</option>
               <option value="admin">Admin</option>
             </select>
 

@@ -17,7 +17,6 @@ const AuthProvider = ({ children }) => {
 
       if (storedUserId && accessToken) {
         try {
-          // Optionally fetch user details from the backend
           const response = await axios.get(
             "http://localhost:8000/api/v1/users/refreshToken",
             { headers: { Authorization: `Bearer ${accessToken}` } }
@@ -25,7 +24,7 @@ const AuthProvider = ({ children }) => {
           setUser(response.data.data.user);
         } catch (error) {
           console.error("Failed to fetch user data:", error);
-          logout(); // If fetching user data fails, clear the session
+          logout();
         }
       }
     };
@@ -45,13 +44,11 @@ const AuthProvider = ({ children }) => {
         const loggedInUser = response.data.data.user;
         setUser(loggedInUser);
 
-        // Save user data to persist session
         localStorage.setItem("userId", loggedInUser._id);
         Cookies.set("accessToken", response.data.data.accessToken, {
           expires: 1,
         });
 
-        // Navigate based on user role
         navigate(`/${loggedInUser.role}`);
         return loggedInUser;
       } else {
@@ -99,8 +96,74 @@ const AuthProvider = ({ children }) => {
     }
   };
 
+  const registerDealer = async (data) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:8000/api/v1/users/get-dealer-request",
+        data,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+  
+      if (response.data.success) {
+        return response.data; // Return the API response data
+      } else {
+        throw new Error(response.data.message || "Registration failed");
+      }
+    } catch (error) {
+      throw new Error(error.response?.data?.message || "Registration failed");
+    }
+  };
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
   return (
-    <AuthContext.Provider value={{ user, login, logout, register }}>
+    <AuthContext.Provider value={{ user, login, logout, register, registerDealer }}>
       {children}
     </AuthContext.Provider>
   );
@@ -110,4 +173,4 @@ export default AuthProvider;
 
 export const useAuth = () => {
   return useContext(AuthContext);
-};
+}
