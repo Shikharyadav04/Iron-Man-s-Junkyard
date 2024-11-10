@@ -1,5 +1,6 @@
 let io; // Declare io globally
 import { Chat } from "../models/chat.models.js";
+
 export const setSocket = (socketIoInstance) => {
   io = socketIoInstance; // Set the io instance globally
 
@@ -11,22 +12,22 @@ export const setSocket = (socketIoInstance) => {
       console.log(`User joined room ${roomId}`);
     });
 
-    socket.on("sendMessage", async ({ roomId, senderId, message }) => {
+    socket.on("sendMessage", async ({ roomId, senderId, content }) => {
       const chat = await Chat.findOne({ requestId: roomId });
 
       if (!chat) return;
 
       const newMessage = {
         senderId,
-        content: message,
+        content, // Ensure 'content' is set correctly
         timestamp: new Date(),
       };
 
-      chat.messages.push(newMessage);
+      chat.content.push(newMessage); // Push to "content" array in schema
 
       await chat.save();
 
-      io.to(roomId).emit("receiveMessage", newMessage); // Now you can use io
+      io.to(roomId).emit("receiveMessage", newMessage); // Emit to room
     });
 
     socket.on("disconnect", () => {

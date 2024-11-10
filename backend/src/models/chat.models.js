@@ -34,7 +34,7 @@ const chatSchema = new Schema(
       ref: "User",
       required: true,
     },
-    messages: [messageSchema],
+    content: [messageSchema], // Renamed to "content" as per your schema
   },
   { timestamps: true }
 );

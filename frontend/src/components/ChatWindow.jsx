@@ -4,21 +4,23 @@ import io from "socket.io-client";
 const socket = io("http://localhost:8000");
 
 const ChatWindow = ({ chat, onBack }) => {
-  const [messages, setMessages] = useState(chat.messages);
+  const [messages, setMessages] = useState(chat?.content || []); // Default to empty array if chat.content is undefined
   const [newMessage, setNewMessage] = useState("");
-
+  console.log(chat);
   useEffect(() => {
-    socket.emit("joinRoom", chat.requestId);
+    if (chat?.requestId) {
+      socket.emit("joinRoom", chat.requestId);
 
-    socket.on("receiveMessage", (message) => {
-      setMessages((prevMessages) => [...prevMessages, message]);
-    });
+      socket.on("receiveMessage", (message) => {
+        setMessages((prevMessages) => [...prevMessages, message]);
+      });
 
-    return () => {
-      socket.off("receiveMessage");
-      socket.emit("leaveRoom", chat.requestId);
-    };
-  }, [chat.requestId]);
+      return () => {
+        socket.off("receiveMessage");
+        socket.emit("leaveRoom", chat.requestId);
+      };
+    }
+  }, [chat?.requestId, chat]); // Ensure chat object is available
 
   const handleSendMessage = () => {
     if (newMessage.trim()) {
@@ -44,18 +46,19 @@ const ChatWindow = ({ chat, onBack }) => {
 
       <div className="bg-white p-6 rounded-lg shadow-lg flex flex-col h-full">
         <div className="flex-1 overflow-y-auto mb-6">
-          {messages.map((msg, index) => (
-            <div
-              key={index}
-              className={`p-4 mb-3 rounded-lg ${
-                msg.senderId === socket.id
-                  ? "bg-blue-500 text-white self-end"
-                  : "bg-gray-200 text-black self-start"
-              }`}
-            >
-              <p>{msg.content}</p>
-            </div>
-          ))}
+          {Array.isArray(messages) &&
+            messages.map((msg, index) => (
+              <div
+                key={index}
+                className={`p-4 mb-3 rounded-lg ${
+                  msg.senderId === socket.id
+                    ? "bg-blue-500 text-white self-end"
+                    : "bg-gray-200 text-black self-start"
+                }`}
+              >
+                <p>{msg.content}</p>
+              </div>
+            ))}
         </div>
 
         <div className="flex">
