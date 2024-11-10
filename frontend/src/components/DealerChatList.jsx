@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import ChatWindow from "./ChatWindow";
 
-const ChatList = () => {
+const DealerChatList = () => {
   const [chats, setChats] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedChat, setSelectedChat] = useState(null); // State to track the selected chat
@@ -12,7 +12,7 @@ const ChatList = () => {
       setLoading(true);
 
       const response = await axios.post(
-        "http://localhost:8000/api/v1/chat/get-chats-for-customer",
+        "http://localhost:8000/api/v1/chat/get-chats-for-dealer",
         {},
         {
           withCredentials: true,
@@ -98,4 +98,4 @@ const ChatList = () => {
   );
 };
 
-export default ChatList;
+export default DealerChatList;

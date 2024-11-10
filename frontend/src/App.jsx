@@ -24,6 +24,7 @@ import GetAcceptedRequest from "./pages/acceptedRequest/getAcceptedRequest";
 import AcceptedBillPage from "./pages/customer/bill/AcceptedRequests";
 import CompletedBillPage from "./pages/customer/bill/CompletedBillPage";
 import ChatList from "./components/ChatList";
+import DealerChatList from "./components/DealerChatList";
 const App = () => {
   const { user } = useAuth();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -94,6 +95,10 @@ const App = () => {
           element={renderRoleBasedRoute("customer", RequestCreation)}
         />
         <Route path="/chats" element={<ChatList userId={user?._id} />} />
+        <Route
+          path="/dealerChats"
+          element={<DealerChatList userId={user?._id} />}
+        />
         {/* Redirect based on user role when not logged in */}
         <Route
           path="/redirect"

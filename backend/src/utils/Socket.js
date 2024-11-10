@@ -1,6 +1,8 @@
+let io; // Declare io globally
 import { Chat } from "../models/chat.models.js";
+export const setSocket = (socketIoInstance) => {
+  io = socketIoInstance; // Set the io instance globally
 
-export const setSocket = (io) => {
   io.on("connection", (socket) => {
     console.log(`User connected to ${socket.id}`);
 
@@ -24,7 +26,7 @@ export const setSocket = (io) => {
 
       await chat.save();
 
-      io.to(roomId).emit("receiveMessage", newMessage);
+      io.to(roomId).emit("receiveMessage", newMessage); // Now you can use io
     });
 
     socket.on("disconnect", () => {
@@ -32,3 +34,6 @@ export const setSocket = (io) => {
     });
   });
 };
+
+// Create a getter for the io instance
+export const getIo = () => io;
