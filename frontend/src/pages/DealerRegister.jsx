@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useAuth } from "../context/AuthProvider";
 import { useNavigate } from "react-router-dom";
 
-const DealerPage = () => {
+const DealerRegister = () => {
   const { registerDealer } = useAuth();
   const [formData, setFormData] = useState({
     fullName: "",
@@ -126,4 +126,4 @@ const DealerPage = () => {
   );
 };
 
-export default DealerPage;
+export default DealerRegister;

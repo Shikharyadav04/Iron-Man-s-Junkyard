@@ -50,6 +50,6 @@ router.route("/dealer-request").post(
 
 router
   .route("/get-dealer-request")
-  .post(adminAuthentication, getdealerRequests);
+  .post( getdealerRequests);
 
 export default router;

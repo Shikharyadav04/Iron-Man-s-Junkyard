@@ -131,36 +131,20 @@ const Profile = () => {
 
   if (loading) return <div>Loading user data...</div>;
 
+  const handleSeeChatsClick = () => {
+    navigate("/chats"); // Navigate to the Chat page
+  };
+
   return (
-    <div className="relative flex flex-col items-center bg-gray-100 p-6 rounded-lg shadow-md max-w-3xl mx-auto w-full ">
-      
-      
-      
-      
-
-      
-    
-
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
+    <div className="relative flex flex-col items-center bg-gray-100 py-5 shadow-md w-screen ">    
 
       {successMessage && <div className="text-green-600 mb-4">{successMessage}</div>}
       {error && <div className="text-red-600 mb-4">{error}</div>}
 
       {/* Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-4 w-screen h-[80vh]">
         {/* Change Password Card */}
-        <div className="bg-white p-4 rounded shadow">
+        <div className= "p-4 ">
           <img className='' src={assets.password}/>
           <button
             onClick={() => setActiveForm(activeForm === "password" ? null : "password")}
@@ -192,7 +176,7 @@ const Profile = () => {
         </div>
 
         {/* Upload Avatar Card */}
-        <div className="bg-white p-4 rounded shadow">
+        <div className=" p-4 ">
           <img src={assets.avatar}/>
           <button
             onClick={() => setActiveForm(activeForm === "avatar" ? null : "avatar")}
@@ -215,7 +199,7 @@ const Profile = () => {
         </div>
 
         {/* Update Username Card */}
-        <div className="bg-white p-4 rounded shadow">
+        <div className=" p-4 ">
           <button
             onClick={() => setActiveForm(activeForm === "username" ? null : "username")}
             className="bg-blue-600 text-white py-2 px-4 rounded w-full"
@@ -240,7 +224,7 @@ const Profile = () => {
 
         {/* Create Scrap Request Card */}
         {user?.role === "customer" && (
-          <div className="bg-white p-4 rounded shadow">
+          <div className=" p-4 ">
             <button
               onClick={() => navigate("/customer/request-creation")}
               className="py-2 px-4 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition duration-200 w-full"
@@ -249,6 +233,16 @@ const Profile = () => {
             </button>
           </div>
         )}
+
+          <div className="p-4">
+            <img className="" src={assets.chat} alt="Chat Icon" />
+            <button
+              onClick={handleSeeChatsClick}
+              className="py-2 px-4 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition duration-200 w-full"
+            >
+              See Chats
+            </button>
+          </div>
       </div>
     </div>
   );
