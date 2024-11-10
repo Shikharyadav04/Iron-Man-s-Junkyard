@@ -44,7 +44,6 @@ const AuthProvider = ({ children }) => {
       if (response.data.success) {
         const loggedInUser = response.data.data.user;
         setUser(loggedInUser);
-
         // Save user data to persist session
         localStorage.setItem("userId", loggedInUser._id);
         Cookies.set("accessToken", response.data.data.accessToken, {
