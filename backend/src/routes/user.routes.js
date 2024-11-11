@@ -37,17 +37,10 @@ router
   .route("/avatar")
   .patch(verifyJWT, upload.single("avatar"), updateUserAvatar);
 
+router.route("/dealer-request").post(askDealerRegistration);
 
+router.route("/get-dealer-request").get(getdealerRequests);
+router.route("/accept-dealer").post(acceptDealerRegistration);
 
-
-router.route("/dealer-request").post(
-  askDealerRegistration
-);
-
-router
-  .route("/get-dealer-request")
-  .get( getdealerRequests);
-router
-  .route("/accept-dealer")
-  .post( acceptDealerRegistration);
+router.route("/verifyjwt").get(verifyJWT);
 export default router;

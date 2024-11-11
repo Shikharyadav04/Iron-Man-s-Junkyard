@@ -1,30 +1,30 @@
-import { Server } from "socket.io"; // Import the Server from socket.io
+import { Server } from "socket.io";
 
-let io; // Declare io variable globally
+let io;
 
 export const setSocket = (socketIoInstance) => {
-  io = socketIoInstance; // Set the io instance when calling setSocket
+  io = socketIoInstance;
 
   io.on("connection", (socket) => {
-    console.log(`User connected to socket with ID: ${socket.id}`);
+    console.log(`User connected: ${socket.id}`);
 
     socket.on("joinRoom", (roomId) => {
-      console.log(`User ${socket.id} attempting to join room ${roomId}`);
       socket.join(roomId);
-      console.log(`User ${socket.id} successfully joined room ${roomId}`);
+      console.log(`User ${socket.id} joined room ${roomId}`);
     });
 
-    socket.on("sendMessage", async ({ chatId, message, senderId }) => {
-      console.log(
-        `Message received for chatId ${chatId} from sender ${senderId}: ${message}`
-      );
-      io.to(chatId).emit("newMessage", { senderId, message });
+    socket.on("sendMessage", ({ chatId, message, senderId }) => {
+      io.to(chatId).emit("newMessage", {
+        senderId,
+        message,
+        timestamp: new Date(),
+      });
     });
 
     socket.on("disconnect", () => {
-      console.log(`User disconnected with ID: ${socket.id}`);
+      console.log(`User disconnected: ${socket.id}`);
     });
   });
 };
 
-export const getIo = () => io; // Return the io instance when needed
+export const getIo = () => io;
