@@ -4,6 +4,7 @@ import Profile from "../components/Profile.jsx";
 import { useNavigate } from "react-router-dom";
 import { assets } from "@/assets/assets.js";
 import Sidebar from "../components/Sidebar.jsx";
+import NotificationBell from "@/components/NotificationBell.jsx";
 
 const Customer = () => {
   const { user } = useAuth();
@@ -11,6 +12,9 @@ const Customer = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const sidebarRef = useRef(null);
   const menuIconRef = useRef(null);
+
+  // Get userId from local storage
+  const userId = localStorage.getItem("userId");
 
   const toggleSidebar = (state) => {
     setIsSidebarOpen(state);
@@ -73,6 +77,11 @@ const Customer = () => {
               <h1 className="text-2xl font-semibold">{user?.fullName}</h1>
               <p className="text-md">{user?.email}</p>
             </div>
+          </div>
+
+          {/* Notification Bell */}
+          <div className="absolute top-4 right-4">
+            <NotificationBell userId={userId} />
           </div>
         </div>
 

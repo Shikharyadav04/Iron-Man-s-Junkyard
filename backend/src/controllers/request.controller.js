@@ -9,6 +9,7 @@ import { Chat } from "../models/chat.models.js";
 import { getIo } from "../utils/Socket.js";
 import { User } from "../models/user.models.js";
 import mongoose from "mongoose";
+import { Notification } from "../models/notification.models.js";
 const ObjectId = mongoose.Types.ObjectId;
 const createRequest = asyncHandler(async (req, res) => {
   const { scraps, pickupLocation, scheduledPickupDate, condition } = req.body;
@@ -108,8 +109,14 @@ const createRequest = asyncHandler(async (req, res) => {
   const transactionId = newTransaction._id;
   newRequest.transactionId = transactionId;
   await newRequest.save();
-
+  const notification = await Notification.create({
+    userId: userId,
+    message:
+      "Your request has been created for further details check your mail",
+  });
+  const io = getIo();
   // Send an email to the user
+  io.to(userId.toString()).emit("newNotification", notification);
   await sendMail({
     to: req.user.email,
     subject: "ScrapMan - Scrap Pickup Request Created Successfully",
@@ -192,6 +199,10 @@ const acceptRequest = asyncHandler(async (req, res) => {
       },
     ],
   });
+  const notification = await Notification.create({
+    userId: newCustomerId,
+    message: "Your request has been accepted by a dealer!",
+  });
 
   // Emit events to the customer and dealer using socket.io
   const io = getIo(); // Assuming you have a function to get the io instance
@@ -207,6 +218,8 @@ const acceptRequest = asyncHandler(async (req, res) => {
     chatId: newChat._id,
     message: `Hello ${customerUsername}, I ${dealerUsername} have accepted your request.`,
   });
+
+  io.to(customer._id.toString()).emit("newNotification", notification);
 
   res
     .status(200)
