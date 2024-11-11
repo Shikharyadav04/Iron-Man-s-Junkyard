@@ -25,13 +25,10 @@ import AcceptedBillPage from "./pages/customer/bill/AcceptedRequests";
 import CompletedBillPage from "./pages/customer/bill/CompletedBillPage";
 import DealerRegister from "./pages/DealerRegister";
 import Success from "./pages/Success";
-<<<<<<< HEAD
 import DealerRequests from "./pages/DealerRequests";
-=======
 import ChatRoom from "./components/ChatRoom";
 import ChatRooms from "./components/ChatRooms";
 
->>>>>>> a65260f780562e5e95f9a43da80a9cd6c9405954
 const App = () => {
   const { user } = useAuth();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -63,10 +60,7 @@ const App = () => {
         <Route path="/contact" element={<Contact />} />
         <Route path="/news" element={<News />} />
         <Route path="/business" element={<Business />} />
-<<<<<<< HEAD
-        <Route path="//unverified-dealer" element={<DealerRequests />} />
-=======
->>>>>>> a65260f780562e5e95f9a43da80a9cd6c9405954
+        <Route path="/unverified-dealer" element={<DealerRequests />} />
         {/* Role-based routes */}
         <Route path="/admin" element={renderRoleBasedRoute("admin", Admin)} />
         <Route

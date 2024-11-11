@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthProvider.jsx";
-<<<<<<< HEAD
 import { NavLink, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Cookies from "js-cookie";
-=======
->>>>>>> a65260f780562e5e95f9a43da80a9cd6c9405954
 
 const categorySubcategoryMap = {
   Metals: ["Aluminum", "Copper", "Steel", "Brass"],
@@ -240,13 +237,11 @@ const Admin = () => {
             ))}
           </select>
 
-<<<<<<< HEAD
       {/* Scrap Management Component */}
       <ScrapManagement />
       <div className="cursor-pointer">
         <NavLink to='/unverified-dealer'>Verification</NavLink>
       </div>
-=======
           <select
             name="scrapSubCategory"
             value={priceData.scrapSubCategory}
@@ -292,7 +287,6 @@ const Admin = () => {
       <footer className="bg-gray-800 text-white text-center py-4 mt-12">
         <p>&copy; 2024 Iron Man's Junkyard | All Rights Reserved</p>
       </footer>
->>>>>>> a65260f780562e5e95f9a43da80a9cd6c9405954
     </div>
   );
 };
