@@ -4,6 +4,6 @@ import { completePayment } from "../controllers/payment.controller.js";
 
 const router = Router();
 
-router.route("/complete-payment").post(verifyJWT, completePayment);
+router.route("/complete-payment").post( completePayment);
 
 export default router;
