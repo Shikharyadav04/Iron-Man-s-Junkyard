@@ -8,24 +8,6 @@ import { sendMail } from "../utils/mail.js";
 import crypto from "crypto";
 import { DealerRequest } from "../models/dealerRequest.model.js";
 
-const generateAccessAndRefreshToken = async (userId) => {
-  try {
-    const user = await User.findById(userId);
-    const accessToken = await user.generateAccessToken();
-    const refreshToken = await user.generateRefreshToken();
-
-    user.refreshToken = refreshToken;
-    await user.save({ validateBeforeSave: false });
-
-    return { accessToken, refreshToken };
-  } catch (error) {
-    throw new ApiError(
-      500,
-      "something went wrong while generating access token"
-    );
-  }
-};
-
 const registerUser = asyncHandler(async (req, res) => {
   // get data from frontend
   // check is required is empty or not
@@ -79,9 +61,7 @@ const registerUser = asyncHandler(async (req, res) => {
     address,
   });
 
-  const createdUser = await User.findById(user._id).select(
-    "-password -refreshToken"
-  );
+  const createdUser = await User.findById(user._id);
 
   if (!createdUser) {
     throw new ApiError(500, "Failed to create user");
@@ -129,13 +109,21 @@ const loginUser = asyncHandler(async (req, res) => {
 
   if (!isPasswordCorrect) throw new ApiError(401, "Password is incorrect");
 
-  const { accessToken, refreshToken } = await generateAccessAndRefreshToken(
-    user._id
+  const refreshToken = jwt.sign(
+    { _id: user._id },
+    process.env.REFRESH_TOKEN_SECRET,
+    { expiresIn: "7d" }
+  );
+  const accessToken = jwt.sign(
+    { _id: user._id, role: user.role },
+    process.env.ACCESS_TOKEN_SECRET,
+    { expiresIn: "1d" }
   );
 
   console.log("Generated Access Token:", accessToken);
   console.log("Generated Refresh Token:", refreshToken);
-
+  user.refreshToken = refreshToken;
+  await user.save({ validateBeforeSave: false });
   const options = {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
@@ -151,7 +139,8 @@ const loginUser = asyncHandler(async (req, res) => {
           user: {
             ...user.toObject(),
             password: undefined,
-            refreshToken: undefined,
+            refreshToken: refreshToken,
+            accessToken: accessToken,
             role: user.role,
           },
         },
@@ -201,7 +190,8 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
     if (!user) {
       throw new ApiError(401, "Invalid refresh token");
     }
-
+    console.log("incorrect refresh token : ", incomingRefreshToken);
+    console.log("user ReFreshToken : ", user?.refreshToken);
     if (incomingRefreshToken !== user?.refreshToken) {
       throw new ApiError(401, "Refresh token has expired");
     }
@@ -210,10 +200,18 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
       httpOnly: true,
       secure: true,
     };
-
-    const { newAccessToken, newRefreshToken } =
-      await generateAccessAndRefreshToken(user._id);
-
+    const newRefreshToken = jwt.sign(
+      { _id: user._id },
+      process.env.REFRESH_TOKEN_SECRET,
+      { expiresIn: "7d" }
+    );
+    const newAccessToken = jwt.sign(
+      { _id: user._id, role: user.role },
+      process.env.ACCESS_TOKEN_SECRET,
+      { expiresIn: "1d" }
+    );
+    console.log("Generated new Refres Token:    ", newRefreshToken);
+    await user.save({ validateBeforehSave: false });
     return res
       .status(200)
       .cookie("accessToken", newAccessToken, options)
@@ -224,6 +222,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
           {
             accessToken: newAccessToken,
             refreshToken: newRefreshToken,
+            user,
           },
           "Access token refreshed successfully"
         )
@@ -324,11 +323,8 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
 });
 
 const askDealerRegistration = asyncHandler(async (req, res) => {
-  const { fullName, email,  address, contact } = req.body;
-  if (
-    [fullName, email,  address, contact].some((field) => !field)
-    
-  ) {
+  const { fullName, email, address, contact } = req.body;
+  if ([fullName, email, address, contact].some((field) => !field)) {
     throw new ApiError(400, "All fields are required");
   }
   const existedUser = await User.findOne({ email });
@@ -336,22 +332,10 @@ const askDealerRegistration = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Dealer with the same email already exists");
   }
 
-  
-
-  
-  
-  
-
-  
-
-  
-  
-  
-
   const newRequest = await DealerRequest.create({
     fullName,
     email,
-    
+
     address,
     contact,
     status: "pending",
@@ -384,7 +368,7 @@ const acceptDealerRegistration = asyncHandler(async (req, res) => {
   const updatedRequests = [];
   for (let request of requests) {
     request.status = "accepted"; // Update request status to "accepted"
-    
+
     const fullName = request.fullName;
     const email = request.email;
     const address = request.address;
@@ -425,54 +409,6 @@ const acceptDealerRegistration = asyncHandler(async (req, res) => {
   });
 });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 const getdealerRequests = asyncHandler(async (req, res) => {
   const requests = await DealerRequest.find({
     status: "pending",
@@ -500,3 +436,34 @@ export {
   acceptDealerRegistration,
   getdealerRequests,
 };
+
+/*
+
+incorrect refresh token :  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzIwOWRlMTM1ODQxM2I1YWJmMDJiMzciLCJpYXQiOjE3MzEzNTQyMzgsImV4cCI6MTczMjIxODIzOH0.39z8U1St_9W4SoLIrTftM98MW9VwMTlpb57pqqPMHRI
+user ReFreshToken :  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzIwOWRlMTM1ODQxM2I1YWJmMDJiMzciLCJpYXQiOjE3MzEzNTQyNDIsImV4cCI6MTczMjIxODI0Mn0.dkXetrE_Dbn0eYVtLu2yUN_EGUPgOKMUlkrrY5RkvEI
+*/
+
+/*
+incorrect refresh token :  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzIwOWRlMTM1ODQxM2I1YWJmMDJiMzciLCJpYXQiOjE3MzEzNTQ1MDcsImV4cCI6MTczMjIxODUwN30.3EnPwgm1_U2X709d4hZl5UFZ3PkyC5CWpSsXdE5YkTo
+user ReFreshToken :  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzIwOWRlMTM1ODQxM2I1YWJmMDJiMzciLCJpYXQiOjE3MzEzNTQ1MTAsImV4cCI6MTczMjIxODUxMH0.4aFms6l7NF7YNG2gFk92lqJKwezCMcmWqZI5z28jaWU
+
+
+
+
+incorrect refresh token :  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzIwOWRlMTM1ODQxM2I1YWJmMDJiMzciLCJpYXQiOjE3MzEzNTQ3NDksImV4cCI6MTczMjIxODc0OX0.SSHIdeZHnEO5Ty3RxinnaA5Bnxoa_QQ2CchvhPgKFsc
+user ReFreshToken :  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzIwOWRlMTM1ODQxM2I1YWJmMDJiMzciLCJpYXQiOjE3MzEzNTQ3NDksImV4cCI6MTczMjIxODc0OX0.SSHIdeZHnEO5Ty3RxinnaA5Bnxoa_QQ2CchvhPgKFsc
+
+incorrect refresh token :  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzIwOWRlMTM1ODQxM2I1YWJmMDJiMzciLCJpYXQiOjE3MzEzNTQ3NDksImV4cCI6MTczMjIxODc0OX0.SSHIdeZHnEO5Ty3RxinnaA5Bnxoa_QQ2CchvhPgKFsc
+user ReFreshToken :  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzIwOWRlMTM1ODQxM2I1YWJmMDJiMzciLCJpYXQiOjE3MzEzNTQ3NTEsImV4cCI6MTczMjIxODc1MX0.HjcgQygyXz9Jbx3_6R-Ea6_NB1gQ8uVTVm5AcsaK7_A
+
+
+Generated Refresh Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzIwOWRlMTM1ODQxM2I1YWJmMDJiMzciLCJpYXQiOjE3MzEzNTQ3NDksImV4cCI6MTczMjIxODc0OX0.SSHIdeZHnEO5Ty3RxinnaA5Bnxoa_QQ2CchvhPgKFsc
+
+
+
+
+
+
+
+
+*/
