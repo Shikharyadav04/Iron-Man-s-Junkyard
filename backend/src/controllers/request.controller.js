@@ -266,19 +266,6 @@ const closeRequest = asyncHandler(async (req, res) => {
   }
   const requestId = request.requestId;
 
-  const transaction = await Transaction.findById(transactionId);
-
-  if (!transaction) {
-    throw new ApiError(404, "Transaction not found");
-  }
-
-  if (transaction.isCompleted !== true) {
-    throw new ApiError(
-      400,
-      "Transactions are not completed please complete your payment"
-    );
-  }
-
   request.status = "completed";
   await request.save();
 

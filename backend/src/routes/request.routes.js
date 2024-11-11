@@ -30,8 +30,8 @@ router
 
 router.route("/get-completed-pickup").post(verifyJWT, getCompletedPickup);
 router
-  .route("/close-request")
-  .post(verifyJWT, dealerAuthentication, closeRequest);
+ .route("/close-request")
+ .post(verifyJWT, dealerAuthentication, closeRequest);
 
 router.route("/get-user-request").post(verifyJWT, getUserRequest);
 

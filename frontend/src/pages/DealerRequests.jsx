@@ -14,6 +14,7 @@ const DealerRequests = () => {
         setRequests(response.data.data); // Assuming the data is in the 'data' field
         setLoading(false);
       } catch (err) {
+        console.error("Error fetching dealer requests:", err);
         setError("Failed to fetch dealer requests.");
         setLoading(false);
       }
@@ -23,28 +24,19 @@ const DealerRequests = () => {
   }, []);
 
   // Handle accept dealer registration
-  const acceptRequests = async () => {
+  const acceptRequest = async (id) => {
     try {
-      // Send a request to accept all pending dealer registrations
-      const response = await axios.post("/api/v1/dealer/accept-dealer");
+      // Send a request to accept a specific dealer registration
+      const response = await axios.post(`http://localhost:8000/api/v1/users/accept-dealer/${id}`);
       
-      // Update the UI by removing all accepted requests
-      setRequests([]); // Clear the list since all pending requests are accepted
-      console.log("All requests accepted:", response.data);
+      // Update the UI by filtering out the accepted request
+      setRequests((prevRequests) => prevRequests.filter((request) => request._id !== id));
+      console.log("Request accepted:", response.data);
     } catch (err) {
-      setError("Failed to accept the requests.");
-      console.error("Error accepting requests:", err.response ? err.response.data : err.message);
+      setError("Failed to accept the request.");
+      console.error("Error accepting request:", err.response ? err.response.data : err.message);
     }
   };
-  
-  
-  
-  
-  
-  
-  
-  
-  
 
   return (
     <div className="container mx-auto p-4">
@@ -72,7 +64,7 @@ const DealerRequests = () => {
               <td className="border border-gray-300 px-4 py-2">{request.contact}</td>
               <td className="border border-gray-300 px-4 py-2">
                 <button
-                  onClick={() => acceptRequests(request._id)}
+                  onClick={() => acceptRequest(request._id)}
                   className="bg-green-500 text-white px-4 py-2 rounded"
                 >
                   Accept
