@@ -19,10 +19,10 @@ const dealerRequestSchema = new Schema(
       type: String,
       required: true,
     },
-    avatar: {
-      type: String,
-      required: true,
-    },
+    
+    
+    
+    
     status: {
       type: String,
       enum: ["pending", "approved", "rejected"],

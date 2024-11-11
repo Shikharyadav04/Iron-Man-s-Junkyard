@@ -27,6 +27,7 @@ import ChatList from "./components/ChatList";
 import DealerChatList from "./components/DealerChatList";
 import DealerRegister from "./pages/DealerRegister";
 import Success from "./pages/Success";
+import DealerRequests from "./pages/DealerRequests";
 const App = () => {
   const { user } = useAuth();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -58,7 +59,7 @@ const App = () => {
         <Route path="/contact" element={<Contact />} />
         <Route path="/news" element={<News />} />
         <Route path="/business" element={<Business />} />
-
+        <Route path="//unverified-dealer" element={<DealerRequests />} />
         {/* Role-based routes */}
         <Route path="/admin" element={renderRoleBasedRoute("admin", Admin)} />
         <Route

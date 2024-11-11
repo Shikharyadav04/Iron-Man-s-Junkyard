@@ -14,7 +14,6 @@ import {
 } from "../controllers/user.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
-import { adminAuthentication } from "../middlewares/admin.auth.middleware.js";
 
 const router = Router();
 
@@ -38,18 +37,17 @@ router
   .route("/avatar")
   .patch(verifyJWT, upload.single("avatar"), updateUserAvatar);
 
-router
-  .route("/accept-dealer")
-  .post(adminAuthentication, acceptDealerRegistration);
+
+
+
 router.route("/dealer-request").post(
-  upload.fields([
-    { name: "avatar", maxCount: 1 }, // Handling avatar uploads
-  ]),
   askDealerRegistration
 );
 
 router
   .route("/get-dealer-request")
-  .post( getdealerRequests);
-
+  .get( getdealerRequests);
+router
+  .route("/accept-dealer")
+  .post( acceptDealerRegistration);
 export default router;

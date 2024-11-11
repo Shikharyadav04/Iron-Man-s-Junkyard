@@ -5,9 +5,9 @@ import { addScrap, changeScrapPrice } from "../controllers/admin.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
 const router = Router();
 
-router.route("/addScrap").post(verifyJWT, adminAuthentication, addScrap);
+router.route("/addScrap").post(addScrap);
 router
   .route("/changeScrapPrice")
-  .post(verifyJWT, adminAuthentication, upload.none(), changeScrapPrice);
+  .post( changeScrapPrice);
 
 export default router;

@@ -95,7 +95,7 @@ const Navbar = () => {
                   <NavLink to='/register'>
                     <p className='cursor-pointer hover:text-black'>Register</p>
                   </NavLink>
-                  <NavLink to='/register'>
+                  <NavLink to='/dealerreg'>
                    <p className='cursor-pointer hover:text-black'>Register As Dealer</p>
                   </NavLink>
                 </div>

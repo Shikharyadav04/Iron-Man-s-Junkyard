@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthProvider.jsx";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Cookies from "js-cookie";
 
@@ -365,6 +365,9 @@ const Admin = () => {
 
       {/* Scrap Management Component */}
       <ScrapManagement />
+      <div className="cursor-pointer">
+        <NavLink to='/unverified-dealer'>Verification</NavLink>
+      </div>
     </div>
   );
 };
