@@ -7,7 +7,7 @@ const DealerRegister = () => {
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
-    avatar: null,
+    
     address: "",
     contact: "",
   });
@@ -23,12 +23,12 @@ const DealerRegister = () => {
     }));
   };
 
-  const handleFileChange = (e) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      avatar: e.target.files[0],
-    }));
-  };
+  
+  
+  
+  
+  
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -37,7 +37,7 @@ const DealerRegister = () => {
       const data = {
         fullName: formData.fullName,
         email: formData.email,
-        avatar: formData.avatar,
+        
         address: formData.address,
         contact: formData.contact,
       };
@@ -79,16 +79,16 @@ const DealerRegister = () => {
               className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-200"
             />
           </div>
-          <div>
-            <label className="block text-gray-700">Avatar</label>
-            <input
-              type="file"
-              name="avatar"
-              onChange={handleFileChange}
-              required
-              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-200"
-            />
-          </div>
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
           <div>
             <label className="block text-gray-700">Address</label>
             <input

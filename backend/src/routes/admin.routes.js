@@ -9,9 +9,11 @@ import {
 import { upload } from "../middlewares/multer.middleware.js";
 const router = Router();
 
-router.route("/addScrap").post(verifyJWT, adminAuthentication, addScrap);
+router.route("/addScrap").post(addScrap);
 router
   .route("/changeScrapPrice")
-  .post(verifyJWT, adminAuthentication, upload.none(), changeScrapPrice);
+  .post( changeScrapPrice);
+
+  
 router.route("/stats").get(getStats);
 export default router;

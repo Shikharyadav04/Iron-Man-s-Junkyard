@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthProvider.jsx";
+import { NavLink, useNavigate } from "react-router-dom";
+import axios from "axios";
+import Cookies from "js-cookie";
 
 const categorySubcategoryMap = {
   Metals: ["Aluminum", "Copper", "Steel", "Brass"],
@@ -234,6 +237,11 @@ const Admin = () => {
             ))}
           </select>
 
+      {/* Scrap Management Component */}
+      <ScrapManagement />
+      <div className="cursor-pointer">
+        <NavLink to='/unverified-dealer'>Verification</NavLink>
+      </div>
           <select
             name="scrapSubCategory"
             value={priceData.scrapSubCategory}

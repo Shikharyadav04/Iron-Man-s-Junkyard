@@ -101,7 +101,7 @@ const AuthProvider = ({ children }) => {
   const registerDealer = async (data) => {
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/v1/users/get-dealer-request",
+        "http://localhost:8000/api/v1/users/dealer-request",
         data,
         {
           headers: {

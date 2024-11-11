@@ -324,11 +324,10 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
 });
 
 const askDealerRegistration = asyncHandler(async (req, res) => {
-  const { fullName, email, avatar, address, contact } = req.body;
+  const { fullName, email,  address, contact } = req.body;
   if (
-    [fullName, email, avatar, address, contact].some(
-      (filed) => filed?.trim() == ""
-    )
+    [fullName, email,  address, contact].some((field) => !field)
+    
   ) {
     throw new ApiError(400, "All fields are required");
   }
@@ -337,22 +336,22 @@ const askDealerRegistration = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Dealer with the same email already exists");
   }
 
-  const avatarLocalPath = req.files?.avatar[0]?.path;
+  
 
-  if (!avatarLocalPath) {
-    throw new ApiError(400, "Please provide an avatar");
-  }
+  
+  
+  
 
-  const uploadonCloudinary = await uploadonCloudinary(avatarLocalPath);
+  
 
-  if (!updateUserAvatar) {
-    throw new ApiError(400, "Error while uploading avatar");
-  }
+  
+  
+  
 
   const newRequest = await DealerRequest.create({
     fullName,
     email,
-    avatar: uploadonCloudinary.url,
+    
     address,
     contact,
     status: "pending",
@@ -374,59 +373,105 @@ const askDealerRegistration = asyncHandler(async (req, res) => {
 });
 
 const acceptDealerRegistration = asyncHandler(async (req, res) => {
-  const requestId = req.body;
+  // Fetch all pending requests
+  const requests = await DealerRequest.find({ status: "pending" });
 
-  if (!requestId) {
-    throw new ApiError(400, "Request ID is required");
+  if (!requests.length) {
+    throw new ApiError(404, "No pending dealer requests found.");
   }
 
-  const request = await DealerRequest.findById(requestId);
+  // Loop through each pending request and accept it
+  const updatedRequests = [];
+  for (let request of requests) {
+    request.status = "accepted"; // Update request status to "accepted"
+    
+    const fullName = request.fullName;
+    const email = request.email;
+    const address = request.address;
+    const contact = request.contact;
 
-  if (!request) {
-    throw new ApiError(404, "Request not found");
+    // Create a new dealer account for each request
+    const username = `${fullName.toLowerCase().replace(/ /g, "")}${Math.floor(Math.random() * 10000)}`;
+    const newPassword = crypto.randomBytes(8).toString("hex");
+
+    const newUser = await User.create({
+      username,
+      password: newPassword,
+      fullName,
+      email,
+      address,
+      role: "dealer",
+    });
+
+    if (!newUser) {
+      throw new ApiError(400, "Failed to create new dealer account.");
+    }
+
+    await request.save(); // Save the updated request
+    updatedRequests.push(newUser);
+
+    // Send email after accepting each request
+    await sendMail({
+      to: email,
+      subject: "Welcome to ScrapMan - Dealer Registration Success",
+      text: `Hello ${fullName},\n\nWelcome to ScrapMan! Your request to be a dealer has been approved, and your dealer account has been successfully created.\n\nUsername: ${username}\nPassword: ${newPassword}\n\nPlease keep your password safe. Contact us if you need assistance.\n\nBest regards,\nScrapMan Team`,
+    });
   }
 
-  if (request.status !== "pending") {
-    throw new ApiError(400, "Request is not pending");
-  }
-
-  request.status = "accepted";
-
-  const fullName = request.fullName;
-  const email = request.email;
-  const avatar = request.avatar;
-  const address = request.address;
-  const contact = request.contact;
-
-  const username = `${fullName.toLowerCase().replace(/ /g, "")}${Math.floor(Math.random() * 10000)}`;
-  const newPassword = crypto.randomBytes(8).toString("hex");
-
-  const newUser = await User.create({
-    username,
-    password: newPassword,
-    fullName,
-    email,
-    avatar,
-    address,
-    role: "dealer",
+  return res.status(200).json({
+    status: 200,
+    message: "All pending dealer requests have been accepted successfully.",
+    data: updatedRequests, // Return the newly created dealer accounts
   });
-
-  if (!newUser) {
-    throw new ApiError(400, "Failed to create new dealer account");
-  }
-  await request.save();
-  const sendEmail = await sendMail({
-    to: email,
-    subject: "Welcome to ScrapMan - Dealer Registration Success",
-    text: `Hello ${fullName},\n\nWelcome to ScrapMan! Your request to be a dealer in our family has been approved and  your dealer account has been successfully created. Below are your account details:\n\nUsername: ${username}\nPassword: ${randomPassword}\n\nPlease make sure to keep your password safe. If you need any assistance or have any questions, feel free to reach out to our support team.\n\nBest regards,\nThe ScrapMan Team`,
-  });
-
-  return res
-    .status(200)
-    .json(
-      new ApiResponse(200, newUser, "Dealer registration accepted successfully")
-    );
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 const getdealerRequests = asyncHandler(async (req, res) => {
   const requests = await DealerRequest.find({
