@@ -23,11 +23,15 @@ import getRequest from "./pages/dealer/getRequest";
 import GetAcceptedRequest from "./pages/acceptedRequest/getAcceptedRequest";
 import AcceptedBillPage from "./pages/customer/bill/AcceptedRequests";
 import CompletedBillPage from "./pages/customer/bill/CompletedBillPage";
-import ChatList from "./components/ChatList";
-import DealerChatList from "./components/DealerChatList";
 import DealerRegister from "./pages/DealerRegister";
 import Success from "./pages/Success";
+<<<<<<< HEAD
 import DealerRequests from "./pages/DealerRequests";
+=======
+import ChatRoom from "./components/ChatRoom";
+import ChatRooms from "./components/ChatRooms";
+
+>>>>>>> a65260f780562e5e95f9a43da80a9cd6c9405954
 const App = () => {
   const { user } = useAuth();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -59,7 +63,10 @@ const App = () => {
         <Route path="/contact" element={<Contact />} />
         <Route path="/news" element={<News />} />
         <Route path="/business" element={<Business />} />
+<<<<<<< HEAD
         <Route path="//unverified-dealer" element={<DealerRequests />} />
+=======
+>>>>>>> a65260f780562e5e95f9a43da80a9cd6c9405954
         {/* Role-based routes */}
         <Route path="/admin" element={renderRoleBasedRoute("admin", Admin)} />
         <Route
@@ -70,40 +77,39 @@ const App = () => {
           path="/dealer"
           element={renderRoleBasedRoute("dealer", Dealer)}
         />
-
         {/* BillPage route */}
         <Route
           path="/customer/bills"
-          element={renderRoleBasedRoute("customer", BillPage)} // Adjust role as needed
+          element={renderRoleBasedRoute("customer", BillPage)}
         />
         {/* RequestPage route */}
         <Route
           path="/dealer/requests"
-          element={renderRoleBasedRoute("dealer", getRequest)} // Adjust role as needed
+          element={renderRoleBasedRoute("dealer", getRequest)}
         />
         <Route
           path="/dealer/acceptedRequests"
-          element={renderRoleBasedRoute("dealer", GetAcceptedRequest)} // Adjust role as needed
+          element={renderRoleBasedRoute("dealer", GetAcceptedRequest)}
         />
         <Route
           path="/customer/acceptedRequests"
-          element={renderRoleBasedRoute("customer", AcceptedBillPage)} // Adjust role as needed
+          element={renderRoleBasedRoute("customer", AcceptedBillPage)}
         />
-
         <Route
           path="/customer/completedRequests"
-          element={renderRoleBasedRoute("customer", CompletedBillPage)} // Adjust role as needed
+          element={renderRoleBasedRoute("customer", CompletedBillPage)}
         />
-
         <Route
           path="/customer/request-creation"
           element={renderRoleBasedRoute("customer", RequestCreation)}
         />
-        <Route path="/chats" element={<ChatList userId={user?._id} />} />
-        <Route
-          path="/dealerChats"
-          element={<DealerChatList userId={user?._id} />}
-        />
+        {/* New Chat Routes */}
+        {/* Chat Routes */}
+        <Route path="/chats" element={<ChatRooms />} />{" "}
+        {/* List of chat rooms */}
+        <Route path="/chat/:roomId" element={<ChatRoom />} />{" "}
+        {/* Specific chat room */}
+        {/* Specific chat room */}
         {/* Redirect based on user role when not logged in */}
         <Route
           path="/redirect"
@@ -121,7 +127,6 @@ const App = () => {
             )
           }
         />
-
         <Route path="*" element={<NotFound />} />
       </Routes>
       <End />

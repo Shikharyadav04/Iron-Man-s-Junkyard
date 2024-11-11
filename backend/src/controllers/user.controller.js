@@ -122,7 +122,9 @@ const loginUser = asyncHandler(async (req, res) => {
   });
 
   if (!user) throw new ApiError(401, "User not found");
-
+  if (user.isbanned == true) {
+    throw new ApiError(401, "User is banned");
+  }
   const isPasswordCorrect = await user.isPasswordCorrect(password);
 
   if (!isPasswordCorrect) throw new ApiError(401, "Password is incorrect");

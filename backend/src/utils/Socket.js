@@ -1,46 +1,30 @@
-import { Chat } from "../models/chat.models.js";
+import { Server } from "socket.io"; // Import the Server from socket.io
 
-let io; // Declare io globally
+let io; // Declare io variable globally
 
 export const setSocket = (socketIoInstance) => {
-  io = socketIoInstance; // Set the io instance globally
+  io = socketIoInstance; // Set the io instance when calling setSocket
 
   io.on("connection", (socket) => {
-    console.log(`User connected to ${socket.id}`);
+    console.log(`User connected to socket with ID: ${socket.id}`);
 
     socket.on("joinRoom", (roomId) => {
+      console.log(`User ${socket.id} attempting to join room ${roomId}`);
       socket.join(roomId);
-      console.log(`User joined room ${roomId}`);
+      console.log(`User ${socket.id} successfully joined room ${roomId}`);
     });
 
-    socket.on("sendMessage", async ({ roomId, senderId, content }) => {
-      const chat = await Chat.findOne({ requestId: roomId });
-
-      if (!chat) return;
-
-      const newMessage = {
-        senderId,
-        content, // Ensure 'content' is set correctly
-        timestamp: new Date(),
-      };
-
-      // Ensure the content array exists
-      if (!chat.content) {
-        chat.content = []; // Create content array if it doesn't exist
-      }
-
-      chat.content.push(newMessage); // Push to "content" array in schema
-
-      await chat.save();
-
-      io.to(roomId).emit("receiveMessage", newMessage); // Emit to room
+    socket.on("sendMessage", async ({ chatId, message, senderId }) => {
+      console.log(
+        `Message received for chatId ${chatId} from sender ${senderId}: ${message}`
+      );
+      io.to(chatId).emit("newMessage", { senderId, message });
     });
 
     socket.on("disconnect", () => {
-      console.log(`User disconnected :  ${socket.id}`);
+      console.log(`User disconnected with ID: ${socket.id}`);
     });
   });
 };
 
-// Create a getter for the io instance
-export const getIo = () => io;
+export const getIo = () => io; // Return the io instance when needed

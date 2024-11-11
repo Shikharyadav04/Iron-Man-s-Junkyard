@@ -7,17 +7,54 @@ import { Transaction } from "../models/transaction.models.js";
 import { sendMail } from "../utils/mail.js";
 import { Chat } from "../models/chat.models.js";
 import { getIo } from "../utils/Socket.js";
+import { User } from "../models/user.models.js";
+import mongoose from "mongoose";
+const ObjectId = mongoose.Types.ObjectId;
 const createRequest = asyncHandler(async (req, res) => {
   const { scraps, pickupLocation, scheduledPickupDate, condition } = req.body;
   const userId = req.user._id;
+  const isSubscribed = req.user.isSubscribed; // Assume `isSubscribed` field exists in the User schema
   console.log(`userId : ${userId}`);
   if (!Array.isArray(scraps) || scraps.length === 0) {
     throw new ApiError(400, "Scraps array is required and cannot be empty");
   }
-  const requestId = `REQ-${Date.now()}`;
+
+  // Get the start and end of the current month
+  const startOfMonth = new Date(
+    new Date().getFullYear(),
+    new Date().getMonth(),
+    1
+  );
+  const endOfMonth = new Date(
+    new Date().getFullYear(),
+    new Date().getMonth() + 1,
+    0
+  );
+
+  // Find the number of requests made by the user in the current month
+  const userRequestsThisMonth = await Request.find({
+    userId,
+    createdAt: { $gte: startOfMonth, $lt: endOfMonth },
+  });
+
+  const allowedRequests = isSubscribed ? 5 : 3; // 5 requests if subscribed, 3 otherwise
+  const maxAmount = isSubscribed ? 5000 : 2000; // 5000 if subscribed, 2000 otherwise
+
+  // Check if the user has exceeded the limit of requests for the month
+  const user = await User.findById(userId);
+
+  if (user.username !== "shikharyadav04") {
+    if (userRequestsThisMonth.length >= allowedRequests) {
+      throw new ApiError(
+        400,
+        `You can only create ${allowedRequests} requests per month`
+      );
+    }
+  }
   let totalAmount = 0;
   const validatedScraps = [];
 
+  // Validate scraps and calculate the total amount
   for (const { category, subCategory, quantity } of scraps) {
     const scrap = await Scrap.findOne({ category, subCategory });
     if (!scrap) {
@@ -38,6 +75,18 @@ const createRequest = asyncHandler(async (req, res) => {
       scrapTotalAmount,
     });
   }
+
+  // Check if the total amount of the new request exceeds the limit
+  if (totalAmount > maxAmount) {
+    throw new ApiError(
+      400,
+      `Request total amount cannot exceed ${maxAmount} INR`
+    );
+  }
+
+  const requestId = `REQ-${Date.now()}`;
+
+  // Create the new request
   const newRequest = await Request.create({
     requestId,
     userId,
@@ -48,6 +97,7 @@ const createRequest = asyncHandler(async (req, res) => {
     totalAmount,
   });
 
+  // Create a new transaction for the request
   const newTransaction = await Transaction.create({
     transactionId: `TRANS-${Date.now()}`,
     requestId: newRequest._id,
@@ -58,11 +108,14 @@ const createRequest = asyncHandler(async (req, res) => {
   const transactionId = newTransaction._id;
   newRequest.transactionId = transactionId;
   await newRequest.save();
-  const Sendemail = await sendMail({
+
+  // Send an email to the user
+  await sendMail({
     to: req.user.email,
     subject: "ScrapMan - Scrap Pickup Request Created Successfully",
     text: `Hello ${req.user.fullName},\n\nYour scrap pickup request has been successfully created on ScrapMan. Here are the details of your request:\n\nRequest ID: ${newRequest.requestId}\nScheduled Pickup Date: ${newRequest.scheduledPickupDate}\nTotal Amount: ${newRequest.totalAmount}\n\nWe will notify you once your pickup has been scheduled. Thank you for using ScrapMan!\n\nBest regards,\nThe ScrapMan Team`,
   });
+
   res
     .status(200)
     .json(
@@ -93,12 +146,12 @@ const getPendingRequest = asyncHandler(async (req, res) => {
 
 const acceptRequest = asyncHandler(async (req, res) => {
   const requestId = req.body.requestId;
-  console.log(`requestId : ${requestId}`);
   if (!requestId) {
     throw new ApiError(400, "Request ID is required");
   }
 
   const dealerId = req.user._id;
+  const dealerUsername = req.user.username; // Assuming dealer's username is stored here
   const request = await Request.findOneAndUpdate(
     {
       requestId: requestId,
@@ -117,19 +170,43 @@ const acceptRequest = asyncHandler(async (req, res) => {
     throw new ApiError(404, "Request not found or already accepted");
   }
 
-  // Ensure dealerId and customerId are ObjectId types for MongoDB
+  // Retrieve customer details
+  const customer = await User.findById(request.userId); // Assuming `userId` is the customer's ID in the request
+  if (!customer) {
+    throw new ApiError(404, "Customer not found");
+  }
+  const customerUsername = customer.username;
+
+  // Create a new chat room and send an initial message
+  const newDealerId = new ObjectId(dealerId);
+  const newCustomerId = new ObjectId(request.userId);
   const newChat = await Chat.create({
     requestId,
-    dealerId: mongoose.Types.ObjectId(dealerId),
-    customerId: mongoose.Types.ObjectId(request.userId), // Ensure ObjectId
-    messages: [],
+    dealerId: newDealerId,
+    customerId: newCustomerId,
+    messages: [
+      {
+        senderId: dealerId,
+        message: `Hello ${customerUsername}, I ${dealerUsername} have accepted your request.`,
+        timestamp: new Date(),
+      },
+    ],
   });
 
-  const io = getIo(); // Access the io instance
+  // Emit events to the customer and dealer using socket.io
+  const io = getIo(); // Assuming you have a function to get the io instance
 
-  // Emit events using io
-  io.to(request.userId.toString()).emit("chatCreated", { requestId, dealerId });
-  io.to(dealerId.toString()).emit("chatCreated", { requestId, dealerId });
+  console.log("Emitting to customer room:", customer._id.toString()); // Log customer ID
+  console.log("Emitting to dealer room:", dealerId.toString()); // Log dealer ID
+
+  io.to(customer._id.toString()).emit("chatCreated", {
+    chatId: newChat._id,
+    message: `Hello ${customerUsername}, I ${dealerUsername} have accepted your request.`,
+  });
+  io.to(dealerId.toString()).emit("chatCreated", {
+    chatId: newChat._id,
+    message: `Hello ${customerUsername}, I ${dealerUsername} have accepted your request.`,
+  });
 
   res
     .status(200)

@@ -43,6 +43,16 @@ const userSchema = new Schema(
     refreshToken: {
       type: String,
     },
+    isSubscribed: {
+      type: Boolean,
+      default: false,
+    },
+    isbanned: {
+      type: Boolean,
+      default: false,
+    },
+    createdAt: { type: Date, default: Date.now },
+    lastActive: { type: Date, default: Date.now },
   },
   { timestamps: true }
 );

@@ -2,7 +2,8 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { Scrap } from "../models/scrap.models.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
-
+import { User } from "../models/user.models.js";
+import { Request } from "../models/request.models.js";
 const addScrap = asyncHandler(async (req, res) => {
   //take info form body
   //validate
@@ -74,4 +75,37 @@ const changeScrapPrice = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, scrap, "Scrap price updated successfully"));
 });
 
-export { addScrap, changeScrapPrice };
+const getStats = asyncHandler(async (req, res) => {
+  const usersThisMonth = await User.countDocuments({
+    createdAt: {
+      $gte: new Date(new Date().setMonth(new Date().getMonth() - 1)),
+    },
+  });
+
+  const requestCounts = await Request.aggregate([
+    {
+      $group: {
+        _id: "$status",
+        count: { $sum: 1 },
+      },
+    },
+  ]);
+
+  const activeUsers = await User.countDocuments({
+    lastActive: {
+      $gte: new Date(new Date().setMonth(new Date().getMonth() - 1)),
+    },
+  });
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        { usersThisMonth, requestCounts, activeUsers },
+        "Stats fetched successfully"
+      )
+    );
+});
+
+export { addScrap, changeScrapPrice, getStats };

@@ -1,25 +1,31 @@
-import React, { createContext, useState, useEffect, useContext } from "react";
-import { io } from "socket.io-client";
+import React, { createContext, useState, useEffect } from "react";
+import io from "socket.io-client";
 
-const SocketContext = createContext();
+export const SocketContext = createContext();
 
-export const SocketProvider = ({ children }) => {
+const SocketProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);
-  const [currentRoom, setCurrentRoom] = useState(null);
+  const [chatRooms, setChatRooms] = useState([]); // Make sure this is initialized
 
   useEffect(() => {
-    const newSocket = io("http://localhost:8000");
-
+    const newSocket = io("http://localhost:8000"); // Your socket URL
     setSocket(newSocket);
 
-    return () => newSocket.close();
+    // Optionally, listen for chat room updates
+    newSocket.on("chatRooms", (rooms) => {
+      setChatRooms(rooms); // Set the rooms once they are fetched
+    });
+
+    return () => {
+      newSocket.close();
+    };
   }, []);
 
   return (
-    <SocketContext.Provider value={{ socket, currentRoom, setCurrentRoom }}>
+    <SocketContext.Provider value={{ socket, chatRooms }}>
       {children}
     </SocketContext.Provider>
   );
 };
 
-export const useSocket = () => useContext(SocketContext);
+export default SocketProvider;
