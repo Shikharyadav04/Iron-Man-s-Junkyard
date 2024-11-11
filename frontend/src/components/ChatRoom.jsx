@@ -1,51 +1,46 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import io from "socket.io-client"; // Socket.IO client
-
-const socket = io("http://localhost:8000"); // Connect to the Socket.IO server
+import { useSocket } from "@/context/SocketProvider";
 
 const ChatRoom = () => {
-  const { roomId } = useParams(); // Extract roomId from the URL
+  const { roomId } = useParams();
+  const socket = useSocket(); // Access the shared socket instance
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
-  const messagesEndRef = useRef(null); // To scroll to the bottom of the chat
+  const messagesEndRef = useRef(null);
 
   useEffect(() => {
-    // Emit 'joinRoom' event to join the specific chat room
+    if (!socket) return;
+
     socket.emit("joinRoom", roomId);
 
-    // Fetch the chat messages for the specific chat room
     axios
       .get(`http://localhost:8000/api/v1/chat/${roomId}/messages`, {
         withCredentials: true,
       })
       .then((response) => {
-        setMessages(response.data.data.messages); // Assuming response.data.messages contains the chat messages
+        setMessages(response.data.data.messages);
       })
       .catch((error) => {
         console.error("Error fetching chat messages:", error);
       });
 
-    // Listen for new messages from Socket.IO
     socket.on("newMessage", (newMessage) => {
       setMessages((prevMessages) => [...prevMessages, newMessage]);
     });
 
-    // Cleanup when the component is unmounted
     return () => {
       socket.off("newMessage");
     };
-  }, [roomId]);
+  }, [socket, roomId]);
 
-  // Scroll to the bottom of the chat when new messages are added
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
   const handleSendMessage = () => {
     if (message.trim()) {
-      // Send message to the backend
       axios
         .post(
           `http://localhost:8000/api/v1/chat/${roomId}/message`,
@@ -53,7 +48,7 @@ const ChatRoom = () => {
           { withCredentials: true }
         )
         .then(() => {
-          setMessage(""); // Clear the message input
+          setMessage("");
         })
         .catch((error) => {
           console.error("Error sending message:", error);
@@ -66,9 +61,7 @@ const ChatRoom = () => {
       <h2 className="text-2xl font-semibold text-center mb-4">
         Chat Room: {roomId}
       </h2>
-
       <div className="max-h-96 overflow-y-auto mb-4 p-2 border border-gray-300 rounded-lg bg-gray-50">
-        {/* Display chat messages */}
         {messages.map((msg, index) => (
           <div
             key={index}
@@ -85,8 +78,6 @@ const ChatRoom = () => {
         ))}
         <div ref={messagesEndRef} />
       </div>
-
-      {/* Message input area */}
       <div className="flex items-center border-t border-gray-300 pt-4">
         <input
           type="text"
