@@ -28,6 +28,7 @@ import password from './password.jpg'
 import chat from './chat.jpg'
 import createscrap from './createscrap.jpg'
 import username from './username.jpg'
+import loader from './loader.mp4'
 
 
 
@@ -69,7 +70,8 @@ export const assets = {
     chat,
     notice,
     createscrap,
-    username
+    username,
+    loader
     
     
    

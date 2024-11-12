@@ -1,23 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthProvider";
+import { useLoader } from "../context/LoaderContext";
 import { useNavigate } from "react-router-dom";
-import Loader from "../components/Loader"; // Import the Loader component
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const Login = () => {
   const { user, login } = useAuth();
+  const { showLoader, hideLoader } = useLoader();
   const navigate = useNavigate();
   const [credentials, setCredentials] = useState({
     identifier: "", // Single field for either username or email
     password: "",
   });
-  const [loading, setLoading] = useState(false); // Loading state
 
   useEffect(() => {
     if (user) {
-      navigate(`/${user.role}`); // Redirect based on user role
-      toast.success(`Welcome back, ${user.role}!`); // Success toast on successful login
+      navigate(`/${user.role}`);
+      toast.success(`Welcome back, ${user.role}!`);
     }
   }, [user, navigate]);
 
@@ -28,15 +28,21 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true); // Set loading to true before login attempt
+    showLoader(); // Show the loader before login attempt
+
+    const loaderTimeout = setTimeout(() => {
+      hideLoader();
+      toast.warning("Request taking longer than expected, please try again.");
+    }, 400000); // Hide loader after 5 seconds if login takes too long
 
     try {
-      await login(credentials); // Call the login function
+      await login(credentials);
+      clearTimeout(loaderTimeout); // Clear timeout if login succeeds within 5 seconds
     } catch (error) {
       console.error("Error logging in:", error);
       toast.error(error.message || "Login failed. Please try again.");
     } finally {
-      setLoading(false); // Set loading to false after the attempt
+      hideLoader();
     }
   };
 
@@ -48,36 +54,30 @@ const Login = () => {
       >
         <h2 className="text-2xl font-bold text-center text-gray-800">Login</h2>
 
-        {loading ? ( // Show loader while loading
-          <Loader />
-        ) : (
-          <>
-            <input
-              type="text"
-              name="identifier" // Single input for both username or email
-              onChange={handleChange}
-              placeholder="Username or Email"
-              required
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
-            />
+        <input
+          type="text"
+          name="identifier"
+          onChange={handleChange}
+          placeholder="Username or Email"
+          required
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
+        />
 
-            <input
-              type="password"
-              name="password"
-              onChange={handleChange}
-              placeholder="Password"
-              required
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
-            />
+        <input
+          type="password"
+          name="password"
+          onChange={handleChange}
+          placeholder="Password"
+          required
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
+        />
 
-            <button
-              type="submit"
-              className="w-full py-2 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition duration-200"
-            >
-              Login
-            </button>
-          </>
-        )}
+        <button
+          type="submit"
+          className="w-full py-2 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition duration-200"
+        >
+          Login
+        </button>
       </form>
       <ToastContainer />
     </div>

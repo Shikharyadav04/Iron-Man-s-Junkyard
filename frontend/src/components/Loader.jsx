@@ -1,29 +1,21 @@
-// Loader.jsx
+import React from 'react';
+import { useLoader } from '../context/LoaderContext';
+
 const Loader = () => {
-  return (
-    <div className="flex items-center justify-center">
-      <div className="loader"></div>
-      <style >{`
-        .loader {
-          border: 4px solid rgba(255, 255, 255, 0.3); /* White border */
-          border-top: 4px solid #007bff; /* Blue color */
-          border-radius: 50%;
-          width: 40px; /* Size of the spinner */
-          height: 40px; /* Size of the spinner */
-          animation: spin 1s linear infinite;
-          margin-left: 10px; /* Space between loader and other elements */
-        }
-        @keyframes spin {
-          0% {
-            transform: rotate(0deg);
-          }
-          100% {
-            transform: rotate(360deg);
-          }
-        }
-      `}</style>
+  const { loading } = useLoader();
+
+  return loading ? (
+    <div className="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50">
+      <div className="flex flex-col items-center">
+        <img
+          src="https://i.pinimg.com/originals/2a/c2/2c/2ac22c37e3b1b63259e830e1e00d9184.gif"
+          alt="Loading..."
+          className="w-20 h-20" // Adjust size as needed
+        />
+        <p className="text-white mt-4">Loading...</p>
+      </div>
     </div>
-  );
+  ) : null;
 };
 
 export default Loader;
