@@ -4,6 +4,7 @@ import axios from "axios";
 const RequestCard = ({ request }) => {
   const [successMessage, setSuccessMessage] = useState("");
   const [error, setError] = useState(null);
+  console.log(request);
 
   const getConditionStyle = (condition) => {
     switch (condition) {
@@ -71,6 +72,11 @@ const RequestCard = ({ request }) => {
       <p className="text-gray-700">
         <span className="font-bold">Scheduled Pickup Date:</span>{" "}
         {new Date(request.scheduledPickupDate).toLocaleString()}
+      </p>
+      <p className="text-gray-700">
+        <span className="font-bold">
+          Scheduled Pickup Time: {request.scheduledPickupTime}
+        </span>{" "}
       </p>
       <p
         className={`font-bold uppercase ${getConditionStyle(

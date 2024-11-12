@@ -147,9 +147,9 @@ const getPendingRequest = asyncHandler(async (req, res) => {
   })
     .populate("userId", "fullName")
     .select(
-      "requestId scheduledPickupDate userId scraps pickupLocation condition status totalAmount isSubscriber"
+      "requestId scheduledPickupDate scheduledPickupTime userId scraps pickupLocation condition status totalAmount isSubscriber"
     )
-    .sort({ createdAt: -1 });
+    .sort({ isSubscriber: -1, createdAt: -1 });
 
   res
     .status(200)

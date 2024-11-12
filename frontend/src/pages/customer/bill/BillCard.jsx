@@ -64,10 +64,17 @@ const BillCard = ({ bill }) => {
         <span className="font-bold">Pickup Location:</span>{" "}
         {bill.pickupLocation}
       </p>
+
+      {/* Separate Date and Time */}
       <p className="text-gray-700">
         <span className="font-bold">Scheduled Pickup Date:</span>{" "}
-        {new Date(bill.scheduledPickupDate).toLocaleString()}
+        {new Date(bill.scheduledPickupDate).toLocaleDateString()}{" "}
       </p>
+      <p className="text-gray-700">
+        <span className="font-bold">Scheduled Pickup Time:</span>{" "}
+        {bill.scheduledPickupTime}
+      </p>
+
       <p className="text-gray-700">
         <span className="font-bold">Condition:</span> {bill.condition}
       </p>
@@ -85,7 +92,6 @@ const BillCard = ({ bill }) => {
 
       <h4 className="text-md font-semibold mt-4">Scraps:</h4>
       <ul className="list-disc ml-6 mb-12">
-        {" "}
         {/* Adds margin to avoid overlapping with button */}
         {bill.scraps.map((scrap) => (
           <li key={scrap._id} className="text-gray-700">

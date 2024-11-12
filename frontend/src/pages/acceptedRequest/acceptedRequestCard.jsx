@@ -134,6 +134,11 @@ const AcceptedRequestCard = ({ request }) => {
         <span className="font-bold">Scheduled Pickup Date:</span>{" "}
         {new Date(request.scheduledPickupDate).toLocaleString()}
       </p>
+      <p className="text-gray-700">
+        <span className="font-bold">
+          Scheduled Pickup Time: {request.ScheduledPickupTime}
+        </span>
+      </p>
       <p
         className={`font-bold uppercase ${getConditionStyle(
           request.condition
