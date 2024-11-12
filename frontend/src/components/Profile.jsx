@@ -109,13 +109,13 @@ const Profile = () => {
   };
 
   return (
-    <div className="relative flex flex-col items-center bg-gradient-to-r from-gray-50 to-gray-200 p-8 rounded-lg shadow-lg max-w-4xl mx-auto w-full">
-      {successMessage && <div className="text-green-600 mb-4">{successMessage}</div>}
+  <div className="relative flex flex-col items-center bg-gradient-to-r from-gray-50 to-gray-200 p-8 rounded-lg shadow-lg w-full">
+    {successMessage && <div className="text-green-600 mb-4">{successMessage}</div>}
       {error && <div className="text-red-600 mb-4">{error}</div>}
 
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-2">
         {/* Change Password Card */}
-        <div className="bg-white p-6 rounded-lg shadow hover:shadow-md transition-shadow duration-300 text-center">
+        <div className="bg-white  p-6 rounded-lg shadow hover:shadow-md transition-shadow duration-300 text-center">
           <img className="h-16 mx-auto mb-3" src={assets.password} alt="Change Password" />
           <button
             onClick={() => setActiveForm(activeForm === "password" ? null : "password")}
@@ -176,7 +176,7 @@ const Profile = () => {
             onClick={() => setActiveForm(activeForm === "username" ? null : "username")}
             className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded w-full font-semibold"
           >
-            Update Username
+            Update Fullname
           </button>
           {activeForm === "username" && (
             <form onSubmit={handleUpdateUserDetails} className="mt-4 space-y-3">
