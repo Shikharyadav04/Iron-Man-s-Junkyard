@@ -31,7 +31,7 @@ import ChatRooms from "./components/ChatRooms";
 import Stats from "./pages/Stats";
 import PricingPage from "./pages/PricingPage";
 import SplashScreen from "./components/SplashScreen"; // Import the SplashScreen component
-
+import UserSearchPage from "./components/adminUsers/UserSearchPage";
 const App = () => {
   const { user } = useAuth();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -82,6 +82,7 @@ const App = () => {
             <Route path="/pricing" element={<PricingPage />} />
             <Route path="/business" element={<Business />} />
             <Route path="/unverified-dealer" element={<DealerRequests />} />
+            <Route path="/user-search" element={renderRoleBasedRoute("admin", UserSearchPage)} />
             {/* Role-based routes */}
             <Route path="/admin" element={renderRoleBasedRoute("admin", Admin)} />
             <Route path="/customer" element={renderRoleBasedRoute("customer", Customer)} />
