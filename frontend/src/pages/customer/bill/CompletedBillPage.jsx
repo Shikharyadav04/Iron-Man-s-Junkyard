@@ -1,13 +1,15 @@
+// CompletedBillPage.jsx
 import React, { useEffect, useState } from "react";
 import BillCard from "./BillCard"; // Ensure this component exists
-import axios from "axios"; // Make sure to import axios
+import axios from "axios";
+import { useLoader } from "@/context/LoaderContext"; // Use your global loader context
 
 const CompletedBillPage = () => {
   const [bills, setBills] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const { showLoader, hideLoader } = useLoader(); // Use global loader context
 
   const fetchBills = async () => {
+    showLoader(); // Show global loader at start of request
     try {
       const response = await axios.post(
         "http://localhost:8000/api/v1/request/get-completed-pickup",
@@ -28,23 +30,14 @@ const CompletedBillPage = () => {
       setBills(fetchedBills); // Set state with the bills
     } catch (err) {
       console.error("Error fetching bills:", err);
-      setError("Error fetching bills."); // Set error state if there is an error
     } finally {
-      setLoading(false); // Ensure loading is set to false after fetch
+      hideLoader(); // Hide the global loader after request completes
     }
   };
 
   useEffect(() => {
     fetchBills(); // Call the fetch function when the component mounts
   }, []);
-
-  if (loading) {
-    return <div>Loading bills...</div>; // Loading state
-  }
-
-  if (error) {
-    return <div>{error}</div>; // Error state
-  }
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4 bg-white">

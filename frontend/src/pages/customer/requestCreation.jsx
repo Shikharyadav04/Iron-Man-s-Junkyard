@@ -87,8 +87,10 @@ function RequestCreation() {
         toast.error(response.data.message);
       }
     } catch (error) {
-      console.error("Error creating request:", error);
-      toast.error("Error creating request. Please try again.");
+      const errorMessage =
+        error.response?.data?.message ||
+        "Error creating request. Please try again.";
+      toast.error(errorMessage);
     } finally {
       hideLoader(); // Hide loader after request completes
     }

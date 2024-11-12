@@ -1,11 +1,14 @@
+// BillPage.jsx
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import BillCard from "./BillCard";
 import axios from "axios";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const BillPage = () => {
   const [bills, setBills] = useState([]);
-  const [loading, setLoading] = useState(bills.length === 0);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
@@ -20,7 +23,8 @@ const BillPage = () => {
       );
       const fetchedBills = response.data.data;
       setBills(fetchedBills);
-      localStorage.setItem("bills", JSON.stringify(fetchedBills)); // Store bills in local storage
+      localStorage.setItem("bills", JSON.stringify(fetchedBills));
+      setError(null);
     } catch (err) {
       console.error("Error fetching bills:", err);
       setError("Error fetching bills.");
@@ -30,9 +34,7 @@ const BillPage = () => {
   };
 
   useEffect(() => {
-    if (bills.length === 0) {
-      fetchBills(); // Fetch only if there are no bills in local storage
-    }
+    fetchBills();
   }, []);
 
   const handleBack = () => {
@@ -64,6 +66,9 @@ const BillPage = () => {
           <div>No bills available.</div>
         )}
       </div>
+
+      {/* Toast container moved here for single notifications */}
+      <ToastContainer />
     </div>
   );
 };

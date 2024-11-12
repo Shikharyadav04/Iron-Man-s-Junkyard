@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthProvider";
 import { useNavigate } from "react-router-dom";
-import Loader from "../components/Loader"; // Import the Loader component
+import { useLoader } from "@/context/LoaderContext";
 
 const Register = () => {
   const { user, register } = useAuth();
+  const { showLoader, hideLoader } = useLoader();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: "",
@@ -15,7 +16,7 @@ const Register = () => {
     address: "",
     avatar: null,
   });
-  const [loading, setLoading] = useState(false); // Loading state
+  const [alert, setAlert] = useState(null);
 
   useEffect(() => {
     if (user) {
@@ -36,7 +37,7 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true); // Set loading to true before registration attempt
+    showLoader();
 
     const data = new FormData();
     Object.entries(formData).forEach(([key, value]) => {
@@ -45,13 +46,19 @@ const Register = () => {
 
     try {
       await register(data); // Call the register function
-      // Optionally redirect or show a success message
+      setAlert({
+        type: "success",
+        message: "Registration successful! Redirecting to login...",
+      });
       setTimeout(() => navigate("/login"), 2000); // Redirect to login after 2 seconds
     } catch (error) {
       console.error("Error registering user:", error);
-      alert(error.message || "Registration failed. Please try again.");
+      setAlert({
+        type: "error",
+        message: error.message || "Registration failed. Please try again.",
+      });
     } finally {
-      setLoading(false); // Set loading to false after the attempt
+      hideLoader(); // Hide the loader after the attempt
     }
   };
 
@@ -65,74 +72,81 @@ const Register = () => {
           Register
         </h2>
 
-        {loading ? ( // Show loader while loading
-          <Loader />
-        ) : (
-          <>
-            <input
-              type="text"
-              name="username"
-              onChange={handleChange}
-              placeholder="Username"
-              required
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
-            />
-
-            <input
-              type="email"
-              name="email"
-              onChange={handleChange}
-              placeholder="Email"
-              required
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
-            />
-
-            <input
-              type="text"
-              name="fullName"
-              onChange={handleChange}
-              placeholder="Full Name"
-              required
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
-            />
-
-            <input
-              type="password"
-              name="password"
-              onChange={handleChange}
-              placeholder="Password"
-              required
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
-            />
-
-            <input
-              type="file"
-              name="avatar"
-              accept="image/*"
-              onChange={handleChange}
-              required
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
-            />
-
-            <select
-              name="role"
-              onChange={handleChange}
-              value={formData.role}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
-            >
-              <option value="customer">Customer</option>
-              <option value="dealer">Dealer</option>
-              <option value="admin">Admin</option>
-            </select>
-
-            <button
-              type="submit"
-              className="w-full py-2 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition duration-200"
-            >
-              Register
-            </button>
-          </>
+        {alert && (
+          <div
+            className={`p-4 mb-4 text-sm ${
+              alert.type === "success"
+                ? "bg-green-100 text-green-700"
+                : "bg-red-100 text-red-700"
+            } rounded-md`}
+            role="alert"
+          >
+            {alert.message}
+          </div>
         )}
+
+        <input
+          type="text"
+          name="username"
+          onChange={handleChange}
+          placeholder="Username"
+          required
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
+        />
+
+        <input
+          type="email"
+          name="email"
+          onChange={handleChange}
+          placeholder="Email"
+          required
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
+        />
+
+        <input
+          type="text"
+          name="fullName"
+          onChange={handleChange}
+          placeholder="Full Name"
+          required
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
+        />
+
+        <input
+          type="password"
+          name="password"
+          onChange={handleChange}
+          placeholder="Password"
+          required
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
+        />
+
+        <input
+          type="file"
+          name="avatar"
+          accept="image/*"
+          onChange={handleChange}
+          required
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
+        />
+
+        <select
+          name="role"
+          onChange={handleChange}
+          value={formData.role}
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
+        >
+          <option value="customer">Customer</option>
+          <option value="dealer">Dealer</option>
+          <option value="admin">Admin</option>
+        </select>
+
+        <button
+          type="submit"
+          className="w-full py-2 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition duration-200"
+        >
+          Register
+        </button>
       </form>
     </div>
   );
