@@ -4,9 +4,7 @@ import BillCard from "./BillCard";
 import axios from "axios";
 
 const BillPage = () => {
-  const [bills, setBills] = useState(
-    JSON.parse(localStorage.getItem("bills")) || []
-  );
+  const [bills, setBills] = useState([]);
   const [loading, setLoading] = useState(bills.length === 0);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
@@ -17,7 +15,6 @@ const BillPage = () => {
         "http://localhost:8000/api/v1/request/get-user-request",
         {},
         {
-          headers: { "Content-Type": "application/json" },
           withCredentials: true,
         }
       );
