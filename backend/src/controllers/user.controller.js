@@ -7,7 +7,8 @@ import jwt from "jsonwebtoken";
 import { sendMail } from "../utils/mail.js";
 import crypto from "crypto";
 import { DealerRequest } from "../models/dealerRequest.model.js";
-
+import { getIo } from "../utils/Socket.js";
+import { Notification } from "../models/notification.models.js";
 const registerUser = asyncHandler(async (req, res) => {
   // get data from frontend
   // check is required is empty or not
@@ -423,6 +424,53 @@ const getdealerRequests = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, requests, "Pending dealer requests."));
 });
 
+const subscribeUser = asyncHandler(async (req, res) => {
+  const userId = req.user._id;
+  if (!userId) {
+    throw new ApiError(401, "User not authenticated");
+  }
+  const { duration } = req.body;
+
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+
+  const startDate = new Date();
+  let endDate;
+  if (duration == "1m") {
+    endDate = newDate(startDate);
+    endDate.setMonth(startDate.getMonth() + 1);
+  } else if (duration == "1y") {
+    endDate = new Date(startDate);
+    endDate.setFullYear(startDate.getFullYear() + 1);
+  } else {
+    throw new ApiError(400, "Invalid duration");
+  }
+
+  user.isSubscribed = true;
+  user.subscriptionStartDate = startDate;
+  user.subscriptionEndDate = endDate;
+
+  await user.save();
+  const io = getIo();
+  const notification = await Notification.create({
+    userId: userId,
+    message: "You have successfully become a part of our Premium family",
+  });
+  io.to(userId.toString()).emit("newNotification", notification);
+  const Sendemail = await sendMail({
+    to: user.email,
+    subject: "ScrapMan - Subscription Activated",
+    text: `Hello ${user.fullName},\n\nThank you for subscribing to ScrapMan! Your subscription is now active, and you have access to all our premium features.\n\nWith your subscription, you can enjoy exclusive benefits such as priority scrap pickups, advanced notifications, and access to additional scrap categories. We’re thrilled to have you as part of our community, working together toward a sustainable future.\n\nSubscription Details:\n- Start Date: ${user.subscriptionStartDate.toLocaleDateString()}
+  - End Date: ${user.subscriptionEndDate.toLocaleDateString()}\n\nIf you have any questions or need further assistance, feel free to reach out to our support team.\n\nThank you for choosing ScrapMan. Together, let’s turn scrap into opportunity!\n\nBest regards,\nThe ScrapMan Team`,
+  });
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, user, `User subscribed for ${duration}`));
+});
+
 export {
   registerUser,
   loginUser,
@@ -435,6 +483,7 @@ export {
   askDealerRegistration,
   acceptDealerRegistration,
   getdealerRequests,
+  subscribeUser,
 };
 
 /*
