@@ -6,6 +6,7 @@ import { useLoader } from "@/context/LoaderContext";
 const Register = () => {
   const { user, register } = useAuth();
   const { showLoader, hideLoader } = useLoader();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -44,12 +45,12 @@ const Register = () => {
     });
 
     try {
-      await register(data);
+      await register(data); // Call the register function
       setAlert({
         type: "success",
         message: "Registration successful! Redirecting to login...",
       });
-      setTimeout(() => navigate("/login"), 2000);
+      setTimeout(() => navigate("/login"), 2000); // Redirect to login after 2 seconds
     } catch (error) {
       console.error("Error registering user:", error);
       setAlert({
@@ -57,7 +58,7 @@ const Register = () => {
         message: error.message || "Registration failed. Please try again.",
       });
     } finally {
-      hideLoader();
+      hideLoader(); // Hide the loader after the attempt
     }
   };
 
