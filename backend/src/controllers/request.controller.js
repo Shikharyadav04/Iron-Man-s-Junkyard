@@ -39,7 +39,7 @@ const createRequest = asyncHandler(async (req, res) => {
     createdAt: { $gte: startOfMonth, $lt: endOfMonth },
   });
 
-  const allowedRequests = isSubscriber ? 5 : 3; // 5 requests if subscribed, 3 otherwise
+  const allowedRequests = isSubscriber ? 100 : 3; // 5 requests if subscribed, 3 otherwise
   const maxAmount = isSubscriber ? 5000 : 2000; // 5000 if subscribed, 2000 otherwise
 
   // Check if the user has exceeded the limit of requests for the month
