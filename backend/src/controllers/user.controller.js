@@ -438,11 +438,12 @@ const subscribeUser = asyncHandler(async (req, res) => {
 
   const startDate = new Date();
   let endDate;
+  
   if (duration == "1m") {
-    endDate = newDate(startDate);
+    endDate = new Date(startDate);  // Corrected here
     endDate.setMonth(startDate.getMonth() + 1);
   } else if (duration == "1y") {
-    endDate = new Date(startDate);
+    endDate = new Date(startDate);  // Corrected here
     endDate.setFullYear(startDate.getFullYear() + 1);
   } else {
     throw new ApiError(400, "Invalid duration");
@@ -453,17 +454,26 @@ const subscribeUser = asyncHandler(async (req, res) => {
   user.subscriptionEndDate = endDate;
 
   await user.save();
+
   const io = getIo();
   const notification = await Notification.create({
     userId: userId,
     message: "You have successfully become a part of our Premium family",
   });
+
   io.to(userId.toString()).emit("newNotification", notification);
-  const Sendemail = await sendMail({
+
+  const sendEmail = await sendMail({
     to: user.email,
     subject: "ScrapMan - Subscription Activated",
-    text: `Hello ${user.fullName},\n\nThank you for subscribing to ScrapMan! Your subscription is now active, and you have access to all our premium features.\n\nWith your subscription, you can enjoy exclusive benefits such as priority scrap pickups, advanced notifications, and access to additional scrap categories. We’re thrilled to have you as part of our community, working together toward a sustainable future.\n\nSubscription Details:\n- Start Date: ${user.subscriptionStartDate.toLocaleDateString()}
-  - End Date: ${user.subscriptionEndDate.toLocaleDateString()}\n\nIf you have any questions or need further assistance, feel free to reach out to our support team.\n\nThank you for choosing ScrapMan. Together, let’s turn scrap into opportunity!\n\nBest regards,\nThe ScrapMan Team`,
+    text: `Hello ${user.fullName},\n\nThank you for subscribing to ScrapMan! Your subscription is now 
+    active, and you have access to all our premium features.\n\nWith your subscription, you can enjoy 
+    exclusive benefits such as priority scrap pickups, advanced notifications, and access to additional 
+    scrap categories. We’re thrilled to have you as part of our community, working together toward a 
+    sustainable future.\n\nSubscription Details:\n- Start Date: ${user.subscriptionStartDate.toLocaleDateString()}
+  - End Date: ${user.subscriptionEndDate.toLocaleDateString()}\n\nIf you have any questions or need further assistance,
+  feel free to reach out to our support team.\n\nThank you for choosing ScrapMan. Together, let’s turn 
+  scrap into opportunity!\n\nBest regards,\nThe ScrapMan Team`,
   });
 
   return res

@@ -15,7 +15,7 @@ import Dealer from "./pages/Dealer"; // Update to the correct path
 import NotFound from "./pages/NotFound"; // Update to the correct path
 import End from "./components/End"; // Update to the correct path
 import Business from "./pages/Business"; // Update to the correct path
-import Contact from "./pages/Contact"; // Update to the correct path
+import SubscriptionPage from "./pages/SubscriptionPage"; // Update to the correct path
 import News from "./components/News"; // Update to the correct path
 import RequestCreation from "./pages/customer/requestCreation"; // Update to the correct path
 import BillPage from "./pages/customer/bill/BillPage"; // Import the BillPage component
@@ -58,7 +58,7 @@ const App = () => {
         <Route path="/dealerreg" element={<DealerRegister />} />
         <Route path="/success" element={<Success />} />
         <Route path="/feedback" element={<Feedback />} />
-        <Route path="/contact" element={<Contact />} />
+        <Route path="/SubscriptionPage" element={user ? <SubscriptionPage /> : <Navigate to="/login"  />}  />
         <Route path="/news" element={<News />} />
         <Route path="/stats" element={<Stats />} />
 

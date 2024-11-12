@@ -93,8 +93,8 @@ const Navbar = () => {
         <NavLink to='/feedback' className='flex flex-col items-center gap-1'>
           <p>Feedback</p>
         </NavLink>
-        <NavLink to='/contact' className='flex flex-col items-center gap-1'>
-          <p>Contact</p>
+        <NavLink to='/SubscriptionPage' className='flex flex-col items-center gap-1'>
+          <p>Subscription</p>
         </NavLink>
         <NavLink to='/news' className='flex flex-col items-center gap-1'>
           <p>News</p>
