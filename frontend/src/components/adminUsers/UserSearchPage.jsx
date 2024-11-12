@@ -33,7 +33,7 @@ function UserSearchPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-200 p-6">
+    <div className="min-h-screen bg-[url(https://i.pinimg.com/736x/66/20/87/662087df1986b1e97b3bd46c57a89a2f.jpg)] bg-fill bg-top p-6">
       <UserSearchForm onSearch={fetchUsers} />
       {loading && <div className="loader">Loading...</div>}
       <div className="mt-8 grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">

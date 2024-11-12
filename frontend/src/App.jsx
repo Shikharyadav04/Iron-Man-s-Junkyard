@@ -47,7 +47,7 @@ const App = () => {
     // Automatically hide splash screen after video ends (e.g., 3 seconds)
     const timer = setTimeout(() => {
       setShowSplash(false);
-    }, 12000); // Adjust to match video duration
+    }, 10000); // Adjust to match video duration
     return () => clearTimeout(timer);
   }, []);
 

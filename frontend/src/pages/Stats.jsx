@@ -25,7 +25,7 @@ const Stats = () => {
   if (error) return <p className="text-center text-red-600 font-semibold">{error}</p>;
 
   return (
-    <div className="p-8 bg-gray-100 min-h-screen">
+    <div className="p-8 bg-gray-100 min-h-screen bg-[url(https://i.pinimg.com/736x/c9/cd/b7/c9cdb7e9fa4b8edb14f610ba4762e280.jpg)] bg-cover">
       <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">Admin Stats Dashboard</h2>
 
       <div className="stats-container grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

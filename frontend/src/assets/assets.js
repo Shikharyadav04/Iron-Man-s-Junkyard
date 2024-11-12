@@ -33,6 +33,8 @@ import tree from './tree.png'
 import seedling from './seedling.png'
 import forest from './forest.png'
 import userbanner1 from './userbanner1.gif'
+import loader1 from './loader1.mp4'
+
 
 
 
@@ -76,7 +78,7 @@ export const assets = {
     notice,
     createscrap,
     username,
-    loader,forest,seedling,tree,userbanner1
+    loader,forest,seedling,tree,userbanner1,loader1
     
     
    
