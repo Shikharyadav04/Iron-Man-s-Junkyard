@@ -21,17 +21,18 @@ import  e1  from './e1.jpg'
 import  e2  from './e2.jpg'
 import  e3  from './e3.jpg'
 import theme from './theme.jpg'
-import userbanner from './userbanner.png'
+import userbanner from './userbanner.jpg'
 import notice from './notice.jpg'
-import avatar from './avatar.jpg'
-import password from './password.jpg'
-import chat from './chat.jpg'
-import createscrap from './createscrap.jpg'
+import avatar from './avatar.png'
+import password from './password.png'
+import chat from './chat.png'
+import createscrap from './createscrap.png'
 import username from './username.jpg'
 import loader from './loader.mp4'
 import tree from './tree.png'
 import seedling from './seedling.png'
 import forest from './forest.png'
+import userbanner1 from './userbanner1.gif'
 
 
 
@@ -75,7 +76,7 @@ export const assets = {
     notice,
     createscrap,
     username,
-    loader,forest,seedling,tree
+    loader,forest,seedling,tree,userbanner1
     
     
    

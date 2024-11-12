@@ -20,7 +20,7 @@ const PricingCard = ({ title, price, description, features, bgColor, textColor, 
 
 const PricingPage = () => {
   return (
-    <div className="flex justify-center items-center min-h-screen space-x-8 p-4">
+    <div className="bg-[url(https://i.pinimg.com/originals/5c/e9/fe/5ce9fee792b1ce67dd70d376ced4c048.gif)] object-cover flex justify-center items-center min-h-screen space-x-8 p-4">
       <PricingCard
         title="Monthly"
         price="199"

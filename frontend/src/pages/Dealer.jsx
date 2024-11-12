@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 // Sidebar Component for Navigation
 const Sidebar = ({ onNavigate }) => {
   return (
-    <div className="bg-gray-800 text-white w-1/4 p-6 space-y-4">
+    <div className="bg-transparent text-white w-1/4 p-6 space-y-4">
       <button
         onClick={() => onNavigate("/dealer")}
         className="block w-full text-left py-2 px-4 rounded hover:bg-gray-700"
@@ -46,7 +46,7 @@ const Dealer = () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-gray-100">
+    <div className="flex min-h-screen bg-[url(https://i.pinimg.com/originals/fb/36/b6/fb36b6ee0ba43a905d7d6db76c21a9bf.gif)] bg-cover backdrop-blur-xl">
       {/* Sidebar for Dealer Navigation */}
       <Sidebar onNavigate={handleNavigate} />
 

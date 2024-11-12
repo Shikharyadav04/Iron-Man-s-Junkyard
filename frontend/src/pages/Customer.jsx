@@ -27,7 +27,7 @@ const Customer = () => {
   };
 
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="flex h-screen bg-[url(https://i.pinimg.com/originals/fb/36/b6/fb36b6ee0ba43a905d7d6db76c21a9bf.gif)] bg-cover backdrop-blur-xl">
       {/* Inline Sidebar for Customer */}
       <div
         className={`transition-all duration-300 ${
@@ -78,12 +78,12 @@ const Customer = () => {
 
       <div className="flex flex-col flex-1 overflow-y-auto">
         <div className="relative h-40">
-          <img
-            src={assets.userbanner}
-            alt="User Banner"
-            className="object-cover w-full h-full"
-          />
-          <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 text-white">
+          
+          
+          
+          
+          
+          <div className="absolute inset-0 flex items-center justify-center  text-black font-bold font-playfair">
             <div className="text-center">
               <img
                 src={user?.avatar || "/default-avatar.png"}
@@ -91,7 +91,7 @@ const Customer = () => {
                 className="w-24 h-24 rounded-full mx-auto mb-2 border-4 border-white"
               />
               <h1 className="text-2xl font-semibold">{user?.fullName}</h1>
-              <p className="text-md">{user?.email}</p>
+              <p className="text-md font-serif">{user?.email}</p>
             </div>
             {/* Button to toggle sidebar */}
             <button

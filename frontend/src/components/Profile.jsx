@@ -109,14 +109,14 @@ const Profile = () => {
   };
 
   return (
-  <div className="relative flex flex-col items-center bg-gradient-to-r from-gray-50 to-gray-200 p-8 rounded-lg shadow-lg w-full">
+  <div className="relative flex flex-col items-center  bg-transparent p-8  w-full">
     {successMessage && <div className="text-green-600 mb-4">{successMessage}</div>}
       {error && <div className="text-red-600 mb-4">{error}</div>}
 
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-2">
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-20">
         {/* Change Password Card */}
-        <div className="bg-white  p-6 rounded-lg shadow hover:shadow-md transition-shadow duration-300 text-center">
-          <img className="h-16 mx-auto mb-3" src={assets.password} alt="Change Password" />
+        <div className="bg-transparent py-20 w-70 rounded-lg shadow hover:shadow-md transition-shadow duration-300 text-center">
+          <img className="h-20 mx-auto mb-3" src={assets.password} alt="Change Password" />
           <button
             onClick={() => setActiveForm(activeForm === "password" ? null : "password")}
             className="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded w-full font-semibold"
@@ -147,8 +147,8 @@ const Profile = () => {
         </div>
 
         {/* Upload Avatar Card */}
-        <div className="bg-white p-6 rounded-lg shadow hover:shadow-md transition-shadow duration-300 text-center">
-          <img className="h-16 mx-auto mb-3" src={assets.avatar} alt="Change Avatar" />
+        <div className="bg-transparent py-20 w-70 rounded-lg shadow hover:shadow-md transition-shadow duration-300 text-center">
+          <img className="h-20 mx-auto mb-3" src={assets.avatar} alt="Change Avatar" />
           <button
             onClick={() => setActiveForm(activeForm === "avatar" ? null : "avatar")}
             className="bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded w-full font-semibold"
@@ -170,8 +170,8 @@ const Profile = () => {
         </div>
 
         {/* Update Username Card */}
-        <div className="bg-white p-6 rounded-lg shadow hover:shadow-md transition-shadow duration-300 text-center">
-          <img className="h-16 mx-auto mb-3" src={assets.username} alt="Change Password" />
+        <div className="bg-transparent py-20 w-70 rounded-lg shadow hover:shadow-md transition-shadow duration-300 text-center">
+          <img className="h-20 mx-auto mb-3" src={assets.username} alt="Change Password" />
           <button
             onClick={() => setActiveForm(activeForm === "username" ? null : "username")}
             className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded w-full font-semibold"
@@ -196,8 +196,8 @@ const Profile = () => {
 
         {/* Create Scrap Request Card */}
         {user?.role === "customer" && (
-          <div className="bg-white p-6 rounded-lg shadow hover:shadow-md transition-shadow duration-300 text-center">
-           <img className="h-16 mx-auto mb-3" src={assets.createscrap} alt="Change Password" />
+          <div className="bg-transparent h-25 py-20 w-90 rounded-lg shadow hover:shadow-md transition-shadow duration-300 text-center">
+           <img className="h-20 mx-auto mb-3" src={assets.createscrap} alt="Change Password" />
             <button
               onClick={() => navigate("/customer/request-creation")}
               className="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded w-full font-semibold"
@@ -208,8 +208,8 @@ const Profile = () => {
         )}
 
         {/* See Chats Button */}
-        <div className="bg-white p-6 rounded-lg shadow hover:shadow-md transition-shadow duration-300 text-center">
-          <img className="h-16 mx-auto mb-3" src={assets.chat} alt="Chat Icon" />
+        <div className="bg-transparent py-20 w-70 rounded-lg shadow hover:shadow-md transition-shadow duration-300 text-center">
+          <img className="h-20 mx-auto mb-3" src={assets.chat} alt="Chat Icon" />
           <button
             onClick={handleSeeChatsClick}
             className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-6 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
