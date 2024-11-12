@@ -11,10 +11,11 @@ import { User } from "../models/user.models.js";
 import mongoose from "mongoose";
 import { Notification } from "../models/notification.models.js";
 const ObjectId = mongoose.Types.ObjectId;
+
 const createRequest = asyncHandler(async (req, res) => {
   const { scraps, pickupLocation, scheduledPickupDate, condition } = req.body;
   const userId = req.user._id;
-  const isSubscribed = req.user.isSubscribed; // Assume `isSubscribed` field exists in the User schema
+  const isSubscriber = req.user.isSubscribed; // Assume `isSubscribed` field exists in the User schema
   console.log(`userId : ${userId}`);
   if (!Array.isArray(scraps) || scraps.length === 0) {
     throw new ApiError(400, "Scraps array is required and cannot be empty");
@@ -38,8 +39,8 @@ const createRequest = asyncHandler(async (req, res) => {
     createdAt: { $gte: startOfMonth, $lt: endOfMonth },
   });
 
-  const allowedRequests = isSubscribed ? 5 : 3; // 5 requests if subscribed, 3 otherwise
-  const maxAmount = isSubscribed ? 5000 : 2000; // 5000 if subscribed, 2000 otherwise
+  const allowedRequests = isSubscriber ? 5 : 3; // 5 requests if subscribed, 3 otherwise
+  const maxAmount = isSubscriber ? 5000 : 2000; // 5000 if subscribed, 2000 otherwise
 
   // Check if the user has exceeded the limit of requests for the month
   const user = await User.findById(userId);
@@ -54,7 +55,6 @@ const createRequest = asyncHandler(async (req, res) => {
   }
   let totalAmount = 0;
   const validatedScraps = [];
-
   // Validate scraps and calculate the total amount
   for (const { category, subCategory, quantity } of scraps) {
     const scrap = await Scrap.findOne({ category, subCategory });
@@ -96,6 +96,7 @@ const createRequest = asyncHandler(async (req, res) => {
     scheduledPickupDate,
     condition,
     totalAmount,
+    isSubscriber,
   });
 
   // Create a new transaction for the request
@@ -139,7 +140,7 @@ const getPendingRequest = asyncHandler(async (req, res) => {
   })
     .populate("userId", "fullName")
     .select(
-      "requestId scheduledPickupDate userId scraps pickupLocation condition status totalAmount"
+      "requestId scheduledPickupDate userId scraps pickupLocation condition status totalAmount isSubscriber"
     )
     .sort({ createdAt: -1 });
 

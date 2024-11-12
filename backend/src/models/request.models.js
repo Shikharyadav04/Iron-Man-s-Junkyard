@@ -52,6 +52,9 @@ const requestSchema = new Schema(
     transactionId: {
       type: String,
     },
+    isSubscriber: {
+      type: Boolean,
+    },
   },
   { timestamps: true }
 );

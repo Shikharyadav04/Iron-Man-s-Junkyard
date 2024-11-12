@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
-import BillCard from "./BillCard"; // Ensure this component exists
-import axios from "axios"; // Make sure to import axios
+import { useNavigate } from "react-router-dom";
+import BillCard from "./BillCard";
+import axios from "axios";
 
 const BillPage = () => {
-  const [bills, setBills] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [bills, setBills] = useState(
+    JSON.parse(localStorage.getItem("bills")) || []
+  );
+  const [loading, setLoading] = useState(bills.length === 0);
   const [error, setError] = useState(null);
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
 
   const fetchBills = async () => {
     try {
@@ -19,50 +21,50 @@ const BillPage = () => {
           withCredentials: true,
         }
       );
-
-      console.log("Fetched bills:", response.data); // Log the entire response
-      const fetchedBills = response.data.data; // Store the fetched bills
-
-      setBills(fetchedBills); // Set state with the bills
+      const fetchedBills = response.data.data;
+      setBills(fetchedBills);
+      localStorage.setItem("bills", JSON.stringify(fetchedBills)); // Store bills in local storage
     } catch (err) {
       console.error("Error fetching bills:", err);
-      setError("Error fetching bills."); // Set error state if there is an error
+      setError("Error fetching bills.");
     } finally {
-      setLoading(false); // Ensure loading is set to false after fetch
+      setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchBills(); // Call the fetch function when the component mounts
+    if (bills.length === 0) {
+      fetchBills(); // Fetch only if there are no bills in local storage
+    }
   }, []);
 
   const handleBack = () => {
-    navigate("/customer"); // Navigate back to the customer page
+    navigate("/customer");
   };
 
   if (loading) {
-    return <div>Loading bills...</div>; // Loading state
+    return <div>Loading bills...</div>;
   }
 
   if (error) {
-    return <div>{error}</div>; // Error state
+    return <div>{error}</div>;
   }
 
   return (
     <div className="p-4">
       <button
         onClick={handleBack}
-        className=" mb-4 py-2 px-4 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition duration-200"
+        className="mb-4 py-2 px-4 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition duration-200"
       >
         Back
       </button>
       <div className="bg-white grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {bills.length > 0 ? (
           bills.map((bill, index) => (
-            <BillCard key={`${bill.id}-${index}`} bill={bill} /> // Ensure unique key using id and index
+            <BillCard key={`${bill.id}-${index}`} bill={bill} />
           ))
         ) : (
-          <div>No bills available.</div> // Message for no bills
+          <div>No bills available.</div>
         )}
       </div>
     </div>
