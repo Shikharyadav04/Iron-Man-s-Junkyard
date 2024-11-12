@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useLoader } from "@/context/LoaderContext";
 
 const AcceptedRequestCard = ({ request }) => {
+  const { loading, showLoader, hideLoader } = useLoader(); // Use loader context
   const [paymentCompleted, setPaymentCompleted] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [error, setError] = useState(null);
@@ -30,6 +32,7 @@ const AcceptedRequestCard = ({ request }) => {
   };
 
   const initiatePayment = async () => {
+    showLoader(); // Show loader when payment initiation starts
     try {
       const amountInPaise = request.totalAmount * 100;
       const response = await axios.post("http://localhost:8000/order", {
@@ -83,10 +86,13 @@ const AcceptedRequestCard = ({ request }) => {
     } catch (err) {
       setError("Payment initiation error");
       console.error("Payment initiation error:", err);
+    } finally {
+      hideLoader(); // Hide loader after the operation
     }
   };
 
   const closeRequest = async (transactionId) => {
+    showLoader(); // Show loader on request close
     try {
       const response = await axios.post(
         "http://localhost:8000/api/v1/request/close-request",
@@ -101,6 +107,8 @@ const AcceptedRequestCard = ({ request }) => {
     } catch (err) {
       setError("Failed to close request");
       console.error("Close request error:", err);
+    } finally {
+      hideLoader(); // Hide loader after the operation
     }
   };
 
@@ -134,6 +142,11 @@ const AcceptedRequestCard = ({ request }) => {
         <span className="font-bold">Scheduled Pickup Date:</span>{" "}
         {new Date(request.scheduledPickupDate).toLocaleString()}
       </p>
+      <p className="text-gray-700">
+        <span className="font-bold">
+          Scheduled Pickup Time: {request.ScheduledPickupTime}
+        </span>
+      </p>
       <p
         className={`font-bold uppercase ${getConditionStyle(
           request.condition
@@ -142,20 +155,28 @@ const AcceptedRequestCard = ({ request }) => {
         Condition: {request.condition}
       </p>
 
-      {!paymentCompleted ? (
-        <button
-          onClick={initiatePayment}
-          className="mt-4 py-1 px-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-200 w-full"
-        >
-          Complete Payment
-        </button>
+      {loading ? (
+        <div className="flex justify-center items-center mt-4">
+          <div className="w-8 h-8 border-4 border-t-4 border-blue-500 rounded-full animate-spin"></div>
+        </div>
       ) : (
-        <button
-          onClick={() => closeRequest(request.transactionId)}
-          className="py-1 px-2 bg-red-600 mt-4 text-white font-semibold rounded-lg hover:bg-red-700 transition duration-200 w-full"
-        >
-          Close Request
-        </button>
+        <>
+          {!paymentCompleted ? (
+            <button
+              onClick={initiatePayment}
+              className="mt-4 py-1 px-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-200 w-full"
+            >
+              Complete Payment
+            </button>
+          ) : (
+            <button
+              onClick={() => closeRequest(request.transactionId)}
+              className="py-1 px-2 bg-red-600 mt-4 text-white font-semibold rounded-lg hover:bg-red-700 transition duration-200 w-full"
+            >
+              Close Request
+            </button>
+          )}
+        </>
       )}
     </div>
   );
