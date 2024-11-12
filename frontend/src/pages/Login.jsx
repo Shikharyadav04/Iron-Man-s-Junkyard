@@ -4,15 +4,17 @@ import { useLoader } from "../context/LoaderContext";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { FaEye, FaEyeSlash } from "react-icons/fa"; // Import eye icons
 
 const Login = () => {
   const { user, login } = useAuth();
   const { showLoader, hideLoader } = useLoader();
   const navigate = useNavigate();
   const [credentials, setCredentials] = useState({
-    identifier: "", // Single field for either username or email
+    identifier: "",
     password: "",
   });
+  const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
 
   useEffect(() => {
     if (user) {
@@ -28,16 +30,16 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    showLoader(); // Show the loader before login attempt
+    showLoader();
 
     const loaderTimeout = setTimeout(() => {
       hideLoader();
       toast.warning("Request taking longer than expected, please try again.");
-    }, 400000); // Hide loader after 5 seconds if login takes too long
+    }, 4000);
 
     try {
       await login(credentials);
-      clearTimeout(loaderTimeout); // Clear timeout if login succeeds within 5 seconds
+      clearTimeout(loaderTimeout);
     } catch (error) {
       console.error("Error logging in:", error);
       toast.error(error.message || "Login failed. Please try again.");
@@ -63,14 +65,23 @@ const Login = () => {
           className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
         />
 
-        <input
-          type="password"
-          name="password"
-          onChange={handleChange}
-          placeholder="Password"
-          required
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
-        />
+        <div className="relative">
+          <input
+            type={showPassword ? "text" : "password"} // Toggle between "text" and "password"
+            name="password"
+            onChange={handleChange}
+            placeholder="Password"
+            required
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute inset-y-0 right-0 flex items-center px-3 text-gray-600"
+          >
+            {showPassword ? <FaEyeSlash /> : <FaEye />} {/* Toggle icon */}
+          </button>
+        </div>
 
         <button
           type="submit"
