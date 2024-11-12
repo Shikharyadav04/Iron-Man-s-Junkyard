@@ -22,14 +22,17 @@ const ScrapManagement = () => {
   const addScrap = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:8000/api/v1/admin/addScrap", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        withCredentials: true,
-        body: JSON.stringify(scrapData),
-      });
+      const response = await fetch(
+        "http://localhost:8000/api/v1/admin/addScrap",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+          body: JSON.stringify(scrapData),
+        }
+      );
       const result = await response.json();
       alert(result.message);
       // Reset the form after successful addition
@@ -42,14 +45,17 @@ const ScrapManagement = () => {
   const changeScrapPrice = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:8000/api/v1/admin/changeScrapPrice", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        withCredentials: true,
-        body: JSON.stringify(priceData),
-      });
+      const response = await fetch(
+        "http://localhost:8000/api/v1/admin/changeScrapPrice",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+          body: JSON.stringify(priceData),
+        }
+      );
       const result = await response.json();
       alert(result.message);
       // Reset the form after successful update
@@ -68,7 +74,9 @@ const ScrapManagement = () => {
           name="category"
           placeholder="Category"
           value={scrapData.category}
-          onChange={(e) => setScrapData({ ...scrapData, category: e.target.value })}
+          onChange={(e) =>
+            setScrapData({ ...scrapData, category: e.target.value })
+          }
           required
           className="p-2 border rounded w-full"
         />
@@ -77,7 +85,9 @@ const ScrapManagement = () => {
           name="subCategory"
           placeholder="Sub Category"
           value={scrapData.subCategory}
-          onChange={(e) => setScrapData({ ...scrapData, subCategory: e.target.value })}
+          onChange={(e) =>
+            setScrapData({ ...scrapData, subCategory: e.target.value })
+          }
           required
           className="p-2 border rounded w-full"
         />
@@ -86,11 +96,16 @@ const ScrapManagement = () => {
           name="pricePerUnit"
           placeholder="Price Per Unit"
           value={scrapData.pricePerUnit}
-          onChange={(e) => setScrapData({ ...scrapData, pricePerUnit: e.target.value })}
+          onChange={(e) =>
+            setScrapData({ ...scrapData, pricePerUnit: e.target.value })
+          }
           required
           className="p-2 border rounded w-full"
         />
-        <button type="submit" className="py-2 px-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-200 w-full">
+        <button
+          type="submit"
+          className="py-2 px-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-200 w-full"
+        >
           Add Scrap
         </button>
       </form>
@@ -102,7 +117,9 @@ const ScrapManagement = () => {
           name="scrapCategory"
           placeholder="Scrap Category"
           value={priceData.scrapCategory}
-          onChange={(e) => setPriceData({ ...priceData, scrapCategory: e.target.value })}
+          onChange={(e) =>
+            setPriceData({ ...priceData, scrapCategory: e.target.value })
+          }
           required
           className="p-2 border rounded w-full"
         />
@@ -111,7 +128,9 @@ const ScrapManagement = () => {
           name="scrapSubCategory"
           placeholder="Scrap Sub Category"
           value={priceData.scrapSubCategory}
-          onChange={(e) => setPriceData({ ...priceData, scrapSubCategory: e.target.value })}
+          onChange={(e) =>
+            setPriceData({ ...priceData, scrapSubCategory: e.target.value })
+          }
           required
           className="p-2 border rounded w-full"
         />
@@ -120,11 +139,16 @@ const ScrapManagement = () => {
           name="newPrice"
           placeholder="New Price"
           value={priceData.newPrice}
-          onChange={(e) => setPriceData({ ...priceData, newPrice: e.target.value })}
+          onChange={(e) =>
+            setPriceData({ ...priceData, newPrice: e.target.value })
+          }
           required
           className="p-2 border rounded w-full"
         />
-        <button type="submit" className="py-2 px-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-200 w-full">
+        <button
+          type="submit"
+          className="py-2 px-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-200 w-full"
+        >
           Change Scrap Price
         </button>
       </form>
@@ -212,7 +236,7 @@ const Admin = () => {
             "Content-Type": "application/json",
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
-          withCredentials: true
+          withCredentials: true,
         }
       );
 
@@ -292,7 +316,9 @@ const Admin = () => {
           <input
             type="text"
             value={userData.fullName}
-            onChange={(e) => setUserData({ ...userData, fullName: e.target.value })}
+            onChange={(e) =>
+              setUserData({ ...userData, fullName: e.target.value })
+            }
             placeholder="Full Name"
             className="p-2 border rounded w-full"
             required
@@ -300,7 +326,9 @@ const Admin = () => {
           <input
             type="email"
             value={userData.email}
-            onChange={(e) => setUserData({ ...userData, email: e.target.value })}
+            onChange={(e) =>
+              setUserData({ ...userData, email: e.target.value })
+            }
             placeholder="Email"
             className="p-2 border rounded w-full"
             required
@@ -366,10 +394,20 @@ const Admin = () => {
       {/* Scrap Management Component */}
       <ScrapManagement />
       <div className="cursor-pointer py-5">
-        <NavLink to='/unverified-dealer'
-            className="block text-center py-2 px-4 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition duration-200 w-full"
-
-        >Verification</NavLink>
+        <NavLink
+          to="/unverified-dealer"
+          className="block text-center py-2 px-4 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition duration-200 w-full"
+        >
+          Verification
+        </NavLink>
+      </div>
+      <div className="cursor-pointer py-5">
+        <NavLink
+          to="/user-search"
+          className="block text-center py-2 px-4 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition duration-200 w-full"
+        >
+          Ban User
+        </NavLink>
       </div>
     </div>
   );

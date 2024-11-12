@@ -4,6 +4,7 @@ import { Scrap } from "../models/scrap.models.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { User } from "../models/user.models.js";
 import { Request } from "../models/request.models.js";
+import { response } from "express";
 const addScrap = asyncHandler(async (req, res) => {
   //take info form body
   //validate
@@ -108,4 +109,42 @@ const getStats = asyncHandler(async (req, res) => {
     );
 });
 
-export { addScrap, changeScrapPrice, getStats };
+const getUsers = asyncHandler(async (req, res) => {
+  const { username, email, role, isSubscribed } = req.body;
+  console.log(req.body);
+
+  if (!username && !email && !role && !isSubscribed) {
+    throw new ApiError(400, "Please provide at least one user field");
+  }
+  const matchCriteria = {};
+  if (username) matchCriteria.username = username;
+  if (email) matchCriteria.email = email;
+  if (role) matchCriteria.role = role;
+  if (isSubscribed !== undefined) matchCriteria.isSubscribed = isSubscribed;
+  matchCriteria.isbanned = false;
+  const users = await User.aggregate([{ $match: matchCriteria }]);
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, users, "User fetched successfully"));
+});
+const banUser = asyncHandler(async (req, res) => {
+  const { username } = req.body;
+  if (!username) {
+    throw new ApiError(400, "Please provide a username");
+  }
+
+  const user = await User.findOneAndUpdate(
+    { username: username },
+    { isbanned: true }
+  );
+
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, user, "User banned successfully"));
+});
+export { addScrap, changeScrapPrice, getStats, getUsers, banUser };
