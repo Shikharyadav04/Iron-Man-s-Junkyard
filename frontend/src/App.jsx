@@ -33,6 +33,7 @@ import PricingPage from "./pages/PricingPage";
 import SplashScreen from "./components/SplashScreen"; // Import the SplashScreen component
 import UserSearchPage from "./components/adminUsers/UserSearchPage";
 import "../src/components/Custome.css";
+import ThankYou from "./components/ThankYou";
 const App = () => {
   const { user } = useAuth();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -81,6 +82,7 @@ const App = () => {
               path="/SubscriptionPage"
               element={user ? <SubscriptionPage /> : <Navigate to="/login" />}
             />
+            <Route path = "/thankyou" element = {<ThankYou/>}/>
             <Route path="/news" element={<News />} />
             <Route path="/stats" element={<Stats />} />
             <Route path="/pricing" element={<PricingPage />} />
