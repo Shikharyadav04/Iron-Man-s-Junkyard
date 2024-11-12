@@ -5,11 +5,12 @@ import { useSocket } from "@/context/SocketProvider";
 
 const ChatRoom = () => {
   const { roomId } = useParams();
-  const socket = useSocket(); // Access the shared socket instance
+  const socket = useSocket();
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
   const messagesEndRef = useRef(null);
 
+  // Initial setup for joining the room and listening for new messages via WebSocket
   useEffect(() => {
     if (!socket) return;
 
@@ -35,9 +36,28 @@ const ChatRoom = () => {
     };
   }, [socket, roomId]);
 
+  // Smooth scroll to the latest message whenever messages update
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+  // Polling every 2 seconds to fetch the latest messages
+  useEffect(() => {
+    const interval = setInterval(() => {
+      axios
+        .get(`http://localhost:8000/api/v1/chat/${roomId}/messages`, {
+          withCredentials: true,
+        })
+        .then((response) => {
+          setMessages(response.data.data.messages);
+        })
+        .catch((error) => {
+          console.error("Error fetching chat messages:", error);
+        });
+    }, 2000);
+
+    return () => clearInterval(interval);
+  }, [roomId]);
 
   const handleSendMessage = () => {
     if (message.trim()) {
