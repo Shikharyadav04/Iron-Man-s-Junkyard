@@ -105,7 +105,7 @@ const SubscriptionPage = () => {
   };
 
   return (
-    <div className="max-w-lg mx-auto p-4 bg-white rounded-lg shadow-md mt-8">
+    <div className="max-w-lg mx-auto py-10 p-4 bg-white rounded-lg shadow-md mt-8">
       <h1 className="text-3xl font-semibold text-center text-gray-800 mb-6">Subscription Page</h1>
       <p className="text-lg text-gray-700 mb-4">Select subscription duration:</p>
       <select
