@@ -17,10 +17,7 @@ connectDB()
     const io = new Server(server, {
       cors: {
         origin: "http://localhost:5173",
-<<<<<<< HEAD
-=======
         origin: "http://localhost:5175",
->>>>>>> 57fe0c9aa5c92079d686694c49420929d50fdfc8
         credentials: true,
         methods: ["GET", "POST", "PUT"],
       },

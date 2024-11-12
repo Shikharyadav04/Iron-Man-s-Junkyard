@@ -1,7 +1,6 @@
 import asyncHandler from "express-async-handler";
-import User from "../models/User.js";
-import Request from "../models/Request.js";
-import express from e
+import { User } from "../models/user.models.js";
+import { Request } from "../models/request.models.js";
 
 // Stats Endpoints
 
