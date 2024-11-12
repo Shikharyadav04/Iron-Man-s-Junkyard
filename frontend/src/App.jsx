@@ -32,7 +32,7 @@ import Stats from "./pages/Stats";
 import PricingPage from "./pages/PricingPage";
 import SplashScreen from "./components/SplashScreen"; // Import the SplashScreen component
 import UserSearchPage from "./components/adminUsers/UserSearchPage";
-import TypingEffect from "./pages/TypingEffect";
+import "../src/components/Custome.css";
 const App = () => {
   const { user } = useAuth();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
