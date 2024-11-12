@@ -8,13 +8,21 @@ import { useLoader } from "@/context/LoaderContext"; // Import the loader contex
 const categorySubcategoryMap = {
   Metals: ["Aluminum", "Copper", "Steel", "Brass"],
   Plastics: ["PET", "HDPE", "PVC", "LDPE"],
-  Electronics: ["Laptops", "Desktops", "Computer Accessories", "Smartphones", "Tablets"],
+  Electronics: [
+    "Laptops",
+    "Desktops",
+    "Computer Accessories",
+    "Smartphones",
+    "Tablets",
+  ],
   Glass: ["Bottles", "Windows", "Jars"],
   Paper: ["Office Paper", "Cardboard Boxes", "Newspaper"],
 };
 
 function RequestCreation() {
-  const [scraps, setScraps] = useState([{ category: "", subCategory: "", quantity: 1 }]);
+  const [scraps, setScraps] = useState([
+    { category: "", subCategory: "", quantity: 1 },
+  ]);
   const [pickupLocation, setPickupLocation] = useState("");
   const [scheduledPickupDate, setScheduledPickupDate] = useState("");
   const [condition, setCondition] = useState("");
@@ -52,7 +60,10 @@ function RequestCreation() {
       const response = await axios.post(
         "http://localhost:8000/api/v1/request/request-creation",
         { scraps, pickupLocation, scheduledPickupDate, condition },
-        { headers: { "Content-Type": "application/json" }, withCredentials: true }
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        }
       );
 
       if (response.data.success) {
@@ -83,9 +94,11 @@ function RequestCreation() {
         >
           ← Back
         </button>
-        
+
         {/* Form title */}
-        <h2 className="text-2xl font-semibold text-center mb-6">Create Request</h2>
+        <h2 className="text-2xl font-semibold text-center mb-6">
+          Create Request
+        </h2>
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -93,7 +106,9 @@ function RequestCreation() {
             <div key={index} className="space-y-2">
               {/* Category Dropdown */}
               <div>
-                <label className="block text-sm font-medium text-gray-700">Category</label>
+                <label className="block text-sm font-medium text-gray-700">
+                  Category
+                </label>
                 <select
                   name="category"
                   value={scrap.category}
@@ -101,16 +116,22 @@ function RequestCreation() {
                   required
                   className="mt-1 p-2 border border-gray-300 rounded-md w-full focus:outline-none focus:ring focus:ring-indigo-500"
                 >
-                  <option value="" disabled>Select a category</option>
+                  <option value="" disabled>
+                    Select a category
+                  </option>
                   {Object.keys(categorySubcategoryMap).map((category) => (
-                    <option key={category} value={category}>{category}</option>
+                    <option key={category} value={category}>
+                      {category}
+                    </option>
                   ))}
                 </select>
               </div>
-              
+
               {/* Sub-Category Dropdown */}
               <div>
-                <label className="block text-sm font-medium text-gray-700">Sub-Category</label>
+                <label className="block text-sm font-medium text-gray-700">
+                  Sub-Category
+                </label>
                 <select
                   name="subCategory"
                   value={scrap.subCategory}
@@ -119,16 +140,25 @@ function RequestCreation() {
                   disabled={!scrap.category}
                   className="mt-1 p-2 border border-gray-300 rounded-md w-full focus:outline-none focus:ring focus:ring-indigo-500"
                 >
-                  <option value="" disabled>Select a sub-category</option>
-                  {scrap.category && categorySubcategoryMap[scrap.category].map((subCategory) => (
-                    <option key={subCategory} value={subCategory}>{subCategory}</option>
-                  ))}
+                  <option value="" disabled>
+                    Select a sub-category
+                  </option>
+                  {scrap.category &&
+                    categorySubcategoryMap[scrap.category].map(
+                      (subCategory) => (
+                        <option key={subCategory} value={subCategory}>
+                          {subCategory}
+                        </option>
+                      )
+                    )}
                 </select>
               </div>
 
               {/* Quantity Input */}
               <div>
-                <label className="block text-sm font-medium text-gray-700">Quantity</label>
+                <label className="block text-sm font-medium text-gray-700">
+                  Quantity
+                </label>
                 <input
                   type="number"
                   name="quantity"
@@ -153,7 +183,9 @@ function RequestCreation() {
 
           {/* Pickup Location Input */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">Pickup Location</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Pickup Location
+            </label>
             <input
               type="text"
               value={pickupLocation}
@@ -165,7 +197,9 @@ function RequestCreation() {
 
           {/* Scheduled Pickup Date Input */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">Scheduled Pickup Date</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Scheduled Pickup Date
+            </label>
             <input
               type="datetime-local"
               value={scheduledPickupDate}
@@ -177,14 +211,18 @@ function RequestCreation() {
 
           {/* Condition Dropdown */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">Condition</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Condition
+            </label>
             <select
               value={condition}
               onChange={(e) => setCondition(e.target.value)}
               required
               className="mt-1 p-2 border border-gray-300 rounded-md w-full focus:outline-none focus:ring focus:ring-indigo-500"
             >
-              <option value="" disabled>Select condition</option>
+              <option value="" disabled>
+                Select condition
+              </option>
               <option value="Good">Good</option>
               <option value="Old">Old</option>
               <option value="Damaged">Damaged</option>
@@ -208,7 +246,9 @@ function RequestCreation() {
             <ul className="mt-2 space-y-2">
               {summary.scraps.map((item, index) => (
                 <li key={index} className="bg-gray-100 p-2 rounded-md">
-                  {item.category} - {item.subCategory} | Quantity: {item.quantity} | Per Unit Price: {item.pricePerUnit} | Subtotal: {item.scrapTotalAmount}
+                  {item.category} - {item.subCategory} | Quantity:{" "}
+                  {item.quantity} | Per Unit Price: {item.pricePerUnit} |
+                  Subtotal: {item.scrapTotalAmount}
                 </li>
               ))}
             </ul>
