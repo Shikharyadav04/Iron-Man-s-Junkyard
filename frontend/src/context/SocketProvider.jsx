@@ -12,6 +12,8 @@ export const SocketProvider = ({ children }) => {
       reconnection: true,
       reconnectionAttempts: 10,
       reconnectionDelay: 1000,
+    },{
+      withCredentails : true,
     });
     setSocket(newSocket);
 
