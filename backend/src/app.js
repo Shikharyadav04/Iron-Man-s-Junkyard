@@ -48,7 +48,6 @@ app.use("/api/v1/chat", chatRouter);
 app.use("/api/v1/adminStats", adminStatsRouter);
 app.use("/api/v1/notifications", notificationRouter);
 
-// Error handling middleware
 const errorHandler = (err, req, res, next) => {
   console.error(err); // Log the full error to see what went wrong
   if (err instanceof ApiError) {
