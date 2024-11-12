@@ -32,7 +32,7 @@ const getChatMessages = asyncHandler(async (req, res) => {
     .json(
       new ApiResponse(
         200,
-        { messages: chat.messages },
+        { messages: chat.messages, chat },
         "Chat messages fetched successfully"
       )
     );
@@ -41,7 +41,7 @@ const sendMessage = asyncHandler(async (req, res) => {
   const { chatId } = req.params;
   const { message } = req.body;
   const senderId = req.user._id;
-
+  const senderName = req.user.username;
   const chat = await Chat.findByIdAndUpdate(
     chatId,
     {
@@ -59,6 +59,7 @@ const sendMessage = asyncHandler(async (req, res) => {
     senderId,
     message,
     timestamp: new Date(),
+    senderName,
   });
 
   res.status(200).json({ message: "Message sent successfully" });

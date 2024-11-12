@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { useSocket } from "@/context/SocketProvider";
@@ -8,7 +8,7 @@ const ChatRoom = () => {
   const socket = useSocket();
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
-  const messagesEndRef = useRef(null);
+  const [customerId, setCustomerId] = useState();
 
   // Initial setup for joining the room and listening for new messages via WebSocket
   useEffect(() => {
@@ -22,6 +22,8 @@ const ChatRoom = () => {
       })
       .then((response) => {
         setMessages(response.data.data.messages);
+        console.log(`response: ${response.data.data.chat.customerId}`);
+        setCustomerId(response.data.data.chat.customerId);
       })
       .catch((error) => {
         console.error("Error fetching chat messages:", error);
@@ -35,11 +37,6 @@ const ChatRoom = () => {
       socket.off("newMessage");
     };
   }, [socket, roomId]);
-
-  // Smooth scroll to the latest message whenever messages update
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
 
   // Polling every 2 seconds to fetch the latest messages
   useEffect(() => {
@@ -85,18 +82,27 @@ const ChatRoom = () => {
         {messages.map((msg, index) => (
           <div
             key={index}
-            className="p-3 mb-2 rounded-lg border border-gray-300 hover:bg-gray-200 transition-all"
+            className={`flex ${
+              msg.senderId === customerId ? "justify-end" : "justify-start"
+            } mb-4`}
           >
-            <div className="flex items-center justify-between">
-              <strong className="text-sm text-gray-700">{msg.senderId}</strong>
-              <span className="text-xs text-gray-500">
-                {new Date(msg.timestamp).toLocaleString() || "Invalid time"}
-              </span>
+            <div
+              className={`${
+                msg.senderId === "user"
+                  ? "bg-blue-500 text-white"
+                  : "bg-gray-200 text-gray-800"
+              } p-3 rounded-lg max-w-xs`}
+            >
+              <div className="flex justify-between text-xs text-gray-500">
+                <strong>{msg.senderName}</strong>
+                <span>
+                  {new Date(msg.timestamp).toLocaleString() || "Invalid time"}
+                </span>
+              </div>
+              <p>{msg.message}</p>
             </div>
-            <div className="mt-1 text-gray-800">{msg.message}</div>
           </div>
         ))}
-        <div ref={messagesEndRef} />
       </div>
       <div className="flex items-center border-t border-gray-300 pt-4">
         <input

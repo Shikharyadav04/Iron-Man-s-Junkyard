@@ -18,6 +18,7 @@ export const setSocket = (socketIoInstance) => {
         senderId,
         message,
         timestamp: new Date(),
+        senderName,
       });
     });
 
