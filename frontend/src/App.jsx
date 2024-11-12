@@ -31,7 +31,6 @@ import ChatRooms from "./components/ChatRooms";
 import Stats from "./pages/Stats";
 import PricingPage from "./pages/PricingPage";
 import SplashScreen from "./components/SplashScreen"; // Import the SplashScreen component
-import TypingEffect from "./pages/TypingEffect";
 import  UserSearchPage from "./components/adminUsers/UserSearchPage"
 
 const App = () => {
@@ -71,7 +70,6 @@ const App = () => {
           />
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/TypingEffect" element={<TypingEffect />} />
             <Route path="/about" element={<About />} />
             <Route path="/buy" element={<Buy />} />
             <Route path="/login" element={<Login />} />
