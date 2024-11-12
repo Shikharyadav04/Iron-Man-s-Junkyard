@@ -1,4 +1,5 @@
 // SocketProvider.js
+import { ContainerWithChildren } from "postcss/lib/container";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import io from "socket.io-client";
 
@@ -8,13 +9,17 @@ export const SocketProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
-    const newSocket = io("http://localhost:8000", {
-      reconnection: true,
-      reconnectionAttempts: 10,
-      reconnectionDelay: 1000,
-    },{
-      withCredentails : true,
-    });
+    const newSocket = io(
+      "http://localhost:8000",
+      {
+        reconnection: true,
+        reconnectionAttempts: 10,
+        reconnectionDelay: 1000,
+      },
+      {
+        withCredentials: true,
+      }
+    );
     setSocket(newSocket);
 
     return () => newSocket.close(); // Clean up on unmount
