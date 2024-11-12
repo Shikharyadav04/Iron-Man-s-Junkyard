@@ -32,7 +32,7 @@ const NotificationBell = ({ userId }) => {
 
   const markAllAsRead = async () => {
     try {
-      await axios.put(
+      const response = await axios.put(
         "http://localhost:8000/api/v1/notifications/mark-all-read",
         {},
         {
@@ -40,10 +40,12 @@ const NotificationBell = ({ userId }) => {
         }
       );
 
-      setNotifications((prev) =>
-        prev.map((notif) => ({ ...notif, read: true }))
-      );
-      setUnreadCount(0);
+      // Log the updated notifications returned from the backend
+      console.log("Updated notifications:", response.data.data.notifications);
+
+      // Update the state with the new notifications
+      setNotifications(response.data.data.notifications);
+      setUnreadCount(0); // Reset unread count to 0
     } catch (error) {
       console.error("Error marking notifications as read:", error);
     }
@@ -79,7 +81,12 @@ const NotificationBell = ({ userId }) => {
         ref={buttonRef}
         className="relative z-50"
       >
-        🔔 {unreadCount > 0 && <span>{unreadCount}</span>}
+        🔔
+        {unreadCount > 0 && (
+          <span className="absolute top-0 right-0 bg-red-500 text-white text-xs font-bold rounded-full px-1">
+            {unreadCount}
+          </span>
+        )}
       </button>
 
       {/* Notification Dropdown */}

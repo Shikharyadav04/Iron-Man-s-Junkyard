@@ -11,6 +11,7 @@ import {
   acceptDealerRegistration,
   askDealerRegistration,
   getdealerRequests,
+  subscribeUser,
 } from "../controllers/user.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
@@ -43,4 +44,5 @@ router.route("/get-dealer-request").get(getdealerRequests);
 router.route("/accept-dealer").post(acceptDealerRegistration);
 
 router.route("/verifyjwt").get(verifyJWT);
+router.route("/subscribe").post(verifyJWT, subscribeUser);
 export default router;

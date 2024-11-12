@@ -115,7 +115,6 @@ const createRequest = asyncHandler(async (req, res) => {
       "Your request has been created for further details check your mail",
   });
   const io = getIo();
-  // Send an email to the user
   io.to(userId.toString()).emit("newNotification", notification);
   await sendMail({
     to: req.user.email,

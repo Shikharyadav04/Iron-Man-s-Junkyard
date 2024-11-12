@@ -29,7 +29,11 @@ const Customer = () => {
   return (
     <div className="flex h-screen bg-gray-100">
       {/* Inline Sidebar for Customer */}
-      <div className={`transition-all duration-300 ${isSidebarOpen ? "w-64" : "w-0"} overflow-hidden`}>
+      <div
+        className={`transition-all duration-300 ${
+          isSidebarOpen ? "w-64" : "w-0"
+        } overflow-hidden`}
+      >
         <div className="w-64 h-full bg-white p-6 shadow-lg">
           <div className="space-y-4">
             <button
@@ -106,7 +110,6 @@ const Customer = () => {
 
         <div className="flex flex-col items-center py-10 px-6">
           <Profile user={user} />
-
         </div>
       </div>
     </div>
