@@ -18,7 +18,7 @@ const Profile = () => {
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
-  const [activeForm, setActiveForm] = useState(null); // Form toggle state
+  const [activeForm, setActiveForm] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -45,11 +45,7 @@ const Profile = () => {
 
   const handleUpdateUserDetails = async (event) => {
     event.preventDefault();
-    const payload = {
-      fullName: userData.fullName,
-      email: userData.email,
-    };
-
+    const payload = { fullName: userData.fullName, email: userData.email };
     try {
       const response = await axios.patch(
         "http://localhost:8000/api/v1/users/update-account",
@@ -62,44 +58,29 @@ const Profile = () => {
           withCredentials: true,
         }
       );
-
       setUserData(response.data.data);
       setSuccessMessage("User details updated successfully!");
     } catch (error) {
-      setError(
-        error.response?.data.message || "An error occurred while updating user details."
-      );
+      setError(error.response?.data.message || "An error occurred while updating user details.");
     }
   };
 
   const handleChangePassword = async (event) => {
     event.preventDefault();
-
-    const payload = {
-      oldPassword,
-      newPassword,
-    };
-
+    const payload = { oldPassword, newPassword };
     try {
-      await axios.post(
-        "http://localhost:8000/api/v1/users/change-password",
-        payload,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-          withCredentials: true,
-        }
-      );
-
+      await axios.post("http://localhost:8000/api/v1/users/change-password", payload, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        withCredentials: true,
+      });
       setSuccessMessage("Password changed successfully!");
       setOldPassword("");
       setNewPassword("");
     } catch (error) {
-      setError(
-        error.response?.data.message || "An error occurred while changing the password."
-      );
+      setError(error.response?.data.message || "An error occurred while changing the password.");
     }
   };
 
@@ -107,66 +88,56 @@ const Profile = () => {
     event.preventDefault();
     const formData = new FormData();
     formData.append("avatar", avatarFile);
-
     try {
-      const response = await axios.patch(
-        "http://localhost:8000/api/v1/users/avatar",
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-          withCredentials: true,
-        }
-      );
-
+      const response = await axios.patch("http://localhost:8000/api/v1/users/avatar", formData, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        withCredentials: true,
+      });
       setUserData(response.data.data);
       setSuccessMessage("Avatar updated successfully!");
     } catch (error) {
-      setError(
-        error.response?.data.message || "An error occurred while updating the avatar."
-      );
+      setError(error.response?.data.message || "An error occurred while updating the avatar.");
     }
   };
 
-  if (loading) return <div>Loading user data...</div>;
+  if (loading) return <div className="text-center">Loading user data...</div>;
 
   const handleSeeChatsClick = () => {
-    navigate("/chats"); // Navigate to the Chat page
+    navigate("/chats");
   };
 
   return (
-    <div className="relative flex flex-col items-center bg-gray-100 py-5 shadow-md w-screen ">    
-
+    <div className="relative flex flex-col items-center bg-gradient-to-r from-gray-50 to-gray-200 p-8 rounded-lg shadow-lg max-w-4xl mx-auto w-full">
       {successMessage && <div className="text-green-600 mb-4">{successMessage}</div>}
       {error && <div className="text-red-600 mb-4">{error}</div>}
 
-      {/* Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-4 w-screen h-[80vh]">
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
         {/* Change Password Card */}
-        <div className= "p-4 ">
-          <img className='' src={assets.password}/>
+        <div className="bg-white p-6 rounded-lg shadow hover:shadow-md transition-shadow duration-300 text-center">
+          <img className="h-16 mx-auto mb-3" src={assets.password} alt="Change Password" />
           <button
             onClick={() => setActiveForm(activeForm === "password" ? null : "password")}
-            className="bg-green-600 text-white py-2 px-4 rounded w-full"
+            className="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded w-full font-semibold"
           >
             Change Password
           </button>
           {activeForm === "password" && (
-            <form onSubmit={handleChangePassword} className="space-y-4 mt-4">
+            <form onSubmit={handleChangePassword} className="mt-4 space-y-3">
               <input
                 type="password"
                 value={oldPassword}
                 onChange={(e) => setOldPassword(e.target.value)}
                 placeholder="Old Password"
-                className="p-2 border rounded w-full"
+                className="p-3 border rounded w-full"
               />
               <input
                 type="password"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 placeholder="New Password"
-                className="p-2 border rounded w-full"
+                className="p-3 border rounded w-full"
               />
               <button type="submit" className="bg-green-600 text-white py-2 px-4 rounded w-full">
                 Submit
@@ -176,20 +147,20 @@ const Profile = () => {
         </div>
 
         {/* Upload Avatar Card */}
-        <div className=" p-4 ">
-          <img src={assets.avatar}/>
+        <div className="bg-white p-6 rounded-lg shadow hover:shadow-md transition-shadow duration-300 text-center">
+          <img className="h-16 mx-auto mb-3" src={assets.avatar} alt="Change Avatar" />
           <button
             onClick={() => setActiveForm(activeForm === "avatar" ? null : "avatar")}
-            className="bg-indigo-600 text-white py-2 px-4 rounded w-full"
+            className="bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded w-full font-semibold"
           >
             Change Avatar
           </button>
           {activeForm === "avatar" && (
-            <form onSubmit={handleAvatarUpload} className="space-y-4 mt-4">
+            <form onSubmit={handleAvatarUpload} className="mt-4 space-y-3">
               <input
                 type="file"
                 onChange={(e) => setAvatarFile(e.target.files[0])}
-                className="p-2 border rounded w-full"
+                className="p-3 border rounded w-full"
               />
               <button type="submit" className="bg-indigo-600 text-white py-2 px-4 rounded w-full">
                 Upload
@@ -199,21 +170,22 @@ const Profile = () => {
         </div>
 
         {/* Update Username Card */}
-        <div className=" p-4 ">
+        <div className="bg-white p-6 rounded-lg shadow hover:shadow-md transition-shadow duration-300 text-center">
+          <img className="h-16 mx-auto mb-3" src={assets.username} alt="Change Password" />
           <button
             onClick={() => setActiveForm(activeForm === "username" ? null : "username")}
-            className="bg-blue-600 text-white py-2 px-4 rounded w-full"
+            className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded w-full font-semibold"
           >
             Update Username
           </button>
           {activeForm === "username" && (
-            <form onSubmit={handleUpdateUserDetails} className="space-y-4 mt-4">
+            <form onSubmit={handleUpdateUserDetails} className="mt-4 space-y-3">
               <input
                 type="text"
                 value={userData.fullName}
                 onChange={(e) => setUserData({ ...userData, fullName: e.target.value })}
                 placeholder="Full Name"
-                className="p-2 border rounded w-full"
+                className="p-3 border rounded w-full"
               />
               <button type="submit" className="bg-blue-600 text-white py-2 px-4 rounded w-full">
                 Update
@@ -224,25 +196,27 @@ const Profile = () => {
 
         {/* Create Scrap Request Card */}
         {user?.role === "customer" && (
-          <div className=" p-4 ">
+          <div className="bg-white p-6 rounded-lg shadow hover:shadow-md transition-shadow duration-300 text-center">
+           <img className="h-16 mx-auto mb-3" src={assets.createscrap} alt="Change Password" />
             <button
               onClick={() => navigate("/customer/request-creation")}
-              className="py-2 px-4 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition duration-200 w-full"
+              className="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded w-full font-semibold"
             >
               Create Scrap Request
             </button>
           </div>
         )}
 
-          <div className="p-4">
-            <img className="" src={assets.chat} alt="Chat Icon" />
-            <button
-              onClick={handleSeeChatsClick}
-              className="py-2 px-4 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition duration-200 w-full"
-            >
-              See Chats
-            </button>
-          </div>
+        {/* See Chats Button */}
+        <div className="bg-white p-6 rounded-lg shadow hover:shadow-md transition-shadow duration-300 text-center">
+          <img className="h-16 mx-auto mb-3" src={assets.chat} alt="Chat Icon" />
+          <button
+            onClick={handleSeeChatsClick}
+            className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-6 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+          >
+            See Chats
+          </button>
+        </div>
       </div>
     </div>
   );

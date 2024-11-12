@@ -8,7 +8,8 @@ const Navbar = () => {
   const { user } = useAuth();
   const [visible, setVisible] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const navigate = useNavigate(); // To navigate programmatically
+  const [adminDropdownVisible, setAdminDropdownVisible] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -21,7 +22,6 @@ const Navbar = () => {
   }, []);
 
   const handleHomeClick = () => {
-    // Redirect user to their specific role's page
     if (user) {
       switch (user.role) {
         case 'admin':
@@ -49,15 +49,40 @@ const Navbar = () => {
       </Link>
 
       <ul className='hidden sm:flex gap-5 text-sm'>
-        {/* Dynamically render Home or user role page */}
         <li className='flex flex-col items-center gap-1'>
-          <p onClick={handleHomeClick} className="cursor-pointer">
-            {user ? 
-              (user.role === 'admin' ? 'Admin' : 
-              user.role === 'customer' ? 'Customer' : 
-              user.role === 'dealer' ? 'Dealer' : 'Home') 
-              : 'Home'}
-          </p>
+          {user ? (
+            user.role === 'admin' ? (
+              <div 
+                className='relative cursor-pointer'
+                onMouseEnter={() => setAdminDropdownVisible(true)}
+                onMouseLeave={() => setAdminDropdownVisible(false)}
+              >
+                <p>Admin</p>
+                {adminDropdownVisible && (
+                  <div className='absolute top-5 left-0 z-20 bg-gray-700 text-white py-2 rounded shadow-lg'>
+                    <NavLink 
+                      to='/admin' 
+                      className='block px-4 py-2 hover:bg-gray-600'
+                    >
+                      Dashboard
+                    </NavLink>
+                    <NavLink 
+                      to='/stats' 
+                      className='block px-4 py-2 hover:bg-gray-600'
+                    >
+                      Stats
+                    </NavLink>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <p onClick={handleHomeClick} className="cursor-pointer">
+                {user.role.charAt(0).toUpperCase() + user.role.slice(1)}
+              </p>
+            )
+          ) : (
+            <p onClick={handleHomeClick} className="cursor-pointer">Home</p>
+          )}
         </li>
         <NavLink to='/about' className='flex flex-col items-center gap-1'>
           <p>About</p>
@@ -106,7 +131,6 @@ const Navbar = () => {
 
         <img onClick={() => setVisible(true)} src={assets.menu_icon} className='w-5 cursor-pointer sm:hidden' alt='Menu' />
 
-        {/* Sidebar menu */}
         <div className={`fixed top-0 right-0 bottom-0 bg-white transition-all duration-300 ${visible ? 'w-full z-50' : 'w-0 overflow-hidden'} sm:hidden`}>
           <div className='flex flex-col text-gray-600'>
             <div onClick={() => setVisible(false)} className='flex items-center gap-4 p-3'>

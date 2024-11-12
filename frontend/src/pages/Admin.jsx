@@ -60,7 +60,7 @@ const ScrapManagement = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 ">
       <h2 className="text-xl font-semibold">Add Scrap</h2>
       <form onSubmit={addScrap} className="space-y-4">
         <input
@@ -365,8 +365,11 @@ const Admin = () => {
 
       {/* Scrap Management Component */}
       <ScrapManagement />
-      <div className="cursor-pointer">
-        <NavLink to='/unverified-dealer'>Verification</NavLink>
+      <div className="cursor-pointer py-5">
+        <NavLink to='/unverified-dealer'
+            className="block text-center py-2 px-4 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition duration-200 w-full"
+
+        >Verification</NavLink>
       </div>
     </div>
   );

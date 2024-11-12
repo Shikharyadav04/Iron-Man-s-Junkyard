@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-const Sidebar = ({ isSidebarOpen, toggleSidebar, sidebarRef, userRole }) => {
+const Sidebar = ({ isSidebarOpen, toggleSidebar, userRole }) => {
   const navigate = useNavigate();
 
   const handleNavigate = (path) => {
@@ -12,10 +12,7 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar, sidebarRef, userRole }) => {
   return (
     <>
       {isSidebarOpen && (
-        <div
-          ref={sidebarRef} // Attach the ref to the sidebar
-          className="fixed top-0 left-0 z-40 w-1/4 h-full bg-white p-6 shadow-lg"
-        >
+        <div className="w-64 h-full bg-white p-6 shadow-lg">
           <div className="space-y-4">
             {userRole === "customer" && (
               <>

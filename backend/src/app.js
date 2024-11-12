@@ -35,6 +35,8 @@ import newsRouter from "../src/routes/news.routes.js";
 import tweetRouter from "../src/routes/tweet.routes.js";
 import chatRouter from "../src/routes/chat.routes.js";
 import notificationRouter from "./routes/notification.routes.js";
+import adminStatsRouter from "./routes/adminStats.routes.js"
+
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/request", requestRouter);
 app.use("/api/v1/admin", adminRouter);
@@ -44,6 +46,8 @@ app.use("/api/v1/payment", paymentRouter);
 app.use("/api/v1/news", newsRouter);
 app.use("/api/v1/tweet", tweetRouter);
 app.use("/api/v1/chat", chatRouter);
+app.use("/api/v1/adminStats", adminStatsRouter);
+
 // Error handling middleware
 const errorHandler = (err, req, res, next) => {
   console.error(err); // Log the full error to see what went wrong

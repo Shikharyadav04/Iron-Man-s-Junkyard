@@ -28,6 +28,7 @@ import Success from "./pages/Success";
 import DealerRequests from "./pages/DealerRequests";
 import ChatRoom from "./components/ChatRoom";
 import ChatRooms from "./components/ChatRooms";
+import Stats from "./pages/Stats";
 
 const App = () => {
   const { user } = useAuth();
@@ -59,6 +60,8 @@ const App = () => {
         <Route path="/feedback" element={<Feedback />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/news" element={<News />} />
+        <Route path="/stats" element={<Stats />} />
+
         <Route path="/business" element={<Business />} />
         <Route path="/unverified-dealer" element={<DealerRequests />} />
         {/* Role-based routes */}
