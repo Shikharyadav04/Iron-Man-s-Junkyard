@@ -135,6 +135,9 @@ const Navbar = () => {
         <NavLink to="/news" className="flex flex-col items-center gap-1">
           <p>News</p>
         </NavLink>
+        <NavLink to="/Pricing" className="flex flex-col items-center gap-1">
+          <p>Pricing</p>
+        </NavLink>
       </ul>
 
       <div className="flex items-center gap-6">
