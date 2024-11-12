@@ -8,7 +8,11 @@ export const SocketProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
-    const newSocket = io("http://localhost:8000", { withCredentials: true });
+    const newSocket = io("http://localhost:8000", {
+      reconnection: true,
+      reconnectionAttempts: 10,
+      reconnectionDelay: 1000,
+    });
     setSocket(newSocket);
 
     return () => newSocket.close(); // Clean up on unmount
