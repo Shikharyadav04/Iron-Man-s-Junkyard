@@ -25,6 +25,7 @@ function RequestCreation() {
   ]);
   const [pickupLocation, setPickupLocation] = useState("");
   const [scheduledPickupDate, setScheduledPickupDate] = useState("");
+  const [scheduledPickupTime, setScheduledPickupTime] = useState("");
   const [condition, setCondition] = useState("");
   const [summary, setSummary] = useState(null);
 
@@ -59,7 +60,13 @@ function RequestCreation() {
     try {
       const response = await axios.post(
         "http://localhost:8000/api/v1/request/request-creation",
-        { scraps, pickupLocation, scheduledPickupDate, condition },
+        {
+          scraps,
+          pickupLocation,
+          scheduledPickupDate,
+          scheduledPickupTime,
+          condition,
+        },
         {
           headers: { "Content-Type": "application/json" },
           withCredentials: true,
@@ -69,7 +76,13 @@ function RequestCreation() {
       if (response.data.success) {
         setSummary(response.data.request);
         toast.success("Request created successfully.");
-        window.location.reload();
+
+        // Reset form data after successful submission
+        setScraps([{ category: "", subCategory: "", quantity: 1 }]);
+        setPickupLocation("");
+        setScheduledPickupDate("");
+        setScheduledPickupTime("");
+        setCondition("");
       } else {
         toast.error(response.data.message);
       }
@@ -201,12 +214,32 @@ function RequestCreation() {
               Scheduled Pickup Date
             </label>
             <input
-              type="datetime-local"
+              type="date"
               value={scheduledPickupDate}
               onChange={(e) => setScheduledPickupDate(e.target.value)}
               required
               className="mt-1 p-2 border border-gray-300 rounded-md w-full focus:outline-none focus:ring focus:ring-indigo-500"
             />
+          </div>
+
+          {/* Scheduled Pickup Time Dropdown */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Scheduled Pickup Time
+            </label>
+            <select
+              value={scheduledPickupTime}
+              onChange={(e) => setScheduledPickupTime(e.target.value)}
+              required
+              className="mt-1 p-2 border border-gray-300 rounded-md w-full focus:outline-none focus:ring focus:ring-indigo-500"
+            >
+              <option value="" disabled>
+                Select pickup time
+              </option>
+              <option value="9 AM - 7 PM">9 AM - 7 PM</option>
+              <option value="7 AM - 10 PM">7 AM - 10 PM</option>
+              <option value="2 PM - 6 PM">2 PM - 6 PM</option>
+            </select>
           </div>
 
           {/* Condition Dropdown */}
@@ -232,30 +265,33 @@ function RequestCreation() {
           {/* Submit Button */}
           <button
             type="submit"
-            className="w-full py-2 px-4 bg-indigo-600 text-white font-semibold rounded-md hover:bg-indigo-700 transition duration-200"
-            disabled={loading} // Disable button when loading
+            className="w-full py-2 px-4 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition duration-200"
           >
-            {loading ? "Creating..." : "Create Request"}
+            Submit Request
           </button>
         </form>
 
-        {/* Request Summary */}
+        {/* Summary after successful submission */}
         {summary && (
-          <div className="mt-6">
-            <h3 className="text-lg font-semibold">Request Summary</h3>
-            <ul className="mt-2 space-y-2">
-              {summary.scraps.map((item, index) => (
-                <li key={index} className="bg-gray-100 p-2 rounded-md">
-                  {item.category} - {item.subCategory} | Quantity:{" "}
-                  {item.quantity} | Per Unit Price: {item.pricePerUnit} |
-                  Subtotal: {item.scrapTotalAmount}
+          <div className="mt-6 p-4 bg-green-100 text-green-800 rounded-md">
+            <h3 className="font-semibold">Request Summary</h3>
+            <p>Pickup Location: {summary.pickupLocation}</p>
+            <p>
+              Scheduled Pickup Date:{" "}
+              {new Date(summary.scheduledPickupDate).toLocaleDateString()}
+            </p>
+            <p>Scheduled Pickup Time: {summary.scheduledPickupTime}</p>
+            <ul>
+              {summary.scraps.map((scrap, index) => (
+                <li key={index}>
+                  {scrap.quantity} {scrap.subCategory} ({scrap.category})
                 </li>
               ))}
             </ul>
-            <p className="font-bold mt-2">Total: {summary.totalAmount}</p>
           </div>
         )}
       </div>
+
       <ToastContainer />
     </div>
   );

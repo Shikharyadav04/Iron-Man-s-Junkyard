@@ -31,6 +31,10 @@ const requestSchema = new Schema(
     scheduledPickupDate: {
       type: Date,
     },
+    scheduledPickupTime: {
+      type: String,
+      enum: ["9 AM - 7 PM", "7 AM - 10 PM", "2 PM - 6 PM"],
+    },
     condition: {
       type: String,
       enum: ["Good", "Old", "Damaged"],
