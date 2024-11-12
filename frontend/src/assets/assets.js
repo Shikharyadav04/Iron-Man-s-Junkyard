@@ -29,6 +29,10 @@ import chat from './chat.jpg'
 import createscrap from './createscrap.jpg'
 import username from './username.jpg'
 import loader from './loader.mp4'
+import tree from './tree.png'
+import seedling from './seedling.png'
+import forest from './forest.png'
+
 
 
 
@@ -71,7 +75,7 @@ export const assets = {
     notice,
     createscrap,
     username,
-    loader
+    loader,forest,seedling,tree
     
     
    

@@ -29,6 +29,7 @@ import DealerRequests from "./pages/DealerRequests";
 import ChatRoom from "./components/ChatRoom";
 import ChatRooms from "./components/ChatRooms";
 import Stats from "./pages/Stats";
+import PricingPage from "./pages/PricingPage";
 
 const App = () => {
   const { user } = useAuth();
@@ -61,6 +62,8 @@ const App = () => {
         <Route path="/SubscriptionPage" element={user ? <SubscriptionPage /> : <Navigate to="/login"  />}  />
         <Route path="/news" element={<News />} />
         <Route path="/stats" element={<Stats />} />
+        <Route path="/pricing" element={<PricingPage />} />
+
 
         <Route path="/business" element={<Business />} />
         <Route path="/unverified-dealer" element={<DealerRequests />} />
