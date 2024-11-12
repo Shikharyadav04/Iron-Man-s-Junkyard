@@ -12,7 +12,7 @@ const chatSchema = new Schema({
   messages: [
     {
       senderId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-      senderName: String,
+      senderName: { type: String },
       message: String,
       timestamp: { type: Date, default: Date.now },
     },
