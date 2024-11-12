@@ -13,15 +13,21 @@ const AuthProvider = ({ children }) => {
   useEffect(() => {
     const checkUserSession = async () => {
       const storedUserId = localStorage.getItem("userId");
-      const accessToken = Cookies.get("accessToken");
+      const accessToken = Cookies.get("aToken");
+      const refreshToken = Cookies.get("rToken");
+      console.log("getaccessToken: ", accessToken);
+      console.log("getrefreshToken ", refreshToken);
 
       if (storedUserId && accessToken) {
         try {
           // Optionally fetch user details from the backend
-          const response = await axios.get(
+          const response = await axios.post(
             "http://localhost:8000/api/v1/users/refreshToken",
-            { headers: { Authorization: `Bearer ${accessToken}` } }
+            {
+              refreshToken: refreshToken,
+            }
           );
+          console.log("refreshTokenworkuser : : ", response.data.data.user);
           setUser(response.data.data.user);
         } catch (error) {
           console.error("Failed to fetch user data:", error);
@@ -46,9 +52,16 @@ const AuthProvider = ({ children }) => {
         setUser(loggedInUser);
         // Save user data to persist session
         localStorage.setItem("userId", loggedInUser._id);
-        Cookies.set("accessToken", response.data.data.accessToken, {
-          expires: 1,
+        console.log("loggedinuser : ", loggedInUser);
+
+        Cookies.set("aToken", response.data.data.user.accessToken, {
+          expires: 10,
         });
+        Cookies.set("rToken", response.data.data.user.refreshToken, {
+          expires: 10,
+        });
+        console.log("accessToken: " + response.data.data.user.accessToken);
+        console.log("refreshToken : ", response.data.data.user.refreshToken);
 
         // Navigate based on user role
         navigate(`/${loggedInUser.role}`);
@@ -109,7 +122,7 @@ const AuthProvider = ({ children }) => {
           },
         }
       );
-  
+
       if (response.data.success) {
         return response.data; // Return the API response data
       } else {
@@ -119,9 +132,11 @@ const AuthProvider = ({ children }) => {
       throw new Error(error.response?.data?.message || "Registration failed");
     }
   };
-  
+
   return (
-    <AuthContext.Provider value={{ user, login, logout, register,registerDealer }}>
+    <AuthContext.Provider
+      value={{ user, login, logout, register, registerDealer }}
+    >
       {children}
     </AuthContext.Provider>
   );
