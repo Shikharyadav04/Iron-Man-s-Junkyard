@@ -115,7 +115,7 @@ const Profile = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-5 gap-20">
         {/* Change Password Card */}
-        <div className="bg-transparent py-20 w-70 rounded-lg shadow hover:shadow-md transition-shadow duration-300 text-center">
+        <div className="bg-transparent py-20 w-70 rounded-lg shadow transform transition-transform ease-in-out duration-100 hover:scale-125 text-center">
           <img className="h-20 mx-auto mb-3" src={assets.password} alt="Change Password" />
           <button
             onClick={() => setActiveForm(activeForm === "password" ? null : "password")}
@@ -147,7 +147,7 @@ const Profile = () => {
         </div>
 
         {/* Upload Avatar Card */}
-        <div className="bg-transparent py-20 w-70 rounded-lg shadow hover:shadow-md transition-shadow duration-300 text-center">
+        <div className="bg-transparent py-20 w-70 rounded-lg shadow transform transition-transform ease-in-out duration-100 hover:scale-125 text-center">
           <img className="h-20 mx-auto mb-3" src={assets.avatar} alt="Change Avatar" />
           <button
             onClick={() => setActiveForm(activeForm === "avatar" ? null : "avatar")}
@@ -170,7 +170,7 @@ const Profile = () => {
         </div>
 
         {/* Update Username Card */}
-        <div className="bg-transparent py-20 w-70 rounded-lg shadow hover:shadow-md transition-shadow duration-300 text-center">
+        <div className="bg-transparent py-20 w-70 rounded-lg shadow transform transition-transform ease-in-out duration-100 hover:scale-125 text-center">
           <img className="h-20 mx-auto mb-3" src={assets.username} alt="Change Password" />
           <button
             onClick={() => setActiveForm(activeForm === "username" ? null : "username")}
@@ -196,7 +196,7 @@ const Profile = () => {
 
         {/* Create Scrap Request Card */}
         {user?.role === "customer" && (
-          <div className="bg-transparent h-25 py-20 w-90 rounded-lg shadow hover:shadow-md transition-shadow duration-300 text-center">
+          <div className="bg-transparent h-25 py-20 w-90 rounded-lg shadow transform transition-transform ease-in-out duration-100 hover:scale-125 text-center">
            <img className="h-20 mx-auto mb-3" src={assets.createscrap} alt="Change Password" />
             <button
               onClick={() => navigate("/customer/request-creation")}
@@ -208,7 +208,7 @@ const Profile = () => {
         )}
 
         {/* See Chats Button */}
-        <div className="bg-transparent py-20 w-70 rounded-lg shadow hover:shadow-md transition-shadow duration-300 text-center">
+        <div className="bg-transparent py-20 w-70 rounded-lg shadow transform transition-transform ease-in-out duration-100 hover:scale-125 text-center">
           <img className="h-20 mx-auto mb-3" src={assets.chat} alt="Chat Icon" />
           <button
             onClick={handleSeeChatsClick}

@@ -79,7 +79,7 @@ const NotificationBell = ({ userId }) => {
       <button
         onClick={toggleDropdown}
         ref={buttonRef}
-        className="relative z-50"
+        className="relative z-50 h-10 w-8"
       >
         🔔
         {unreadCount > 0 && (

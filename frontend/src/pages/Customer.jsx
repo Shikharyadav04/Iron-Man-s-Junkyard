@@ -34,41 +34,41 @@ const Customer = () => {
           isSidebarOpen ? "w-64" : "w-0"
         } overflow-hidden`}
       >
-        <div className="w-64 h-full bg-white p-6 shadow-lg">
+        <div className="w-64 h-full bg-transparent p-6 shadow-lg">
           <div className="space-y-4">
             <button
               onClick={() => handleNavigate("/customer")}
-              className="block w-full text-left py-2 px-4 rounded hover:bg-slate-200"
+              className="block text-white w-full text-left py-2 px-4 rounded transform transition-transform ease-in-out duration-300 hover:scale-125"
             >
               Profile
             </button>
             <button
               onClick={() => handleNavigate("/customer/request-creation")}
-              className="block w-full text-left py-2 px-4 rounded hover:bg-slate-200"
+              className="block text-white w-full text-left py-2 px-4 rounded transform transition-transform ease-in-out duration-300 hover:scale-125"
             >
               Create Request
             </button>
             <button
               onClick={() => handleNavigate("/customer/bills")}
-              className="block w-full text-left py-2 px-4 rounded hover:bg-slate-200"
+              className="block text-white w-full text-left py-2 px-4 rounded transform transition-transform ease-in-out duration-300 hover:scale-125"
             >
               View Bills
             </button>
             <button
               onClick={() => handleNavigate("/customer/acceptedRequests")}
-              className="block w-full text-left py-2 px-4 rounded hover:bg-slate-200"
+              className="block text-white w-full text-left py-2 px-4 rounded transform transition-transform ease-in-out duration-300 hover:scale-125"
             >
               View Accepted Requests
             </button>
             <button
               onClick={() => handleNavigate("/customer/completedRequests")}
-              className="block w-full text-left py-2 px-4 rounded hover:bg-slate-200"
+              className="block text-white w-full text-left py-2 px-4 rounded transform transition-transform ease-in-out duration-300 hover:scale-125"
             >
               View Completed Requests
             </button>
             <button
               onClick={() => handleNavigate("/chats")}
-              className="block w-full text-left py-2 px-4 rounded hover:bg-slate-200"
+              className="block text-white w-full text-left py-2 px-4 rounded transform transition-transform ease-in-out duration-300 hover:scale-125"
             >
               See Chats
             </button>
