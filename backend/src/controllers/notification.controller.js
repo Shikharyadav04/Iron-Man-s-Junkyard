@@ -22,12 +22,35 @@ export const getNotifications = asyncHandler(async (req, res) => {
 export const markAllAsRead = asyncHandler(async (req, res) => {
   const userId = req.user._id;
 
-  await Notification.updateMany(
+  // Step 1: Log the userId for debugging
+  console.log("User ID:", userId);
+
+  // Step 2: Update notifications that are unread (read: false)
+  const result = await Notification.updateMany(
     { userId, read: false },
     { $set: { read: true } }
   );
 
+  // Check if any notifications were updated
+  if (result.modifiedCount === 0) {
+    return res
+      .status(400)
+      .json(new ApiResponse(400, null, "No unread notifications found"));
+  }
+
+  // Step 3: Fetch the updated notifications
+  const notifications = await Notification.find({ userId }).sort({
+    createdAt: -1,
+  });
+
+  // Step 4: Send the updated notifications
   res
     .status(200)
-    .json(new ApiResponse(200, null, "All notifications marked as read"));
+    .json(
+      new ApiResponse(
+        200,
+        { notifications },
+        "All notifications marked as read"
+      )
+    );
 });

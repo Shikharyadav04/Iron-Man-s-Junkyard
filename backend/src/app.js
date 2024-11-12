@@ -8,7 +8,6 @@ dotenv.config(); // Load .env file
 import Razorpay from "razorpay";
 import * as crypto from "crypto";
 
-
 const app = express();
 
 app.use(
@@ -35,7 +34,7 @@ import newsRouter from "../src/routes/news.routes.js";
 import tweetRouter from "../src/routes/tweet.routes.js";
 import chatRouter from "../src/routes/chat.routes.js";
 import notificationRouter from "./routes/notification.routes.js";
-import adminStatsRouter from "./routes/adminStats.routes.js"
+import adminStatsRouter from "./routes/adminStats.routes.js";
 
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/request", requestRouter);
@@ -47,6 +46,7 @@ app.use("/api/v1/news", newsRouter);
 app.use("/api/v1/tweet", tweetRouter);
 app.use("/api/v1/chat", chatRouter);
 app.use("/api/v1/adminStats", adminStatsRouter);
+app.use("/api/v1/notifications", notificationRouter);
 
 // Error handling middleware
 const errorHandler = (err, req, res, next) => {
