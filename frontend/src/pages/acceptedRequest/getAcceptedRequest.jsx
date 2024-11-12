@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import AcceptedRequestCard from "./AcceptedRequestCard"; // Ensure the path and casing are correct
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const GetAcceptedRequest = () => {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   const fetchRequests = async () => {
     try {
@@ -21,8 +22,10 @@ const GetAcceptedRequest = () => {
       console.log("Fetched Requests:", response.data);
       setRequests(response.data.data);
     } catch (err) {
-      console.error("Error fetching request:", err);
-      setError("Error fetching request.");
+      // Display backend error message using Toastify
+      const errorMessage =
+        err.response?.data?.message || "Error fetching request.";
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -34,10 +37,6 @@ const GetAcceptedRequest = () => {
 
   if (loading) {
     return <div>Loading requests...</div>;
-  }
-
-  if (error) {
-    return <div>{error}</div>;
   }
 
   return (
@@ -52,6 +51,9 @@ const GetAcceptedRequest = () => {
       ) : (
         <div>No requests available...</div>
       )}
+
+      {/* Toast container for displaying messages */}
+      <ToastContainer />
     </div>
   );
 };

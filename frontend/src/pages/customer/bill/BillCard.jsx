@@ -1,13 +1,11 @@
-import React, { useState } from "react";
+// BillCard.jsx
+import React from "react";
 import axios from "axios";
 import { useLoader } from "@/context/LoaderContext";
+import { toast } from "react-toastify";
 
 const BillCard = ({ bill }) => {
-  const [successMessage, setSuccessMessage] = useState("");
-  const [error, setError] = useState(null);
-
-  // Access loader functions
-  const { loading, showLoader, hideLoader } = useLoader();
+  const { showLoader, hideLoader } = useLoader(); // No need to import `loading` since it's not used here anymore
 
   const getStatusStyle = (status) => {
     switch (status.toLowerCase()) {
@@ -25,7 +23,7 @@ const BillCard = ({ bill }) => {
   };
 
   const CancelRequest = async (requestId) => {
-    showLoader(); // Show the loader at the start of the request
+    showLoader();
     try {
       const response = await axios.post(
         "http://localhost:8000/api/v1/request/cancel-request",
@@ -37,15 +35,12 @@ const BillCard = ({ bill }) => {
           withCredentials: true,
         }
       );
-      setSuccessMessage(response.data.message);
-      setError(null);
+      toast.success(response.data.message);
     } catch (err) {
-      console.log(err);
       const errorMessage = err.response?.data?.message || "An error occurred";
-      setError(`{ success: "false", message: "${errorMessage}" }`);
-      setSuccessMessage("");
+      toast.error(errorMessage);
     } finally {
-      hideLoader(); // Hide the loader after the request completes
+      hideLoader();
     }
   };
 
@@ -56,11 +51,6 @@ const BillCard = ({ bill }) => {
       }}
       className="shadow-md rounded-lg p-4 mb-4 transition-transform duration-300 transform hover:scale-105 relative overflow-hidden pb-16"
     >
-      {successMessage && (
-        <div className="text-green-600 mb-4">{successMessage}</div>
-      )}
-      {error && <div className="text-red-600 mb-4">{error}</div>}
-
       <p className="text-2xl font-bold text-gray-800 shadow-glow mb-2">
         <span className="font-bold">Total Amount:</span> ₹{bill.totalAmount}
       </p>
@@ -71,17 +61,14 @@ const BillCard = ({ bill }) => {
         <span className="font-bold">Pickup Location:</span>{" "}
         {bill.pickupLocation}
       </p>
-
-      {/* Separate Date and Time */}
       <p className="text-gray-700">
         <span className="font-bold">Scheduled Pickup Date:</span>{" "}
-        {new Date(bill.scheduledPickupDate).toLocaleDateString()}{" "}
+        {new Date(bill.scheduledPickupDate).toLocaleDateString()}
       </p>
       <p className="text-gray-700">
         <span className="font-bold">Scheduled Pickup Time:</span>{" "}
         {bill.scheduledPickupTime}
       </p>
-
       <p className="text-gray-700">
         <span className="font-bold">Condition:</span> {bill.condition}
       </p>
@@ -99,7 +86,6 @@ const BillCard = ({ bill }) => {
 
       <h4 className="text-md font-semibold mt-4">Scraps:</h4>
       <ul className="list-disc ml-6 mb-12">
-        {/* Adds margin to avoid overlapping with button */}
         {bill.scraps.map((scrap) => (
           <li key={scrap._id} className="text-gray-700">
             <span className="font-bold">
@@ -110,14 +96,6 @@ const BillCard = ({ bill }) => {
         ))}
       </ul>
 
-      {/* Display loading spinner if loading is true */}
-      {loading && (
-        <div className="flex justify-center items-center mt-4">
-          <div className="w-8 h-8 border-4 border-t-4 border-blue-500 rounded-full animate-spin"></div>
-        </div>
-      )}
-
-      {/* Show Cancel button only if status is not "canceled" or "completed" */}
       {bill.status.toLowerCase() !== "canceled" &&
         bill.status.toLowerCase() !== "completed" && (
           <button
