@@ -6,7 +6,7 @@ function TypingEffect() {
       text={[
         "Hello, I'm Atul Pathak.",
         "I'm passionate about learning new technologies.",
-        "Welcome to my portfolio!"
+        "Welcome to my portfolio!",
       ]}
       speed={50}
       eraseSpeed={25}

@@ -31,7 +31,9 @@ import ChatRooms from "./components/ChatRooms";
 import Stats from "./pages/Stats";
 import PricingPage from "./pages/PricingPage";
 import SplashScreen from "./components/SplashScreen"; // Import the SplashScreen component
-
+import TypingEffect from "./pages/TypingEffect";
+import UserSearchPage from "./components/adminUsers/UserSearchPage";
+import "../src/components/Custome.css";
 const App = () => {
   const { user } = useAuth();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -77,28 +79,63 @@ const App = () => {
             <Route path="/dealerreg" element={<DealerRegister />} />
             <Route path="/success" element={<Success />} />
             <Route path="/feedback" element={<Feedback />} />
-            <Route path="/SubscriptionPage" element={user ? <SubscriptionPage /> : <Navigate to="/login" />} />
+            <Route
+              path="/SubscriptionPage"
+              element={user ? <SubscriptionPage /> : <Navigate to="/login" />}
+            />
             <Route path="/news" element={<News />} />
             <Route path="/stats" element={<Stats />} />
             <Route path="/pricing" element={<PricingPage />} />
             <Route path="/business" element={<Business />} />
             <Route path="/unverified-dealer" element={<DealerRequests />} />
-            <Route path="/user-search" element={renderRoleBasedRoute("admin", UserSearchPage)} />
+            <Route
+              path="/user-search"
+              element={renderRoleBasedRoute("admin", UserSearchPage)}
+            />
             {/* Role-based routes */}
-            <Route path="/admin" element={renderRoleBasedRoute("admin", Admin)} />
-            <Route path="/customer" element={renderRoleBasedRoute("customer", Customer)} />
-            <Route path="/dealer" element={renderRoleBasedRoute("dealer", Dealer)} />
+            <Route
+              path="/admin"
+              element={renderRoleBasedRoute("admin", Admin)}
+            />
+            <Route
+              path="/customer"
+              element={renderRoleBasedRoute("customer", Customer)}
+            />
+            <Route
+              path="/dealer"
+              element={renderRoleBasedRoute("dealer", Dealer)}
+            />
             {/* BillPage route */}
-            <Route path="/customer/bills" element={renderRoleBasedRoute("customer", BillPage)} />
+            <Route
+              path="/customer/bills"
+              element={renderRoleBasedRoute("customer", BillPage)}
+            />
             {/* RequestPage route */}
-            <Route path="/dealer/requests" element={renderRoleBasedRoute("dealer", getRequest)} />
-            <Route path="/dealer/acceptedRequests" element={renderRoleBasedRoute("dealer", GetAcceptedRequest)} />
-            <Route path="/customer/acceptedRequests" element={renderRoleBasedRoute("customer", AcceptedBillPage)} />
-            <Route path="/customer/completedRequests" element={renderRoleBasedRoute("customer", CompletedBillPage)} />
-            <Route path="/customer/request-creation" element={renderRoleBasedRoute("customer", RequestCreation)} />
+            <Route
+              path="/dealer/requests"
+              element={renderRoleBasedRoute("dealer", getRequest)}
+            />
+            <Route
+              path="/dealer/acceptedRequests"
+              element={renderRoleBasedRoute("dealer", GetAcceptedRequest)}
+            />
+            <Route
+              path="/customer/acceptedRequests"
+              element={renderRoleBasedRoute("customer", AcceptedBillPage)}
+            />
+            <Route
+              path="/customer/completedRequests"
+              element={renderRoleBasedRoute("customer", CompletedBillPage)}
+            />
+            <Route
+              path="/customer/request-creation"
+              element={renderRoleBasedRoute("customer", RequestCreation)}
+            />
             {/* New Chat Routes */}
-            <Route path="/chats" element={<ChatRooms />} /> {/* List of chat rooms */}
-            <Route path="/chat/:roomId" element={<ChatRoom />} /> {/* Specific chat room */}
+            <Route path="/chats" element={<ChatRooms />} />{" "}
+            {/* List of chat rooms */}
+            <Route path="/chat/:roomId" element={<ChatRoom />} />{" "}
+            {/* Specific chat room */}
             {/* Redirect based on user role when not logged in */}
             <Route
               path="/redirect"

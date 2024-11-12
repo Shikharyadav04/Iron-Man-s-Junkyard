@@ -8,7 +8,7 @@ import NotificationBell from "@/components/NotificationBell.jsx";
 const Customer = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // State to manage sidebar visibility
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   // Get userId from local storage
   const userId = localStorage.getItem("userId");
@@ -18,12 +18,12 @@ const Customer = () => {
   };
 
   const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen); // Toggle sidebar visibility
+    setIsSidebarOpen(!isSidebarOpen);
   };
 
   const handleNavigate = (path) => {
     navigate(path);
-    setIsSidebarOpen(false); // Close sidebar after navigation
+    setIsSidebarOpen(false);
   };
 
   return (
@@ -78,20 +78,23 @@ const Customer = () => {
 
       <div className="flex flex-col flex-1 overflow-y-auto">
         <div className="relative h-40">
-          
-          
-          
-          
-          
-          <div className="absolute inset-0 flex items-center justify-center  text-black font-bold font-playfair">
-            <div className="text-center">
+          <div className="absolute inset-0 flex items-center justify-center text-black font-bold font-playfair">
+            <div className="flex items-center space-x-4">
               <img
                 src={user?.avatar || "/default-avatar.png"}
                 alt="User Avatar"
-                className="w-24 h-24 rounded-full mx-auto mb-2 border-4 border-white"
+                className={`w-24 h-24 rounded-full border-1 border-white ${
+                  user?.isSubscribed
+                    ? "ring-4 ring-yellow-500 shadow-[0_0_15px_5px_rgba(255,223,0,0.6)]"
+                    : ""
+                }`}
               />
-              <h1 className="text-2xl font-semibold">{user?.fullName}</h1>
-              <p className="text-md font-serif">{user?.email}</p>
+              <div className="text-black">
+                <h1 className="text-2xl font-semibold glow-text">
+                  {user?.fullName}
+                </h1>
+                <p className="text-md font-serif glow-text">{user?.email}</p>
+              </div>
             </div>
             {/* Button to toggle sidebar */}
             <button
