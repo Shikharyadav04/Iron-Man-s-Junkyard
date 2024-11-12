@@ -31,6 +31,8 @@ import ChatRooms from "./components/ChatRooms";
 import Stats from "./pages/Stats";
 import PricingPage from "./pages/PricingPage";
 import SplashScreen from "./components/SplashScreen"; // Import the SplashScreen component
+import TypingEffect from "./pages/TypingEffect";
+import  UserSearchPage from "./components/adminUsers/UserSearchPage"
 
 const App = () => {
   const { user } = useAuth();
