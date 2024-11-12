@@ -37,8 +37,10 @@ const ChatRooms = () => {
               </span>
             </div>
             <div className="mt-2 text-sm text-gray-600">
-              <span className="font-medium">Customer:</span> {room.customerId} |{" "}
-              <span className="font-medium">Dealer:</span> {room.dealerId}
+              <span className="font-medium">Customer:</span> {room.customerName}{" "}
+              | <span className="font-medium">Dealer:</span> {room.dealerName}
+              {"     "}|<span className="font-medium">Created On :</span>{" "}
+              {new Date(room.createdAt).toLocaleDateString("en-GB")}
             </div>
           </Link>
         ))}

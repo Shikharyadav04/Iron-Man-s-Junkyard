@@ -1,9 +1,13 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useLoader } from "@/context/LoaderContext";
 
 const BillCard = ({ bill }) => {
   const [successMessage, setSuccessMessage] = useState("");
   const [error, setError] = useState(null);
+
+  // Access loader functions
+  const { loading, showLoader, hideLoader } = useLoader();
 
   const getStatusStyle = (status) => {
     switch (status.toLowerCase()) {
@@ -21,6 +25,7 @@ const BillCard = ({ bill }) => {
   };
 
   const CancelRequest = async (requestId) => {
+    showLoader(); // Show the loader at the start of the request
     try {
       const response = await axios.post(
         "http://localhost:8000/api/v1/request/cancel-request",
@@ -39,6 +44,8 @@ const BillCard = ({ bill }) => {
       const errorMessage = err.response?.data?.message || "An error occurred";
       setError(`{ success: "false", message: "${errorMessage}" }`);
       setSuccessMessage("");
+    } finally {
+      hideLoader(); // Hide the loader after the request completes
     }
   };
 
@@ -102,6 +109,13 @@ const BillCard = ({ bill }) => {
           </li>
         ))}
       </ul>
+
+      {/* Display loading spinner if loading is true */}
+      {loading && (
+        <div className="flex justify-center items-center mt-4">
+          <div className="w-8 h-8 border-4 border-t-4 border-blue-500 rounded-full animate-spin"></div>
+        </div>
+      )}
 
       {/* Show Cancel button only if status is not "canceled" or "completed" */}
       {bill.status.toLowerCase() !== "canceled" &&

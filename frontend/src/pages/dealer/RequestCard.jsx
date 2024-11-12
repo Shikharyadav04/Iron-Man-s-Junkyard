@@ -1,9 +1,14 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useLoader } from "@/context/LoaderContext";
 
 const RequestCard = ({ request }) => {
   const [successMessage, setSuccessMessage] = useState("");
   const [error, setError] = useState(null);
+
+  // Access loader context
+  const { showLoader, hideLoader } = useLoader();
+
   console.log(request);
 
   const getConditionStyle = (condition) => {
@@ -20,6 +25,8 @@ const RequestCard = ({ request }) => {
   };
 
   const AcceptRequest = async (requestId) => {
+    showLoader(); // Show loader before making the request
+
     try {
       const response = await axios.post(
         `http://localhost:8000/api/v1/request/accept-request`,
@@ -40,6 +47,8 @@ const RequestCard = ({ request }) => {
           "An error occurred while accepting the request."
       );
       setSuccessMessage("");
+    } finally {
+      hideLoader(); // Hide loader after the request completes
     }
   };
 
@@ -76,7 +85,7 @@ const RequestCard = ({ request }) => {
       <p className="text-gray-700">
         <span className="font-bold">
           Scheduled Pickup Time: {request.scheduledPickupTime}
-        </span>{" "}
+        </span>
       </p>
       <p
         className={`font-bold uppercase ${getConditionStyle(
@@ -98,7 +107,7 @@ const RequestCard = ({ request }) => {
         ))}
       </ul>
 
-      {/* Accept Request Button fixed at the bottom */}
+      {/* Display the button or loader based on the loading state */}
       <button
         onClick={() => AcceptRequest(request.requestId)}
         className="py-2 px-4 absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-200 w-11/12"
