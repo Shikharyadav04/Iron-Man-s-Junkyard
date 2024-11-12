@@ -75,7 +75,7 @@ const NotificationBell = ({ userId }) => {
   }, []);
 
   return (
-    <div>
+    <div >
       <button
         onClick={toggleDropdown}
         ref={buttonRef}
@@ -83,7 +83,7 @@ const NotificationBell = ({ userId }) => {
       >
         🔔
         {unreadCount > 0 && (
-          <span className="absolute top-0 right-0 bg-red-500 text-white text-xs font-bold rounded-full px-1">
+          <span className="absolute top-0 right-0  bg-red-500 text-white text-xs font-bold rounded-full px-1">
             {unreadCount}
           </span>
         )}
@@ -94,7 +94,7 @@ const NotificationBell = ({ userId }) => {
         ref={dropdownRef}
         className={`${
           dropdownVisible ? "block" : "hidden"
-        } absolute right-0 mt-2 w-64 bg-white shadow-lg rounded-lg p-4 transition-all ease-in-out duration-200`}
+        } absolute z-20 right-0 mt-2 w-64 bg-white shadow-lg rounded-lg p-4 transition-all ease-in-out duration-200`}
         style={{ maxHeight: "300px", overflowY: "auto" }} // Set max height and enable scroll
       >
         <div className="flex justify-between items-center">
