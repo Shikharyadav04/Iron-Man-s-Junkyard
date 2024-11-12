@@ -3,13 +3,49 @@ import { assets } from '../assets/assets';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from "../context/AuthProvider";
 import Logout from './Logout';
+import axios from 'axios';
+
 
 const Navbar = () => {
   const { user } = useAuth();
+  console.log("User from Auth Context:", user); // Log user data
+
   const [visible, setVisible] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [adminDropdownVisible, setAdminDropdownVisible] = useState(false);
+  const [isSubscribed, setIsSubscribed] = useState(false);
+
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user) {
+      const fetchSubscriptionStatus = async () => {
+        try {
+          const response = await axios.get('http://localhost:8000/api/v1/users/current-user', { withCredentials: true });
+          setIsSubscribed(response.data.isSubscribed);
+          console.log('Subscription status:', response.data.isSubscribed);
+        } catch (error) {
+          console.error('Failed to fetch subscription status', error);
+        }
+      };
+      fetchSubscriptionStatus();
+    }
+  }, [user, isSubscribed]); // Add `isSubscribed` as a dependency
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 
   useEffect(() => {
     const handleScroll = () => {
@@ -20,6 +56,13 @@ const Navbar = () => {
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
+  const handleSubscriptionClick = () => {
+    if (isSubscribed) {
+      navigate('/thankyou');
+    } else {
+      navigate('/SubscriptionPage');
+    }
+  };
 
   const handleHomeClick = () => {
     if (user) {
@@ -93,9 +136,9 @@ const Navbar = () => {
         <NavLink to='/feedback' className='flex flex-col items-center gap-1'>
           <p>Feedback</p>
         </NavLink>
-        <NavLink to='/SubscriptionPage' className='flex flex-col items-center gap-1'>
+        <li className='flex flex-col items-center gap-1 cursor-pointer' onClick={handleSubscriptionClick}>
           <p>Subscription</p>
-        </NavLink>
+        </li>
         <NavLink to='/news' className='flex flex-col items-center gap-1'>
           <p>News</p>
         </NavLink>

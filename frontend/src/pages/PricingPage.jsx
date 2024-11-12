@@ -7,7 +7,7 @@ const PricingCard = ({ title, price, description, features, bgColor, textColor, 
   >
     <img src={imageSrc} alt={`${title} plan`} className="w-25 h-20 mb-4" />
     <div className="text-4xl mb-4">{title}</div>
-    <div className={`text-5xl font-bold mb-4 ${textColor}`}>${price}</div>
+    <div className={`text-5xl font-bold mb-4 ${textColor}`}>₹{price}</div>
     <div className="mb-4">{description}</div>
     <ul className="mb-6 overflow-y-auto max-h-32 px-4">
       {features.map((feature, index) => (
@@ -23,7 +23,7 @@ const PricingPage = () => {
     <div className="flex justify-center items-center min-h-screen space-x-8 p-4">
       <PricingCard
         title="Monthly"
-        price="100"
+        price="199"
         description="Ideal for individuals or small households"
         features={[
           'Monthly Scrap Pickup',
@@ -37,7 +37,7 @@ const PricingPage = () => {
       />
       <PricingCard
         title="6 Months"
-        price="200"
+        price="1199"
         description="Suitable for small businesses and communities"
         features={[
           'Weekly Scrap Pickup',
@@ -51,7 +51,7 @@ const PricingPage = () => {
       />
       <PricingCard
         title="Annually"
-        price="500"
+        price="1999"
         description="Perfect for large organizations and municipalities"
         features={[
           'Daily Waste Pickup',

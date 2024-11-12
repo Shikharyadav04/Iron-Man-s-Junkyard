@@ -4,18 +4,21 @@ import axios from 'axios';
 const SubscriptionPage = () => {
   const [duration, setDuration] = useState("1m"); // Default subscription duration
   const [loading, setLoading] = useState(false);
-  const [amount, setAmount] = useState(500); // Default amount for 1 month (in paise)
+  const [amount, setAmount] = useState(199); // Default amount for 1 month (in paise)
 
   // Set amount based on selected duration
   const handleDurationChange = (e) => {
     const selectedDuration = e.target.value;
     setDuration(selectedDuration);
     if (selectedDuration === "1m") {
-      setAmount(500); // 1 month = 500 INR
+      setAmount(199); // 1 month = 500 INR
+    } else if (selectedDuration === "6m") {
+      setAmount(1199); // 1 year = 5000 INR
     } else if (selectedDuration === "1y") {
-      setAmount(5000); // 1 year = 5000 INR
+      setAmount(1999); // 1 year = 5000 INR
     }
   };
+
 
   // Dynamically load the Razorpay script when the component mounts
   useEffect(() => {
@@ -111,10 +114,11 @@ const SubscriptionPage = () => {
         className="w-full p-3 border border-gray-300 rounded-lg mb-6 focus:outline-none focus:ring-2 focus:ring-indigo-500"
       >
         <option value="1m">1 Month</option>
+        <option value="1m">6 Month</option>
         <option value="1y">1 Year</option>
       </select>
 
-      <p className="text-xl font-semibold text-gray-800 mb-6">Amount: ₹{amount / 100}</p>
+      <p className="text-xl font-semibold text-gray-800 mb-6">Amount: ₹{amount}</p>
 
       <button
         onClick={handlePayment}
