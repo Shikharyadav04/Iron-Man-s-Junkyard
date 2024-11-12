@@ -13,7 +13,13 @@ import { Notification } from "../models/notification.models.js";
 const ObjectId = mongoose.Types.ObjectId;
 
 const createRequest = asyncHandler(async (req, res) => {
-  const { scraps, pickupLocation, scheduledPickupDate, condition } = req.body;
+  const {
+    scraps,
+    pickupLocation,
+    scheduledPickupDate,
+    condition,
+    scheduledPickupTime,
+  } = req.body;
   const userId = req.user._id;
   const isSubscriber = req.user.isSubscribed; // Assume `isSubscribed` field exists in the User schema
   console.log(`userId : ${userId}`);
@@ -97,6 +103,7 @@ const createRequest = asyncHandler(async (req, res) => {
     condition,
     totalAmount,
     isSubscriber,
+    scheduledPickupTime,
   });
 
   // Create a new transaction for the request
