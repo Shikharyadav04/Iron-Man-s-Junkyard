@@ -3,10 +3,10 @@ import axios from "axios";
 import { useLoader } from "@/context/LoaderContext";
 
 const AcceptedRequestCard = ({ request }) => {
-  const { loading, showLoader, hideLoader } = useLoader(); // Use loader context
   const [paymentCompleted, setPaymentCompleted] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [error, setError] = useState(null);
+  const { showLoader, hideLoader } = useLoader(); // Access loader functions
 
   useEffect(() => {
     // Ensure Razorpay script is loaded
@@ -32,8 +32,8 @@ const AcceptedRequestCard = ({ request }) => {
   };
 
   const initiatePayment = async () => {
-    showLoader(); // Show loader when payment initiation starts
     try {
+      showLoader(); // Show the loader before initiating payment
       const amountInPaise = request.totalAmount * 100;
       const response = await axios.post("http://localhost:8000/order", {
         amount: amountInPaise,
@@ -65,6 +65,8 @@ const AcceptedRequestCard = ({ request }) => {
           } catch (err) {
             setError("Payment validation failed");
             console.error("Validation error:", err);
+          } finally {
+            hideLoader(); // Hide loader after payment validation
           }
         },
         prefill: {
@@ -81,19 +83,19 @@ const AcceptedRequestCard = ({ request }) => {
       rzp1.on("payment.failed", (response) => {
         setError(`Payment failed: ${response.error.description}`);
         console.error("Payment failed details:", response.error);
+        hideLoader(); // Hide loader if payment failed
       });
       rzp1.open();
     } catch (err) {
       setError("Payment initiation error");
       console.error("Payment initiation error:", err);
-    } finally {
-      hideLoader(); // Hide loader after the operation
+      hideLoader(); // Hide loader if there's an error
     }
   };
 
   const closeRequest = async (transactionId) => {
-    showLoader(); // Show loader on request close
     try {
+      showLoader(); // Show the loader before closing the request
       const response = await axios.post(
         "http://localhost:8000/api/v1/request/close-request",
         { transactionId },
@@ -108,7 +110,7 @@ const AcceptedRequestCard = ({ request }) => {
       setError("Failed to close request");
       console.error("Close request error:", err);
     } finally {
-      hideLoader(); // Hide loader after the operation
+      hideLoader(); // Hide loader after request is closed or failed
     }
   };
 
@@ -142,11 +144,7 @@ const AcceptedRequestCard = ({ request }) => {
         <span className="font-bold">Scheduled Pickup Date:</span>{" "}
         {new Date(request.scheduledPickupDate).toLocaleString()}
       </p>
-      <p className="text-gray-700">
-        <span className="font-bold">
-          Scheduled Pickup Time: {request.ScheduledPickupTime}
-        </span>
-      </p>
+
       <p
         className={`font-bold uppercase ${getConditionStyle(
           request.condition
@@ -155,28 +153,20 @@ const AcceptedRequestCard = ({ request }) => {
         Condition: {request.condition}
       </p>
 
-      {loading ? (
-        <div className="flex justify-center items-center mt-4">
-          <div className="w-8 h-8 border-4 border-t-4 border-blue-500 rounded-full animate-spin"></div>
-        </div>
+      {!paymentCompleted ? (
+        <button
+          onClick={initiatePayment}
+          className="mt-4 py-1 px-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-200 w-full"
+        >
+          Complete Payment
+        </button>
       ) : (
-        <>
-          {!paymentCompleted ? (
-            <button
-              onClick={initiatePayment}
-              className="mt-4 py-1 px-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-200 w-full"
-            >
-              Complete Payment
-            </button>
-          ) : (
-            <button
-              onClick={() => closeRequest(request.transactionId)}
-              className="py-1 px-2 bg-red-600 mt-4 text-white font-semibold rounded-lg hover:bg-red-700 transition duration-200 w-full"
-            >
-              Close Request
-            </button>
-          )}
-        </>
+        <button
+          onClick={() => closeRequest(request.transactionId)}
+          className="py-1 px-2 bg-red-600 mt-4 text-white font-semibold rounded-lg hover:bg-red-700 transition duration-200 w-full"
+        >
+          Close Request
+        </button>
       )}
     </div>
   );

@@ -9,8 +9,6 @@ const RequestCard = ({ request }) => {
   // Access loader context
   const { showLoader, hideLoader } = useLoader();
 
-  console.log(request);
-
   const getConditionStyle = (condition) => {
     switch (condition) {
       case "Old":
@@ -20,17 +18,16 @@ const RequestCard = ({ request }) => {
       case "Damaged":
         return "text-red-500 shadow-red-500/50";
       default:
-        return "text-gray-500"; // Default color for unknown status
+        return "text-gray-500";
     }
   };
 
-  const AcceptRequest = async (requestId) => {
-    showLoader(); // Show loader before making the request
-
+  const acceptRequest = async () => {
+    showLoader();
     try {
       const response = await axios.post(
         `http://localhost:8000/api/v1/request/accept-request`,
-        { requestId },
+        { requestId: request.requestId },
         {
           headers: {
             "Content-Type": "application/json",
@@ -41,14 +38,11 @@ const RequestCard = ({ request }) => {
       setSuccessMessage("Request accepted successfully!");
       setError(null);
     } catch (error) {
-      console.log(error);
-      setError(
-        error.response?.data.message ||
-          "An error occurred while accepting the request."
-      );
+      console.error("Error accepting request:", error);
+      setError(error.response?.data.message || "An error occurred while accepting the request.");
       setSuccessMessage("");
     } finally {
-      hideLoader(); // Hide loader after the request completes
+      hideLoader();
     }
   };
 
@@ -59,39 +53,28 @@ const RequestCard = ({ request }) => {
       }}
       className="shadow-md rounded-lg p-4 mb-4 transition-transform duration-300 transform hover:scale-105 relative overflow-hidden pb-16"
     >
-      {successMessage && (
-        <div className="text-green-600 mb-4">{successMessage}</div>
-      )}
+      {successMessage && <div className="text-green-600 mb-4">{successMessage}</div>}
       {error && <div className="text-red-600 mb-4">{error}</div>}
 
       <p className="text-2xl font-bold text-gray-800 shadow-glow mb-2">
         <span className="font-bold">Total Amount:</span> ₹{request.totalAmount}
       </p>
       <h3 className="text-lg font-semibold">
-        <span className="font-bold">Customer's Name :</span>{" "}
-        {request.userId.fullName}
+        <span className="font-bold">Customer's Name :</span> {request.userId.fullName}
       </h3>
       <p className="text-gray-700">
         <span className="font-bold">Request Id :</span> {request.requestId}
       </p>
       <p className="text-gray-700">
-        <span className="font-bold">Pickup Location:</span>{" "}
-        {request.pickupLocation}
+        <span className="font-bold">Pickup Location:</span> {request.pickupLocation}
       </p>
       <p className="text-gray-700">
-        <span className="font-bold">Scheduled Pickup Date:</span>{" "}
-        {new Date(request.scheduledPickupDate).toLocaleString()}
+        <span className="font-bold">Scheduled Pickup Date:</span> {new Date(request.scheduledPickupDate).toLocaleString()}
       </p>
       <p className="text-gray-700">
-        <span className="font-bold">
-          Scheduled Pickup Time: {request.scheduledPickupTime}
-        </span>
+        <span className="font-bold">Scheduled Pickup Time:</span> {request.scheduledPickupTime}
       </p>
-      <p
-        className={`font-bold uppercase ${getConditionStyle(
-          request.condition
-        )} shadow-lg`}
-      >
+      <p className={`font-bold uppercase ${getConditionStyle(request.condition)} shadow-lg`}>
         Condition: {request.condition}
       </p>
 
@@ -107,9 +90,8 @@ const RequestCard = ({ request }) => {
         ))}
       </ul>
 
-      {/* Display the button or loader based on the loading state */}
       <button
-        onClick={() => AcceptRequest(request.requestId)}
+        onClick={acceptRequest}
         className="py-2 px-4 absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-200 w-11/12"
       >
         Accept Request
