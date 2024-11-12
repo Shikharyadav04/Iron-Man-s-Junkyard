@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useLoader } from "@/context/LoaderContext"; // Import the loader context
 
 const categorySubcategoryMap = {
   Metals: ["Aluminum", "Copper", "Steel", "Brass"],
@@ -20,6 +21,7 @@ function RequestCreation() {
   const [summary, setSummary] = useState(null);
 
   const navigate = useNavigate();
+  const { loading, showLoader, hideLoader } = useLoader(); // Access the loader functions
 
   const handleScrapChange = (index, e) => {
     const { name, value } = e.target;
@@ -44,6 +46,8 @@ function RequestCreation() {
       return;
     }
 
+    showLoader(); // Show loader when form is submitted
+
     try {
       const response = await axios.post(
         "http://localhost:8000/api/v1/request/request-creation",
@@ -54,28 +58,40 @@ function RequestCreation() {
       if (response.data.success) {
         setSummary(response.data.request);
         toast.success("Request created successfully.");
+        window.location.reload();
       } else {
         toast.error(response.data.message);
       }
     } catch (error) {
       console.error("Error creating request:", error);
       toast.error("Error creating request. Please try again.");
+    } finally {
+      hideLoader(); // Hide loader after request completes
     }
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-transparent">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+        {/* Loader (conditional display) */}
+        {loading && <div className="loader">Loading...</div>}
+
+        {/* Back button */}
         <button
           onClick={() => navigate("/customer")}
           className="text-gray-500 hover:text-gray-700 mb-4 inline-flex items-center"
         >
           ← Back
         </button>
+        
+        {/* Form title */}
         <h2 className="text-2xl font-semibold text-center mb-6">Create Request</h2>
+
+        {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
           {scraps.map((scrap, index) => (
             <div key={index} className="space-y-2">
+              {/* Category Dropdown */}
               <div>
                 <label className="block text-sm font-medium text-gray-700">Category</label>
                 <select
@@ -91,6 +107,8 @@ function RequestCreation() {
                   ))}
                 </select>
               </div>
+              
+              {/* Sub-Category Dropdown */}
               <div>
                 <label className="block text-sm font-medium text-gray-700">Sub-Category</label>
                 <select
@@ -107,6 +125,8 @@ function RequestCreation() {
                   ))}
                 </select>
               </div>
+
+              {/* Quantity Input */}
               <div>
                 <label className="block text-sm font-medium text-gray-700">Quantity</label>
                 <input
@@ -121,6 +141,8 @@ function RequestCreation() {
               </div>
             </div>
           ))}
+
+          {/* Add Scrap Button */}
           <button
             type="button"
             onClick={addScrap}
@@ -128,6 +150,8 @@ function RequestCreation() {
           >
             Add More Scrap
           </button>
+
+          {/* Pickup Location Input */}
           <div>
             <label className="block text-sm font-medium text-gray-700">Pickup Location</label>
             <input
@@ -138,6 +162,8 @@ function RequestCreation() {
               className="mt-1 p-2 border border-gray-300 rounded-md w-full focus:outline-none focus:ring focus:ring-indigo-500"
             />
           </div>
+
+          {/* Scheduled Pickup Date Input */}
           <div>
             <label className="block text-sm font-medium text-gray-700">Scheduled Pickup Date</label>
             <input
@@ -148,6 +174,8 @@ function RequestCreation() {
               className="mt-1 p-2 border border-gray-300 rounded-md w-full focus:outline-none focus:ring focus:ring-indigo-500"
             />
           </div>
+
+          {/* Condition Dropdown */}
           <div>
             <label className="block text-sm font-medium text-gray-700">Condition</label>
             <select
@@ -162,13 +190,18 @@ function RequestCreation() {
               <option value="Damaged">Damaged</option>
             </select>
           </div>
+
+          {/* Submit Button */}
           <button
             type="submit"
             className="w-full py-2 px-4 bg-indigo-600 text-white font-semibold rounded-md hover:bg-indigo-700 transition duration-200"
+            disabled={loading} // Disable button when loading
           >
-            Create Request
+            {loading ? "Creating..." : "Create Request"}
           </button>
         </form>
+
+        {/* Request Summary */}
         {summary && (
           <div className="mt-6">
             <h3 className="text-lg font-semibold">Request Summary</h3>
