@@ -10,7 +10,9 @@ const DealerRequests = () => {
     // Fetch pending dealer requests from the backend
     const fetchDealerRequests = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/api/v1/users/get-dealer-request");
+        const response = await axios.get(
+          "http://localhost:8000/api/v1/users/get-dealer-request"
+        );
         setRequests(response.data.data); // Assuming the data is in the 'data' field
         setLoading(false);
       } catch (err) {
@@ -27,14 +29,22 @@ const DealerRequests = () => {
   const acceptRequest = async (id) => {
     try {
       // Send a request to accept a specific dealer registration
-      const response = await axios.post(`http://localhost:8000/api/v1/users/accept-dealer/${id}`);
-      
+      const response = await axios.post(
+        `http://localhost:8000/api/v1/users/accept-dealer`,
+        { requestId: id }
+      );
+
       // Update the UI by filtering out the accepted request
-      setRequests((prevRequests) => prevRequests.filter((request) => request._id !== id));
+      setRequests((prevRequests) =>
+        prevRequests.filter((request) => request._id !== id)
+      );
       console.log("Request accepted:", response.data);
     } catch (err) {
       setError("Failed to accept the request.");
-      console.error("Error accepting request:", err.response ? err.response.data : err.message);
+      console.error(
+        "Error accepting request:",
+        err.response ? err.response.data : err.message
+      );
     }
   };
 
@@ -58,10 +68,18 @@ const DealerRequests = () => {
         <tbody>
           {requests.map((request) => (
             <tr key={request._id}>
-              <td className="border border-gray-300 px-4 py-2">{request.fullName}</td>
-              <td className="border border-gray-300 px-4 py-2">{request.email}</td>
-              <td className="border border-gray-300 px-4 py-2">{request.address}</td>
-              <td className="border border-gray-300 px-4 py-2">{request.contact}</td>
+              <td className="border border-gray-300 px-4 py-2">
+                {request.fullName}
+              </td>
+              <td className="border border-gray-300 px-4 py-2">
+                {request.email}
+              </td>
+              <td className="border border-gray-300 px-4 py-2">
+                {request.address}
+              </td>
+              <td className="border border-gray-300 px-4 py-2">
+                {request.contact}
+              </td>
               <td className="border border-gray-300 px-4 py-2">
                 <button
                   onClick={() => acceptRequest(request._id)}

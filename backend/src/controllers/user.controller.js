@@ -358,56 +358,50 @@ const askDealerRegistration = asyncHandler(async (req, res) => {
 });
 
 const acceptDealerRegistration = asyncHandler(async (req, res) => {
-  // Fetch all pending requests
-  const requests = await DealerRequest.find({ status: "pending" });
-
-  if (!requests.length) {
-    throw new ApiError(404, "No pending dealer requests found.");
+  const { requestId } = req.body;
+  const request = await DealerRequest.findById(requestId);
+  if (!request) {
+    throw new ApiError(404, "Request not found");
   }
-
   // Loop through each pending request and accept it
-  const updatedRequests = [];
-  for (let request of requests) {
-    request.status = "accepted"; // Update request status to "accepted"
+  if (request.status === "approved") {
+    throw new ApiError(400, "Request is already approved");
+  }
+  request.status = "approved"; // Update request status to "accepted"
 
-    const fullName = request.fullName;
-    const email = request.email;
-    const address = request.address;
-    const contact = request.contact;
+  const fullName = request.fullName;
+  const email = request.email;
+  const address = request.address;
 
-    // Create a new dealer account for each request
-    const username = `${fullName.toLowerCase().replace(/ /g, "")}${Math.floor(Math.random() * 10000)}`;
-    const newPassword = crypto.randomBytes(8).toString("hex");
+  // Create a new dealer account for each request
+  const username = `${fullName.toLowerCase().replace(/ /g, "")}${Math.floor(Math.random() * 10000)}`;
+  const newPassword = crypto.randomBytes(8).toString("hex");
 
-    const newUser = await User.create({
-      username,
-      password: newPassword,
-      fullName,
-      email,
-      address,
-      role: "dealer",
-    });
+  const newUser = await User.create({
+    username,
+    password: newPassword,
+    fullName,
+    email,
+    address,
+    role: "dealer",
+  });
 
-    if (!newUser) {
-      throw new ApiError(400, "Failed to create new dealer account.");
-    }
-
-    await request.save(); // Save the updated request
-    updatedRequests.push(newUser);
-
-    // Send email after accepting each request
-    await sendMail({
-      to: email,
-      subject: "Welcome to ScrapMan - Dealer Registration Success",
-      text: `Hello ${fullName},\n\nWelcome to ScrapMan! Your request to be a dealer has been approved, and your dealer account has been successfully created.\n\nUsername: ${username}\nPassword: ${newPassword}\n\nPlease keep your password safe. Contact us if you need assistance.\n\nBest regards,\nScrapMan Team`,
-    });
+  if (!newUser) {
+    throw new ApiError(400, "Failed to create new dealer account.");
   }
 
-  return res.status(200).json({
-    status: 200,
-    message: "All pending dealer requests have been accepted successfully.",
-    data: updatedRequests, // Return the newly created dealer accounts
+  await request.save(); // Save the updated request
+
+  // Send email after accepting each request
+  await sendMail({
+    to: email,
+    subject: "Welcome to ScrapMan - Dealer Registration Success",
+    text: `Hello ${fullName},\n\nWelcome to ScrapMan! Your request to be a dealer has been approved, and your dealer account has been successfully created.\n\nUsername: ${username}\nPassword: ${newPassword}\n\nPlease keep your password safe. Contact us if you need assistance.\n\nBest regards,\nScrapMan Team`,
   });
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, { request }, "request accepted successfully"));
 });
 
 const getdealerRequests = asyncHandler(async (req, res) => {
@@ -435,16 +429,21 @@ const subscribeUser = asyncHandler(async (req, res) => {
   if (!user) {
     throw new ApiError(404, "User not found");
   }
-
+  if (user.isSubscribed == true) {
+    throw new ApiError(404, "User is already subscribed");
+  }
   const startDate = new Date();
   let endDate;
-  
+
   if (duration == "1m") {
-    endDate = new Date(startDate);  // Corrected here
+    endDate = new Date(startDate); // Corrected here
     endDate.setMonth(startDate.getMonth() + 1);
   } else if (duration == "1y") {
-    endDate = new Date(startDate);  // Corrected here
+    endDate = new Date(startDate); // Corrected here
     endDate.setFullYear(startDate.getFullYear() + 1);
+  } else if (duration == "6m") {
+    endDate = new Date(startDate); // Corrected here
+    endDate.setMonth(startDate.getMonth() + 6);
   } else {
     throw new ApiError(400, "Invalid duration");
   }
