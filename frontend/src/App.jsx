@@ -1,24 +1,24 @@
-import "./index.css"; // or './App.css' if that's where Tailwind is imported
+import "./index.css";
 import React, { useState, useEffect } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
-import { useAuth } from "./context/AuthProvider"; // Ensure this path is correct
-import Navbar from "./components/Navbar"; // Ensure you have this component
-import Home from "./pages/Home"; // Update to the correct path
-import About from "./pages/About"; // Update to the correct path
-import Buy from "./pages/Buy"; // Update to the correct path
-import Login from "./pages/Login"; // Update to the correct path
-import Register from "./pages/register"; // Update to the correct path
-import Feedback from "./pages/Feedback"; // Update to the correct path
-import Admin from "./pages/Admin"; // Update to the correct path
-import Customer from "./pages/Customer"; // Update to the correct path
-import Dealer from "./pages/Dealer"; // Update to the correct path
-import NotFound from "./pages/NotFound"; // Update to the correct path
-import End from "./components/End"; // Update to the correct path
-import Business from "./pages/Business"; // Update to the correct path
-import SubscriptionPage from "./pages/SubscriptionPage"; // Update to the correct path
-import News from "./components/News"; // Update to the correct path
-import RequestCreation from "./pages/customer/requestCreation"; // Update to the correct path
-import BillPage from "./pages/customer/bill/BillPage"; // Import the BillPage component
+import { useAuth } from "./context/AuthProvider";
+import Navbar from "./components/Navbar";
+import Home from "./pages/Home";
+import About from "./pages/About";
+import Buy from "./pages/Buy";
+import Login from "./pages/Login";
+import Register from "./pages/register";
+import Feedback from "./pages/Feedback";
+import Admin from "./pages/Admin";
+import Customer from "./pages/Customer";
+import Dealer from "./pages/Dealer";
+import NotFound from "./pages/NotFound";
+import End from "./components/End";
+import Business from "./pages/Business";
+import SubscriptionPage from "./pages/SubscriptionPage";
+import News from "./components/News";
+import RequestCreation from "./pages/customer/requestCreation";
+import BillPage from "./pages/customer/bill/BillPage";
 import getRequest from "./pages/dealer/getRequest";
 import GetAcceptedRequest from "./pages/acceptedRequest/getAcceptedRequest";
 import AcceptedBillPage from "./pages/customer/bill/AcceptedRequests";
@@ -30,25 +30,24 @@ import ChatRoom from "./components/ChatRoom";
 import ChatRooms from "./components/ChatRooms";
 import Stats from "./pages/Stats";
 import PricingPage from "./pages/PricingPage";
-import SplashScreen from "./components/SplashScreen"; // Import the SplashScreen component
+import SplashScreen from "./components/SplashScreen";
 import UserSearchPage from "./components/adminUsers/UserSearchPage";
 import "../src/components/Custome.css";
 import ThankYou from "./components/ThankYou";
+
 const App = () => {
   const { user } = useAuth();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [showSplash, setShowSplash] = useState(true); // New state for splash screen
+  const [showSplash, setShowSplash] = useState(true);
 
-  // Function to handle the end of the video
   const handleVideoEnd = () => {
     setShowSplash(false);
   };
 
   useEffect(() => {
-    // Automatically hide splash screen after video ends (e.g., 3 seconds)
     const timer = setTimeout(() => {
       setShowSplash(false);
-    }, 10000); // Adjust to match video duration
+    }, 10000);
     return () => clearTimeout(timer);
   }, []);
 
@@ -61,13 +60,13 @@ const App = () => {
   return (
     <div>
       {showSplash ? (
-        <SplashScreen onVideoEnd={handleVideoEnd} /> // Show splash screen if true
+        <SplashScreen onVideoEnd={handleVideoEnd} />
       ) : (
         <>
           <Navbar
             isSidebarOpen={isSidebarOpen}
             toggleSidebar={toggleSidebar}
-            user={user} // Pass user prop to check if logged in
+            user={user}
           />
           <Routes>
             <Route path="/" element={<Home />} />
@@ -82,7 +81,7 @@ const App = () => {
               path="/SubscriptionPage"
               element={user ? <SubscriptionPage /> : <Navigate to="/login" />}
             />
-            <Route path = "/thankyou" element = {<ThankYou/>}/>
+            <Route path="/thankyou" element={<ThankYou />} />
             <Route path="/news" element={<News />} />
             <Route path="/stats" element={<Stats />} />
             <Route path="/pricing" element={<PricingPage />} />
@@ -92,7 +91,6 @@ const App = () => {
               path="/user-search"
               element={renderRoleBasedRoute("admin", UserSearchPage)}
             />
-            {/* Role-based routes */}
             <Route
               path="/admin"
               element={renderRoleBasedRoute("admin", Admin)}
@@ -105,12 +103,10 @@ const App = () => {
               path="/dealer"
               element={renderRoleBasedRoute("dealer", Dealer)}
             />
-            {/* BillPage route */}
             <Route
               path="/customer/bills"
               element={renderRoleBasedRoute("customer", BillPage)}
             />
-            {/* RequestPage route */}
             <Route
               path="/dealer/requests"
               element={renderRoleBasedRoute("dealer", getRequest)}
@@ -131,12 +127,8 @@ const App = () => {
               path="/customer/request-creation"
               element={renderRoleBasedRoute("customer", RequestCreation)}
             />
-            {/* New Chat Routes */}
-            <Route path="/chats" element={<ChatRooms />} />{" "}
-            {/* List of chat rooms */}
-            <Route path="/chat/:roomId" element={<ChatRoom />} />{" "}
-            {/* Specific chat room */}
-            {/* Redirect based on user role when not logged in */}
+            <Route path="/chats" element={<ChatRooms />} />
+            <Route path="/chat/:roomId" element={<ChatRoom />} />
             <Route
               path="/redirect"
               element={
