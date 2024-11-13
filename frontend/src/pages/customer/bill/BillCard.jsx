@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useLoader } from "@/context/LoaderContext";
+import { useNavigate } from "react-router-dom"
+
 
 const BillCard = ({ bill }) => {
   const [successMessage, setSuccessMessage] = useState("");
@@ -8,6 +10,7 @@ const BillCard = ({ bill }) => {
 
   // Access loader functions
   const { loading, showLoader, hideLoader } = useLoader();
+  const navigate = useNavigate(); // Initialize navigate
 
   const getStatusStyle = (status) => {
     switch (status.toLowerCase()) {
@@ -48,6 +51,11 @@ const BillCard = ({ bill }) => {
       hideLoader(); // Hide the loader after the request completes
     }
   };
+
+  // Navigate to feedback page
+  const navigateToFeedback = () => {
+      navigate("/feedback");
+    };
 
   return (
     <div
@@ -127,6 +135,16 @@ const BillCard = ({ bill }) => {
             Cancel Request
           </button>
         )}
+
+      {/* Show Feedback button only if status is "completed" */}
+      {bill.status.toLowerCase() === "completed" && (
+        <button
+          onClick={navigateToFeedback}
+          className="py-2 px-4 absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-200 w-11/12"
+        >
+          Provide Feedback
+        </button>
+      )}
     </div>
   );
 };
