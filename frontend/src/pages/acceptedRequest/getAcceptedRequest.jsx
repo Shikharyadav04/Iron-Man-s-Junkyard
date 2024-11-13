@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import AcceptedRequestCard from "./AcceptedRequestCard"; // Ensure the path and casing are correct
+import AcceptedRequestCard from "./acceptedRequestCard";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useLoader } from "@/context/LoaderContext"; // Use your global loader context
@@ -9,7 +9,8 @@ const GetAcceptedRequest = () => {
   const [requests, setRequests] = useState([]);
   const { showLoader, hideLoader } = useLoader(); // Use loader context
   const [error, setError] = useState(null);
-
+  const [customer,setCustomer] = useState(null)
+  console.log("accr",requests)
   const fetchRequests = async () => {
     showLoader(); // Show loader at the start of request
     try {
@@ -23,7 +24,9 @@ const GetAcceptedRequest = () => {
       );
 
       console.log("Fetched Requests:", response.data);
-      setRequests(response.data.data); // Set the requests
+      setRequests(response.data.data.acceptedRequest);
+      setCustomer(response.data.data.customer)
+      console.log(response.data.data)
     } catch (err) {
       setError(err.response?.data?.message || "Error fetching requests.");
       console.error("Error fetching requests:", err);

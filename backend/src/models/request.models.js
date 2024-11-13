@@ -8,9 +8,12 @@ const requestSchema = new Schema(
       unique: true,
     },
     userId: {
-      type: mongoose.Schema.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
+    },
+    customerName : {
+      type : String,
     },
     scraps: [
       {

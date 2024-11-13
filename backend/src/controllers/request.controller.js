@@ -50,7 +50,7 @@ const createRequest = asyncHandler(async (req, res) => {
 
   // Check if the user has exceeded the limit of requests for the month
   const user = await User.findById(userId);
-
+  const customerName = user.username ;
   if (user.username !== "shikharyadav04") {
     if (userRequestsThisMonth.length >= allowedRequests) {
       throw new ApiError(
@@ -104,6 +104,7 @@ const createRequest = asyncHandler(async (req, res) => {
     totalAmount,
     isSubscriber,
     scheduledPickupTime,
+    customerName,
   });
 
   // Create a new transaction for the request
@@ -147,7 +148,7 @@ const getPendingRequest = asyncHandler(async (req, res) => {
   })
     .populate("userId", "fullName")
     .select(
-      "requestId scheduledPickupDate scheduledPickupTime userId scraps pickupLocation condition status totalAmount isSubscriber"
+      "requestId scheduledPickupDate scheduledPickupTime userId scraps pickupLocation condition status totalAmount isSubscriber customerName"
     )
     .sort({ isSubscriber: -1, createdAt: -1 });
 
@@ -332,7 +333,7 @@ const getAcceptedRequest = asyncHandler(async (req, res) => {
   if (!userId) {
     throw new ApiError(401, "User not authenticated");
   }
-
+  
   const acceptedRequest = await Request.aggregate([
     {
       $match: {
@@ -348,14 +349,14 @@ const getAcceptedRequest = asyncHandler(async (req, res) => {
       $sort: { createdAt: -1 },
     },
   ]);
-
+  const customer = await User.findById(acceptRequest.userId)
   if (!acceptedRequest) {
     throw new ApiError(404, "No accepted requests found");
   }
 
   return res
     .status(200)
-    .json(new ApiResponse(200, acceptedRequest, "User's accepted requests."));
+    .json(new ApiResponse(200, {acceptedRequest , customer}, "User's accepted requests."));
 });
 
 const cancelRequest = asyncHandler(async (req, res) => {

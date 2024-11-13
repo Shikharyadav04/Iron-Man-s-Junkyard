@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-const AcceptedRequestCard = ({ request }) => {
+const AcceptedRequestCard = ({ request } , {customer}) => {
   const [paymentCompleted, setPaymentCompleted] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [error, setError] = useState(null);
-
+  console.log(request)
   useEffect(() => {
     // Ensure Razorpay script is loaded
     if (!window.Razorpay) {
@@ -106,10 +106,10 @@ const AcceptedRequestCard = ({ request }) => {
         <span className="font-bold">Total Amount:</span> ₹{request.totalAmount}
       </p>
       <h3 className="text-lg font-semibold">
-        <span className="font-bold">Customer's Name :</span> {request.userId?.fullName}
+        <span className="font-bold">Customer's Name :</span> {request.customerName? request.customerName : "S"}
       </h3>
       <p className="text-gray-700">
-        <span className="font-bold">Request Id :</span> {request.requestId}
+        <span className="font-bold">Request Id :</span> {request._id}
       </p>
       <p className="text-gray-700">
         <span className="font-bold">Pickup Location:</span> {request.pickupLocation}
@@ -120,6 +120,16 @@ const AcceptedRequestCard = ({ request }) => {
       <p className={`font-bold uppercase ${getConditionStyle(request.condition)} shadow-lg`}>
         Condition: {request.condition}
       </p>
+      <h4 className="text-md font-semibold mt-4">Scraps:</h4>
+<ul className="list-disc ml-6 mb-4">
+  {request.scraps.map((scrap) => (
+    <li key={scrap._id} className="text-gray-700">
+      <span className="font-bold">
+        {scrap.category} - {scrap.subCategory}:
+      </span> {scrap.quantity} units
+    </li>
+  ))}
+</ul>
 
       {!paymentCompleted ? (
         <button

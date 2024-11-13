@@ -6,7 +6,7 @@ const AcceptedBillPage = () => {
   const [bills, setBills] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
+  const [cusomer,setCustomer] = useState(null);
   const fetchBills = async () => {
     try {
       const response = await axios.post(
@@ -19,7 +19,7 @@ const AcceptedBillPage = () => {
       );
 
       console.log("Fetched bills:", response.data); // Log the entire response
-      const fetchedBills = response.data.data; // Store the fetched bills
+      const fetchedBills = response.data.data.acceptedRequest; // Store the fetched bills
 
       // Log IDs to check for duplicates
       const ids = fetchedBills.map((bill) => bill.id);

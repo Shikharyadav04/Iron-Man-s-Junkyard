@@ -43,7 +43,11 @@ const RequestCard = ({ request }) => {
   };
 
   return (
-    <div className="bg-white shadow-md rounded-lg p-4 mb-4 transition-transform duration-300 transform hover:scale-105 relative overflow-hidden pb-16">
+    <div
+    style={{
+      backgroundColor: request.isSubscriber ? "#ffdc73" : "white",
+    }}  
+    className="bg-white shadow-md rounded-lg p-4 mb-4 transition-transform duration-300 transform hover:scale-105 relative overflow-hidden pb-16">
       {successMessage && <div className="text-green-600 mb-4">{successMessage}</div>}
       {error && <div className="text-red-600 mb-4">{error}</div>}
 
@@ -51,7 +55,7 @@ const RequestCard = ({ request }) => {
         <span className="font-bold">Total Amount:</span> ₹{request.totalAmount}
       </p>
       <h3 className="text-lg font-semibold">
-        <span className="font-bold">Customer's Name :</span> {request.userId.fullName}
+        <span className="font-bold">Customer's Name :</span> {request.customerName? request.customerName : "S"}
       </h3>
       <p className="text-gray-700">
         <span className="font-bold">Request Id :</span> {request.requestId}
