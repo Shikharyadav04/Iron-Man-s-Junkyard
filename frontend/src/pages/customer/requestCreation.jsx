@@ -98,7 +98,7 @@ function RequestCreation() {
 
   return (
     <div className="bg-[url(https://i.pinimg.com/564x/7d/50/5b/7d505bde575f517d0b42cb91e0ce951d.jpg)] bg-cover flex items-center justify-center min-h-screen bg-transparent">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+      <div className="bg-slate-300 p-8 rounded-lg shadow-lg w-full max-w-md">
         {/* Loader (conditional display) */}
         {loading && <div className="loader">Loading...</div>}
 

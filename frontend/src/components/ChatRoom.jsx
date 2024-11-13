@@ -74,11 +74,11 @@ const ChatRoom = () => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-4 bg-white rounded-lg shadow-md">
-      <h2 className="text-2xl font-semibold text-center mb-4">
+    <div className="max-w-2xl mx-auto p-4 bg-[url(https://i.pinimg.com/564x/7d/50/5b/7d505bde575f517d0b42cb91e0ce951d.jpg)] rounded-lg shadow-md">
+      <h2 className="text-2xl glow-text font-semibold text-center mb-4">
         Chat Room: {roomId}
       </h2>
-      <div className="max-h-96 overflow-y-auto mb-4 p-2 border border-gray-300 rounded-lg bg-gray-50">
+      <div className="max-h-96 glow-text overflow-y-auto mb-4 p-2 border border-gray-500 rounded-lg bg-transparent">
         {messages.map((msg, index) => (
           <div
             key={index}
@@ -88,13 +88,10 @@ const ChatRoom = () => {
           >
             <div
               className={`${
-                msg.senderId === "user"
-                  ? "bg-blue-500 text-white"
-                  : "bg-gray-200 text-gray-800"
+                msg.senderId === "user" ? "bg-blue-500 " : "bg-gray-200 "
               } p-3 rounded-lg max-w-xs`}
             >
               <div className="flex justify-between text-xs text-gray-500">
-                <strong>{msg.senderName}</strong>
                 <span>
                   {new Date(msg.timestamp).toLocaleString() || "Invalid time"}
                 </span>

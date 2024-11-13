@@ -18,10 +18,12 @@ const ChatRooms = () => {
   }, []);
 
   return (
-    <div className="max-w-2xl mx-auto p-4">
-      <h2 className="text-2xl font-semibold text-center mb-6">Chat Rooms</h2>
+    <div className="max-w-2xl mx-auto p-4 bg-[url(https://i.pinimg.com/564x/7d/50/5b/7d505bde575f517d0b42cb91e0ce951d.jpg)] bg-cover">
+      <h2 className="text-2xl glow-text font-semibold text-center mb-6">
+        Chat Rooms
+      </h2>
 
-      <div className="space-y-4">
+      <div className="space-y-4 glow-text">
         {chatRooms.map((room) => (
           <Link
             key={room._id}
@@ -29,14 +31,10 @@ const ChatRooms = () => {
             className="block p-4 border border-gray-300 rounded-lg hover:bg-gray-100 transition-all duration-300"
           >
             <div className="flex justify-between items-center">
-              <span className="font-semibold text-gray-700">
-                Chat ID: {room._id}
-              </span>
-              <span className="text-sm text-gray-500">
-                Request ID: {room.requestId}
-              </span>
+              <span className="font-semibold">Chat ID: {room._id}</span>
+              <span className="text-sm ">Request ID: {room.requestId}</span>
             </div>
-            <div className="mt-2 text-sm text-gray-600">
+            <div className="mt-2 text-sm ">
               <span className="font-medium">Customer:</span> {room.customerName}{" "}
               | <span className="font-medium">Dealer:</span> {room.dealerName}
               {"     "}|<span className="font-medium">Created On :</span>{" "}

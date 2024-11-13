@@ -75,7 +75,7 @@ const NotificationBell = ({ userId }) => {
   }, []);
 
   return (
-    <div >
+    <div>
       <button
         onClick={toggleDropdown}
         ref={buttonRef}
