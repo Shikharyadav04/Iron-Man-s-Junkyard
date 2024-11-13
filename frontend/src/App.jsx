@@ -81,7 +81,10 @@ const App = () => {
               path="/SubscriptionPage"
               element={user ? <SubscriptionPage /> : <Navigate to="/login" />}
             />
-            <Route path="/community" element={<Community />} />
+            <Route
+              path="/community"
+              element={user ? <Community /> : <Navigate to="/login" />}
+            />
             <Route path="/thankyou" element={<ThankYou />} />
             <Route path="/news" element={<News />} />
             <Route path="/stats" element={<Stats />} />

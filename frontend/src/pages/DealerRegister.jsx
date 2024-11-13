@@ -7,7 +7,7 @@ const DealerRegister = () => {
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
-    
+
     address: "",
     contact: "",
   });
@@ -23,13 +23,6 @@ const DealerRegister = () => {
     }));
   };
 
-  
-  
-  
-  
-  
-  
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -37,7 +30,7 @@ const DealerRegister = () => {
       const data = {
         fullName: formData.fullName,
         email: formData.email,
-        
+
         address: formData.address,
         contact: formData.contact,
       };
@@ -53,74 +46,69 @@ const DealerRegister = () => {
   };
 
   return (
-    <div className="bg-[url('https://i.pinimg.com/564x/80/d9/c0/80d9c0b74a6402241de02b16fc9df20c.jpg')] bg-cover backdrop-blur-xl flex items-center justify-center min-h-screen bg-gray-100 py-20">
-      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-        <h2 className="text-2xl font-semibold text-center text-gray-800 mb-6">Dealer Registration</h2>
+    <div className="bg-[url('https://i.pinimg.com/originals/12/58/59/1258595725c0fb95b2255f678c1afead.gif')] bg-cover backdrop-blur-xl flex items-center justify-center min-h-screen bg-gray-100 py-20">
+      <div className="bg-transparent p-8 rounded-lg shadow-md w-full max-w-md glow-text">
+        <h2 className="text-2xl font-semibold text-center  mb-6">
+          Dealer Registration
+        </h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-gray-700">Full Name</label>
+            <label className="block ">Full Name</label>
             <input
               type="text"
               name="fullName"
               value={formData.fullName}
               onChange={handleChange}
               required
-              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-200"
+              className="w-full px-4 py-2 text-black border rounded-md focus:outline-none focus:ring focus:ring-blue-200"
             />
           </div>
           <div>
-            <label className="block text-gray-700">Email</label>
+            <label className="block ">Email</label>
             <input
               type="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
               required
-              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-200"
+              className="w-full px-4 py-2 border text-black rounded-md focus:outline-none focus:ring focus:ring-blue-200"
             />
           </div>
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
+
           <div>
-            <label className="block text-gray-700">Address</label>
+            <label className="block ">Address</label>
             <input
               type="text"
               name="address"
               value={formData.address}
               onChange={handleChange}
               required
-              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-200"
+              className="w-full px-4 py-2 border rounded-md text-black focus:outline-none focus:ring focus:ring-blue-200"
             />
           </div>
           <div>
-            <label className="block text-gray-700">Contact</label>
+            <label className="block ">Contact</label>
             <input
               type="text"
               name="contact"
               value={formData.contact}
               onChange={handleChange}
               required
-              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-200"
+              className="w-full px-4 py-2 border rounded-md text-black focus:outline-none focus:ring focus:ring-blue-200"
             />
           </div>
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded-md font-semibold hover:bg-blue-700 transition duration-300"
+            className="w-full bg-blue-600 text-white py-2  rounded-md font-semibold hover:bg-blue-700 transition duration-300"
           >
             Submit
           </button>
         </form>
 
         {error && <div className="mt-4 text-red-600 text-center">{error}</div>}
-        {success && <div className="mt-4 text-green-600 text-center">{success}</div>}
+        {success && (
+          <div className="mt-4 text-green-600 text-center">{success}</div>
+        )}
       </div>
     </div>
   );

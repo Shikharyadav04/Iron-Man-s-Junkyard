@@ -49,12 +49,12 @@ const Login = () => {
   };
 
   return (
-    <div className="bg-[url('https://i.pinimg.com/564x/80/d9/c0/80d9c0b74a6402241de02b16fc9df20c.jpg')] bg-cover backdrop-blur-xl flex justify-center items-center min-h-screen">
+    <div className="bg-[url('https://i.pinimg.com/originals/12/58/59/1258595725c0fb95b2255f678c1afead.gif')] bg-cover backdrop-blur-xl flex justify-center items-center min-h-screen">
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-md p-6 bg-white rounded-lg shadow-lg space-y-4"
+        className="w-full max-w-md p-6 bg-transparent glow-text rounded-lg shadow-lg space-y-4"
       >
-        <h2 className="text-2xl font-bold text-center text-gray-800">Login</h2>
+        <h2 className="text-2xl font-bold text-center ">Login</h2>
 
         <input
           type="text"
@@ -62,7 +62,7 @@ const Login = () => {
           onChange={handleChange}
           placeholder="Username or Email"
           required
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
+          className="w-full px-4 py-2 border text-black border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
         />
 
         <div className="relative">
@@ -72,7 +72,7 @@ const Login = () => {
             onChange={handleChange}
             placeholder="Password"
             required
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
+            className="w-full px-4 py-2 border text-black border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
           />
           <button
             type="button"

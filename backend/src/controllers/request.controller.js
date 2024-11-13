@@ -82,32 +82,14 @@ const createRequest = asyncHandler(async (req, res) => {
       scrapTotalAmount,
     });
   }
-  matchCriteria.userId = userId;
-  matchCriteria.scraps = validatedScraps;
-  matchCriteria.pickupLocation = pickupLocation;
-  matchCriteria.scheduledPickupDate = scheduledPickupDate;
-  matchCriteria.condition = condition;
-  matchCriteria.scheduledPickupDate = scheduledPickupDate;
-  matchCriteria.isSubscriber = isSubscriber;
-  // Check if the total amount of the new request exceeds the limit
+
   if (totalAmount > maxAmount) {
     throw new ApiError(
       400,
       `Request total amount cannot exceed ${maxAmount} INR`
     );
   }
-  const checkRequest = await Request.aggregate([
-    {
-      $match: matchCriteria,
-    },
-  ]);
 
-  if (checkRequest) {
-    throw new ApiError(
-      400,
-      `You have already made a same pickup request for this date and time. Please choose different date and time.`
-    );
-  }
   const requestId = `REQ-${Date.now()}`;
 
   // Create the new request
