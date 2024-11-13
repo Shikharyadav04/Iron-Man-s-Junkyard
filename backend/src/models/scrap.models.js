@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 
-const categorySubcategoryMap = {
+const predefinedCategorySubcategoryMap = {
   Metals: ["Aluminum", "Copper", "Steel", "Brass"],
   Plastics: ["PET", "HDPE", "PVC", "LDPE"],
   Electronics: [
@@ -19,7 +19,6 @@ const scrapSchema = new Schema(
     category: {
       type: String,
       required: true,
-      enum: Object.keys(categorySubcategoryMap), // Main categories as enum
     },
     subCategory: {
       type: String,
@@ -33,20 +32,26 @@ const scrapSchema = new Schema(
   { timestamps: true }
 );
 
-// Custom validation to ensure subCategory is valid for the selected category
 scrapSchema.pre("validate", function (next) {
   const selectedCategory = this.category;
   const selectedSubcategory = this.subCategory;
 
-  // Check if the subcategory is valid for the chosen category
-  if (categorySubcategoryMap[selectedCategory]?.includes(selectedSubcategory)) {
-    next(); // If valid, proceed
-  } else {
-    next(
-      new Error(
-        `Invalid subcategory "${selectedSubcategory}" for category "${selectedCategory}".`
+  if (predefinedCategorySubcategoryMap[selectedCategory]) {
+    if (
+      predefinedCategorySubcategoryMap[selectedCategory].includes(
+        selectedSubcategory
       )
-    );
+    ) {
+      next();
+    } else {
+      next(
+        new Error(
+          `Invalid subcategory "${selectedSubcategory}" for predefined category "${selectedCategory}".`
+        )
+      );
+    }
+  } else {
+    next();
   }
 });
 
