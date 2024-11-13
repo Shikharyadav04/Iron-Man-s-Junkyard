@@ -61,10 +61,12 @@ const RequestCard = ({ request }) => {
         <span className="font-bold">Request Id :</span> {request.requestId}
       </p>
       <p className="text-gray-700">
-        <span className="font-bold">Pickup Location:</span> {request.pickupLocation}
+        <span className="font-bold">Pickup Location:</span>{" "}
+        {request.pickupLocation}
       </p>
       <p className="text-gray-700">
-        <span className="font-bold">Scheduled Pickup Date:</span> {new Date(request.scheduledPickupDate).toLocaleString()}
+        <span className="font-bold">Scheduled Pickup Date:</span>{" "}
+        {new Date(request.scheduledPickupDate).toLocaleString()}
       </p>
       <p className={`font-bold uppercase ${getConditionStyle(request.condition)} shadow-lg`}>
         Condition: {request.condition}

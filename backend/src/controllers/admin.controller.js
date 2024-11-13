@@ -4,39 +4,32 @@ import { Scrap } from "../models/scrap.models.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { User } from "../models/user.models.js";
 import { Request } from "../models/request.models.js";
-import { response } from "express";
-const addScrap = asyncHandler(async (req, res) => {
-  //take info form body
-  //validate
-  //check if scrap already exists
-  //create new scrap
-  //return response
 
+const addScrap = asyncHandler(async (req, res) => {
   const { category, subCategory, pricePerUnit } = req.body;
 
   if (
-    [category, subCategory, pricePerUnit].some((field) => field?.trim() === "")
+    [category, subCategory, pricePerUnit].some(
+      (field) => !field || field.trim() === ""
+    )
   ) {
     throw new ApiError(400, "All fields are required");
   }
 
-  const scrap = await Scrap.findOne({ subCategory });
-
-  if (scrap) {
-    throw new ApiError(400, "Scrap already exists");
+  const existingScrap = await Scrap.findOne({ category, subCategory });
+  if (existingScrap) {
+    throw new ApiError(
+      400,
+      "Scrap with this category and subcategory already exists"
+    );
   }
 
-  const newScrap = await Scrap.create({
-    category,
-    subCategory,
-    pricePerUnit,
-  });
-
+  const newScrap = await Scrap.create({ category, subCategory, pricePerUnit });
   if (!newScrap) {
     throw new ApiError(500, "Failed to create new scrap");
   }
 
-  return res
+  res
     .status(200)
     .json(new ApiResponse(200, newScrap, "Scrap added successfully"));
 });
