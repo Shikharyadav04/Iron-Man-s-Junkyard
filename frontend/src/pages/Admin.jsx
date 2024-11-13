@@ -11,13 +11,34 @@ const ScrapManagement = () => {
     subCategory: "",
     pricePerUnit: "",
   });
-
+  const categorySubcategoryMap = {
+    Metals: ["Aluminum", "Copper", "Steel", "Brass"],
+    Plastics: ["PET", "HDPE", "PVC", "LDPE"],
+    Electronics: [
+      "Laptops",
+      "Desktops",
+      "Computer Accessories",
+      "Smartphones",
+      "Tablets",
+    ],
+    Glass: ["Bottles", "Windows", "Jars"],
+    Paper: ["Office Paper", "Cardboard Boxes", "Newspaper"],
+  };
   // State for changing scrap price
   const [priceData, setPriceData] = useState({
     scrapCategory: "",
     scrapSubCategory: "",
     newPrice: "",
   });
+
+  const handleCategoryChange = (e) => {
+    const selectedCategory = e.target.value;
+    setPriceData({
+      ...priceData,
+      scrapCategory: selectedCategory,
+      scrapSubCategory: "", // Reset subcategory when category changes
+    });
+  };
 
   const addScrap = async (e) => {
     e.preventDefault();
@@ -64,94 +85,133 @@ const ScrapManagement = () => {
       alert("Failed to change scrap price: " + error.message);
     }
   };
+  const [isFormVisible, setIsFormVisible] = useState(false);
 
   return (
     <div className="space-y-6 ">
       <h2 className="text-xl font-semibold">Add Scrap</h2>
-      <form onSubmit={addScrap} className="space-y-4">
-        <input
-          type="text"
-          name="category"
-          placeholder="Category"
-          value={scrapData.category}
-          onChange={(e) =>
-            setScrapData({ ...scrapData, category: e.target.value })
-          }
-          required
-          className="p-2 border rounded w-full"
-        />
-        <input
-          type="text"
-          name="subCategory"
-          placeholder="Sub Category"
-          value={scrapData.subCategory}
-          onChange={(e) =>
-            setScrapData({ ...scrapData, subCategory: e.target.value })
-          }
-          required
-          className="p-2 border rounded w-full"
-        />
-        <input
-          type="number"
-          name="pricePerUnit"
-          placeholder="Price Per Unit"
-          value={scrapData.pricePerUnit}
-          onChange={(e) =>
-            setScrapData({ ...scrapData, pricePerUnit: e.target.value })
-          }
-          required
-          className="p-2 border rounded w-full"
-        />
-        <button
-          type="submit"
-          className="py-2 px-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-200 w-full"
-        >
-          Add Scrap
-        </button>
-      </form>
+      <button
+        onClick={() => setIsFormVisible(!isFormVisible)} // Toggle form visibility
+        className="py-2 px-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-200"
+      >
+        Add Scrap
+      </button>
+
+      {/* Conditionally render the form only when isFormVisible is true */}
+      {isFormVisible && (
+        <form onSubmit={addScrap} className="space-y-4 mt-4">
+          <input
+            type="text"
+            name="category"
+            placeholder="Category"
+            value={scrapData.category}
+            onChange={(e) =>
+              setScrapData({ ...scrapData, category: e.target.value })
+            }
+            required
+            className="p-2 border rounded w-full"
+          />
+          <input
+            type="text"
+            name="subCategory"
+            placeholder="Sub Category"
+            value={scrapData.subCategory}
+            onChange={(e) =>
+              setScrapData({ ...scrapData, subCategory: e.target.value })
+            }
+            required
+            className="p-2 border rounded w-full"
+          />
+          <input
+            type="number"
+            name="pricePerUnit"
+            placeholder="Price Per Unit"
+            value={scrapData.pricePerUnit}
+            onChange={(e) =>
+              setScrapData({ ...scrapData, pricePerUnit: e.target.value })
+            }
+            required
+            className="p-2 border rounded w-full"
+          />
+          <button
+            type="submit"
+            className="py-2 px-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-200 w-full"
+          >
+            Add Scrap
+          </button>
+        </form>
+      )}
 
       <h2 className="text-xl font-semibold">Change Scrap Price</h2>
-      <form onSubmit={changeScrapPrice} className="space-y-4">
-        <input
-          type="text"
-          name="scrapCategory"
-          placeholder="Scrap Category"
-          value={priceData.scrapCategory}
-          onChange={(e) =>
-            setPriceData({ ...priceData, scrapCategory: e.target.value })
-          }
-          required
-          className="p-2 border rounded w-full"
-        />
-        <input
-          type="text"
-          name="scrapSubCategory"
-          placeholder="Scrap Sub Category"
-          value={priceData.scrapSubCategory}
-          onChange={(e) =>
-            setPriceData({ ...priceData, scrapSubCategory: e.target.value })
-          }
-          required
-          className="p-2 border rounded w-full"
-        />
-        <input
-          type="number"
-          name="newPrice"
-          placeholder="New Price"
-          value={priceData.newPrice}
-          onChange={(e) =>
-            setPriceData({ ...priceData, newPrice: e.target.value })
-          }
-          required
-          className="p-2 border rounded w-full"
-        />
-        <button
-          type="submit"
-          className="py-2 px-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-200 w-full"
-        >
-          Change Scrap Price
-        </button>
-      </form>
+      <button
+        type="button"
+        onClick={() => setIsFormVisible(!isFormVisible)}
+        className="py-2 px-4 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition duration-200"
+      >
+        Change Scrap Price
+      </button>
+
+      {isFormVisible && (
+        <form onSubmit={changeScrapPrice} className="space-y-4 mt-4">
+          <h2 className="text-xl font-semibold">Change Scrap Price</h2>
+
+          {/* Category dropdown */}
+          <select
+            name="scrapCategory"
+            value={priceData.scrapCategory}
+            onChange={handleCategoryChange}
+            required
+            className="p-2 border rounded w-full"
+          >
+            <option value="">Select Category</option>
+            {Object.keys(categorySubcategoryMap).map((category) => (
+              <option key={category} value={category}>
+                {category}
+              </option>
+            ))}
+          </select>
+
+          {/* Subcategory dropdown */}
+          {priceData.scrapCategory && (
+            <select
+              name="scrapSubCategory"
+              value={priceData.scrapSubCategory}
+              onChange={(e) =>
+                setPriceData({ ...priceData, scrapSubCategory: e.target.value })
+              }
+              required
+              className="p-2 border rounded w-full"
+            >
+              <option value="">Select Subcategory</option>
+              {categorySubcategoryMap[priceData.scrapCategory]?.map(
+                (subCategory) => (
+                  <option key={subCategory} value={subCategory}>
+                    {subCategory}
+                  </option>
+                )
+              )}
+            </select>
+          )}
+
+          <input
+            type="number"
+            name="newPrice"
+            placeholder="New Price"
+            value={priceData.newPrice}
+            onChange={(e) =>
+              setPriceData({ ...priceData, newPrice: e.target.value })
+            }
+            required
+            className="p-2 border rounded w-full"
+          />
+          <button
+            type="submit"
+            className="py-2 px-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-200 w-full"
+          >
+            Change Scrap Price
+          </button>
+        </form>
+      )}
     </div>
   );
 };
@@ -287,260 +347,158 @@ const Admin = () => {
   }
 
   return (
-    <div className="flex flex-col items-center bg-gray-100 p-6 rounded-lg shadow-md max-w-lg mx-auto w-full">
-    <div className="flex flex-row items-center space-x-6 mb-6 w-full">
-      <img
-        src={userData.avatar}
-        alt="User Avatar"
-        className="w-24 h-24 rounded-full border-2 border-indigo-600"
-      />
-      <div>
-        <h1 className="text-2xl font-semibold">{userData.fullName}</h1>
-        <p className="text-gray-600">{userData.email}</p>
-      </div>
-    </div>
-  
-    {successMessage && <div className="text-green-600 mb-4">{successMessage}</div>}
-    {error && <div className="text-red-600 mb-4">{error}</div>}
-  
-    <div className="flex space-x-4 w-full mb-4">
-      <button
-        onClick={() => setUpdateFormOpen(!updateFormOpen)}
-        className="py-2 px-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-200 w-full"
-      >
-        {updateFormOpen ? "Close Update Form" : "Update Details"}
-      </button>
-    </div>
-  
-    {updateFormOpen && (
-      <form onSubmit={handleUpdateUserDetails} className="space-y-4 w-full flex flex-col items-center">
-        <input
-          type="text"
-          value={userData.fullName}
-          onChange={(e) => setUserData({ ...userData, fullName: e.target.value })}
-          placeholder="Full Name"
-          className="p-2 border rounded w-full"
-          required
-        />
-        <input
-          type="email"
-          value={userData.email}
-          onChange={(e) => setUserData({ ...userData, email: e.target.value })}
-          placeholder="Email"
-          className="p-2 border rounded w-full"
-          required
-        />
-        <div className="w-full">
+    <div className="flex h-screen bg-[url(https://i.pinimg.com/originals/fb/36/b6/fb36b6ee0ba43a905d7d6db76c21a9bf.gif)] bg-cover backdrop-blur-xl">
+      <div className="flex flex-wrap justify-normal items-center bg-transparent p-7 rounded-lg shadow-md max-w-lg mx-auto w-full">
+        <div className="flex flex-row items-center space-x-6 mb-6 w-full">
+          <img
+            src={userData.avatar}
+            alt="User Avatar"
+            className="w-24 h-24 rounded-full border-2 border-indigo-600"
+          />
+          <div>
+            <h1 className="text-2xl font-semibold text-md  glow-text">
+              {userData.fullName}
+            </h1>
+            <p className="text-md font-serif glow-text">{userData.email}</p>
+          </div>
+        </div>
+
+        {successMessage && (
+          <div className="text-green-600 mb-4">{successMessage}</div>
+        )}
+        {error && <div className="text-red-600 mb-4">{error}</div>}
+
+        <div className="flex space-x-4 w-full mb-4">
           <button
-            type="submit"
-            className="py-2 px-4 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition duration-200 w-full"
+            onClick={() => setUpdateFormOpen(!updateFormOpen)}
+            className="py-2 px-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-200 w-full"
           >
-            Update User
+            {updateFormOpen ? "Close Update Form" : "Update Details"}
           </button>
         </div>
-      </form>
-    )}
-  
-    <div className="flex space-x-4 w-full mb-4">
-      <button
-        onClick={() => setPasswordFormOpen(!passwordFormOpen)}
-        className="py-2 px-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-200 w-full"
-      >
-        {passwordFormOpen ? "Close Change Password Form" : "Change Password"}
-      </button>
-    </div>
-  
-    {passwordFormOpen && (
-      <form onSubmit={handleChangePassword} className="space-y-4 w-full flex flex-col items-center">
-        <input
-          type="password"
-          value={oldPassword}
-          onChange={(e) => setOldPassword(e.target.value)}
-          placeholder="Old Password"
-          className="p-2 border rounded w-full"
-          required
-        />
-        <input
-          type="password"
-          value={newPassword}
-          onChange={(e) => setNewPassword(e.target.value)}
-          placeholder="New Password"
-          className="p-2 border rounded w-full"
-          required
-        />
-        <div className="w-full">
-          <button
-            type="submit"
-            className="py-2 px-4 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition duration-200 w-full"
+
+        {updateFormOpen && (
+          <form
+            onSubmit={handleUpdateUserDetails}
+            className="space-y-4 w-full flex flex-col items-center"
           >
-            Change Password
+            <input
+              type="text"
+              value={userData.fullName}
+              onChange={(e) =>
+                setUserData({ ...userData, fullName: e.target.value })
+              }
+              placeholder="Full Name"
+              className="p-2 border rounded w-full"
+              required
+            />
+            <input
+              type="email"
+              value={userData.email}
+              onChange={(e) =>
+                setUserData({ ...userData, email: e.target.value })
+              }
+              placeholder="Email"
+              className="p-2 border rounded w-full"
+              required
+            />
+            <div className="w-full">
+              <button
+                type="submit"
+                className="py-2 px-4 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition duration-200 w-full"
+              >
+                Update User
+              </button>
+            </div>
+          </form>
+        )}
+
+        <div className="flex space-x-4 w-full mb-4">
+          <button
+            onClick={() => setPasswordFormOpen(!passwordFormOpen)}
+            className="py-2 px-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-200 w-full"
+          >
+            {passwordFormOpen
+              ? "Close Change Password Form"
+              : "Change Password"}
           </button>
         </div>
-      </form>
-    )}
-  
-    <form onSubmit={handleAvatarUpload} className="space-y-4 w-full flex flex-col items-center">
-      <input
-        type="file"
-        accept="image/*"
-        onChange={(e) => setAvatarFile(e.target.files[0])}
-        className="p-2 border rounded w-full"
-      />
-      <div className="w-full">
-        <button
-          type="submit"
-          className="py-2 px-4 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition duration-200 w-full"
+
+        {passwordFormOpen && (
+          <form
+            onSubmit={handleChangePassword}
+            className="space-y-4 w-full flex flex-col items-center"
+          >
+            <input
+              type="password"
+              value={oldPassword}
+              onChange={(e) => setOldPassword(e.target.value)}
+              placeholder="Old Password"
+              className="p-2 border rounded w-full"
+              required
+            />
+            <input
+              type="password"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              placeholder="New Password"
+              className="p-2 border rounded w-full"
+              required
+            />
+            <div className="w-full">
+              <button
+                type="submit"
+                className="py-2 px-4 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition duration-200 w-full"
+              >
+                Change Password
+              </button>
+            </div>
+          </form>
+        )}
+
+        <form
+          onSubmit={handleAvatarUpload}
+          className="space-y-4 w-full flex flex-col items-center"
         >
-          Upload Avatar
-        </button>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => setAvatarFile(e.target.files[0])}
+            className="p-2 border rounded w-full"
+          />
+          <div className="w-full">
+            <button
+              type="submit"
+              className="py-2 px-4 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition duration-200 w-full"
+            >
+              Upload Avatar
+            </button>
+          </div>
+        </form>
+
+        {/* Scrap Management Component */}
+        <ScrapManagement />
+
+        <div className="flex space-x-4 py-5 w-full">
+          <NavLink
+            to="/unverified-dealer"
+            className="block text-center py-2 px-4 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition duration-200 w-full"
+          >
+            Verification
+          </NavLink>
+        </div>
+
+        <div className="flex space-x-4 py-5 w-full">
+          <NavLink
+            to="/user-search"
+            className="block text-center py-2 px-4 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition duration-200 w-full"
+          >
+            Ban User
+          </NavLink>
+        </div>
       </div>
-    </form>
-  
-    {/* Scrap Management Component */}
-    <ScrapManagement />
-  
-    <div className="flex space-x-4 py-5 w-full">
-      <NavLink
-        to="/unverified-dealer"
-        className="block text-center py-2 px-4 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition duration-200 w-full"
-      >
-        Verification
-      </NavLink>
     </div>
-  
-    <div className="flex space-x-4 py-5 w-full">
-      <NavLink
-        to="/user-search"
-        className="block text-center py-2 px-4 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition duration-200 w-full"
-      >
-        Ban User
-      </NavLink>
-    </div>
-  </div>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-  )
+  );
 };
 
 export default Admin;
