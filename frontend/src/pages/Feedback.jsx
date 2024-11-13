@@ -33,22 +33,22 @@ const Feedback = () => {
       <form onSubmit={submitFeedback} className="p-4 max-w-md mx-auto bg-white shadow-md rounded-md">
         <h2 className="text-lg font-bold mb-4">Submit Feedback</h2>
 
-        <input
-          type="text"
-          placeholder="Transaction ID"
-          value={transactionId}
-          onChange={(e) => setTransactionId(e.target.value)}
-          className="w-full p-2 mb-3 border border-gray-300 rounded"
-          required
-        />
-        <input
-          type="text"
-          placeholder="Customer ID"
-          value={customerId}
-          onChange={(e) => setCustomerId(e.target.value)}
-          className="w-full p-2 mb-3 border border-gray-300 rounded"
-          required
-        />
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         <textarea
           placeholder="Message"
           value={message}

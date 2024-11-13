@@ -1,11 +1,12 @@
-// BillCard.jsx
 import React from "react";
 import axios from "axios";
 import { useLoader } from "@/context/LoaderContext";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 const BillCard = ({ bill }) => {
-  const { showLoader, hideLoader } = useLoader(); // No need to import `loading` since it's not used here anymore
+  const { showLoader, hideLoader } = useLoader();
+  const navigate = useNavigate(); // Initialize navigate
 
   const getStatusStyle = (status) => {
     switch (status.toLowerCase()) {
@@ -42,6 +43,10 @@ const BillCard = ({ bill }) => {
     } finally {
       hideLoader();
     }
+  };
+
+  const handleFeedbackClick = () => {
+    navigate("/feedback"); // Navigate to feedback page
   };
 
   return (
@@ -95,6 +100,15 @@ const BillCard = ({ bill }) => {
           </li>
         ))}
       </ul>
+
+      {bill.status.toLowerCase() === "completed" && (
+        <button
+          onClick={handleFeedbackClick}
+          className="py-2 px-4 absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition duration-200 w-11/12"
+        >
+          Give Feedback
+        </button>
+      )}
 
       {bill.status.toLowerCase() !== "canceled" &&
         bill.status.toLowerCase() !== "completed" && (
