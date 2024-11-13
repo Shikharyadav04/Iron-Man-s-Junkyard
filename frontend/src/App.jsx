@@ -34,7 +34,7 @@ import SplashScreen from "./components/SplashScreen";
 import UserSearchPage from "./components/adminUsers/UserSearchPage";
 import "../src/components/Custome.css";
 import ThankYou from "./components/ThankYou";
-
+import Community from "./components/Community";
 const App = () => {
   const { user } = useAuth();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -81,6 +81,7 @@ const App = () => {
               path="/SubscriptionPage"
               element={user ? <SubscriptionPage /> : <Navigate to="/login" />}
             />
+            <Route path="/community" element={<Community />} />
             <Route path="/thankyou" element={<ThankYou />} />
             <Route path="/news" element={<News />} />
             <Route path="/stats" element={<Stats />} />

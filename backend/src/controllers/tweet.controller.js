@@ -13,8 +13,8 @@ const createTweet = asyncHandler(async (req, res) => {
   //check if tweet is created or not
   //return response
 
-  const { message, userId } = req.body;
-
+  const { message } = req.body;
+  const userId = req.user._id;
   if (!message) {
     throw new ApiError(400, "Please enter a message");
   }
@@ -31,6 +31,7 @@ const createTweet = asyncHandler(async (req, res) => {
   const tweet = await Tweet.create({
     message,
     owner: user._id,
+    avatar: user.avatar,
   });
 
   if (!tweet) {
@@ -47,7 +48,7 @@ const getUserTweets = asyncHandler(async (req, res) => {
   //find all tweets of user
   //return response
 
-  const { userId } = req.body;
+  const userId = req.user._id;
 
   if (!userId) {
     throw new ApiError(400, "User Authorization failed : NO userId found");
@@ -118,5 +119,16 @@ const deleteTweet = asyncHandler(async (req, res) => {
     .status(200)
     .json(new ApiResponse(200, tweet, "Tweet deleted successfully"));
 });
+const getAllTweets = asyncHandler(async (req, res) => {
+  const tweets = await Tweet.find().populate("owner", "fullName email avatar");
 
-export { createTweet, getUserTweets, updateTweet, deleteTweet };
+  if (!tweets || tweets.length === 0) {
+    throw new ApiError(404, "No tweets found");
+  }
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, tweets, "All tweets fetched successfully"));
+});
+
+export { createTweet, getUserTweets, updateTweet, deleteTweet, getAllTweets };

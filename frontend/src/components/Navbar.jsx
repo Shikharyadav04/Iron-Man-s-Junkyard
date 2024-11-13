@@ -79,8 +79,8 @@ const Navbar = () => {
         <h1 className="h-5px w-6px bold py-5">SCRAPMAN</h1>
       </Link>
 
-      <ul className="hidden sm:flex gap-5 text-sm">
-        <li className="flex flex-col items-center gap-1">
+      <ul className="hidden sm:flex gap-5 text-sm ">
+        <li className="flex flex-col items-center gap-1 transform transition-transform ease-in-out duration-300 hover:scale-125">
           {user ? (
             user.role === "admin" ? (
               <div
@@ -117,25 +117,46 @@ const Navbar = () => {
             </p>
           )}
         </li>
-        <NavLink to="/about" className="flex flex-col items-center gap-1">
+        <NavLink
+          to="/about"
+          className="flex flex-col items-center gap-1 transform transition-transform ease-in-out duration-300 hover:scale-125"
+        >
           <p>About</p>
         </NavLink>
-        <NavLink to="/business" className="flex flex-col items-center gap-1">
+        <NavLink
+          to="/business"
+          className="flex flex-col items-center gap-1 transform transition-transform ease-in-out duration-300 hover:scale-125"
+        >
           <p>For Businesses</p>
         </NavLink>
-        <NavLink to="/feedback" className="flex flex-col items-center gap-1">
+        <NavLink
+          to="/feedback"
+          className="flex flex-col items-center gap-1 transform transition-transform ease-in-out duration-300 hover:scale-125"
+        >
           <p>Feedback</p>
         </NavLink>
+        <NavLink
+          to="/community"
+          className="flex flex-col items-center gap-1 transform transition-transform ease-in-out duration-300 hover:scale-125"
+        >
+          <p>Community</p>
+        </NavLink>
         <li
-          className="flex flex-col items-center gap-1 cursor-pointer"
+          className="flex flex-col items-center gap-1 cursor-pointer transform transition-transform ease-in-out duration-300 hover:scale-125"
           onClick={handleSubscriptionClick}
         >
           <p>Subscription</p>
         </li>
-        <NavLink to="/news" className="flex flex-col items-center gap-1">
+        <NavLink
+          to="/news"
+          className="flex flex-col items-center gap-1 transform transition-transform ease-in-out duration-300 hover:scale-125"
+        >
           <p>News</p>
         </NavLink>
-        <NavLink to="/Pricing" className="flex flex-col items-center gap-1">
+        <NavLink
+          to="/Pricing"
+          className="flex flex-col items-center gap-1 transform transition-transform ease-in-out duration-300 hover:scale-125"
+        >
           <p>Pricing</p>
         </NavLink>
       </ul>
