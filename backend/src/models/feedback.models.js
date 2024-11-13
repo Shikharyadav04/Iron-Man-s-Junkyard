@@ -1,19 +1,8 @@
 import mongoose from "mongoose";
 const { Schema } = mongoose;
 
-
 const feedbackSchema = new Schema(
   {
-    transactionId: {
-      type: Schema.Types.ObjectId,
-      ref: "Transaction",
-      required: true,
-    },
-    customerId: {
-      type: Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-    },
     message: {
       type: String,
     },

@@ -6,12 +6,11 @@ const router = Router();
 
 // POST feedback
 router.post("/", async (req, res) => {
-  const { transactionId, customerId, message, rating } = req.body;
+  const {  message, rating } = req.body;
 
   try {
     const feedback = new Feedback({
-      transactionId,
-      customerId,
+    
       message,
       rating,
     });
