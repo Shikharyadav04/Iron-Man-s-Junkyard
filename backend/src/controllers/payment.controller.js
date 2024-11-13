@@ -7,7 +7,7 @@ import mongoose from "mongoose";
 
 const completePayment = asyncHandler(async (req, res) => {
   const { transactionId, paymentMethod } = req.body;
-  // Validate inputs
+
   console.log(
     `TransactionId: ${transactionId} paymentMethod: ${paymentMethod}`
   );

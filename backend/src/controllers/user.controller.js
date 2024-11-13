@@ -9,6 +9,7 @@ import crypto from "crypto";
 import { DealerRequest } from "../models/dealerRequest.model.js";
 import { getIo } from "../utils/Socket.js";
 import { Notification } from "../models/notification.models.js";
+
 const registerUser = asyncHandler(async (req, res) => {
   // get data from frontend
   // check is required is empty or not
@@ -267,14 +268,12 @@ const changeCurrentPassword = asyncHandler(async (req, res) => {
 });
 
 const getCurrentUser = asyncHandler(async (req, res) => {
-  // Check if user is authenticated and req.user is available
   if (!req.user) {
     return res
       .status(401)
       .json(new ApiResponse(401, null, "User not authenticated"));
   }
 
-  // If authenticated, respond with user details
   return res
     .status(200)
     .json(new ApiResponse(200, req.user, "Current user fetched successfully"));
@@ -314,7 +313,7 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
 
   const user = await User.findByIdAndUpdate(
     req.user._id,
-    { avatar: avatar.url }, // Store the URL from Cloudinary
+    { avatar: avatar.url },
     { new: true, runValidators: true }
   ).select("-password");
 
@@ -363,17 +362,16 @@ const acceptDealerRegistration = asyncHandler(async (req, res) => {
   if (!request) {
     throw new ApiError(404, "Request not found");
   }
-  // Loop through each pending request and accept it
+
   if (request.status === "approved") {
     throw new ApiError(400, "Request is already approved");
   }
-  request.status = "approved"; // Update request status to "accepted"
+  request.status = "approved";
 
   const fullName = request.fullName;
   const email = request.email;
   const address = request.address;
 
-  // Create a new dealer account for each request
   const username = `${fullName.toLowerCase().replace(/ /g, "")}${Math.floor(Math.random() * 10000)}`;
   const newPassword = crypto.randomBytes(8).toString("hex");
 
@@ -390,9 +388,8 @@ const acceptDealerRegistration = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Failed to create new dealer account.");
   }
 
-  await request.save(); // Save the updated request
+  await request.save();
 
-  // Send email after accepting each request
   await sendMail({
     to: email,
     subject: "Welcome to ScrapMan - Dealer Registration Success",

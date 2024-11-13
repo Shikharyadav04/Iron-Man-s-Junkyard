@@ -20,14 +20,14 @@ const createRequest = asyncHandler(async (req, res) => {
     condition,
     scheduledPickupTime,
   } = req.body;
+  const matchCriteria = {};
+
   const userId = req.user._id;
   const isSubscriber = req.user.isSubscribed; // Assume `isSubscribed` field exists in the User schema
   console.log(`userId : ${userId}`);
   if (!Array.isArray(scraps) || scraps.length === 0) {
     throw new ApiError(400, "Scraps array is required and cannot be empty");
   }
-
-  // Get the start and end of the current month
   const startOfMonth = new Date(
     new Date().getFullYear(),
     new Date().getMonth(),
@@ -50,7 +50,7 @@ const createRequest = asyncHandler(async (req, res) => {
 
   // Check if the user has exceeded the limit of requests for the month
   const user = await User.findById(userId);
-  const customerName = user.username ;
+  const customerName = user.username;
   if (user.username !== "shikharyadav04") {
     if (userRequestsThisMonth.length >= allowedRequests) {
       throw new ApiError(
@@ -82,7 +82,13 @@ const createRequest = asyncHandler(async (req, res) => {
       scrapTotalAmount,
     });
   }
-
+  matchCriteria.userId = userId;
+  matchCriteria.scraps = validatedScraps;
+  matchCriteria.pickupLocation = pickupLocation;
+  matchCriteria.scheduledPickupDate = scheduledPickupDate;
+  matchCriteria.condition = condition;
+  matchCriteria.scheduledPickupDate = scheduledPickupDate;
+  matchCriteria.isSubscriber = isSubscriber;
   // Check if the total amount of the new request exceeds the limit
   if (totalAmount > maxAmount) {
     throw new ApiError(
@@ -90,7 +96,18 @@ const createRequest = asyncHandler(async (req, res) => {
       `Request total amount cannot exceed ${maxAmount} INR`
     );
   }
+  const checkRequest = await Request.aggregate([
+    {
+      $match: matchCriteria,
+    },
+  ]);
 
+  if (checkRequest) {
+    throw new ApiError(
+      400,
+      `You have already made a same pickup request for this date and time. Please choose different date and time.`
+    );
+  }
   const requestId = `REQ-${Date.now()}`;
 
   // Create the new request
@@ -166,7 +183,7 @@ const acceptRequest = asyncHandler(async (req, res) => {
   }
 
   const dealerId = req.user._id;
-  const dealerUsername = req.user.username; // Assuming dealer's username is stored here
+  const dealerUsername = req.user.username;
   const request = await Request.findOneAndUpdate(
     {
       requestId: requestId,
@@ -185,14 +202,12 @@ const acceptRequest = asyncHandler(async (req, res) => {
     throw new ApiError(404, "Request not found or already accepted");
   }
 
-  // Retrieve customer details
-  const customer = await User.findById(request.userId); // Assuming `userId` is the customer's ID in the request
+  const customer = await User.findById(request.userId);
   if (!customer) {
     throw new ApiError(404, "Customer not found");
   }
   const customerUsername = customer.username;
 
-  // Create a new chat room and send an initial message
   const newDealerId = new ObjectId(dealerId);
   const newCustomerId = new ObjectId(request.userId);
   const newChat = await Chat.create({
@@ -333,7 +348,7 @@ const getAcceptedRequest = asyncHandler(async (req, res) => {
   if (!userId) {
     throw new ApiError(401, "User not authenticated");
   }
-  
+
   const acceptedRequest = await Request.aggregate([
     {
       $match: {
@@ -349,14 +364,20 @@ const getAcceptedRequest = asyncHandler(async (req, res) => {
       $sort: { createdAt: -1 },
     },
   ]);
-  const customer = await User.findById(acceptRequest.userId)
+  const customer = await User.findById(acceptRequest.userId);
   if (!acceptedRequest) {
     throw new ApiError(404, "No accepted requests found");
   }
 
   return res
     .status(200)
-    .json(new ApiResponse(200, {acceptedRequest , customer}, "User's accepted requests."));
+    .json(
+      new ApiResponse(
+        200,
+        { acceptedRequest, customer },
+        "User's accepted requests."
+      )
+    );
 });
 
 const cancelRequest = asyncHandler(async (req, res) => {

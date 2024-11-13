@@ -17,7 +17,6 @@ export const verifyJWT = asyncHandler(async (req, res, next) => {
       throw new ApiError(401, "Unauthorized request: Token missing or invalid");
     }
 
-    // Verify token and ensure ACCESS_TOKEN_SECRET is defined and correct
     const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
     // console.log("Decoded Token:", decodedToken); // Debugging line
 
