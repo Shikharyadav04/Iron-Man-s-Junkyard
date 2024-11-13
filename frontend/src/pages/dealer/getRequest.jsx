@@ -23,7 +23,6 @@ const GetRequest = () => {
       console.log("Fetched Requests:", response.data); // Log the entire response
       const fetchedRequests = response.data.data;
       setRequests(fetchedRequests);
-      console.log("requests :", fetchedRequests);
     } catch (err) {
       console.error("Error fetching request:", err);
       setError("Error fetching request."); // Set error state if there is an error
@@ -53,7 +52,7 @@ const GetRequest = () => {
       >
         Back to Dealer Page
       </button>
-
+      
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {requests.length > 0 ? (
           requests.map((request, index) => (
