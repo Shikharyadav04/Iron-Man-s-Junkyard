@@ -21,26 +21,26 @@ const Stats = () => {
     fetchStats();
   }, []);
 
-  if (loading) return <p className="text-center text-lg text-gray-600 animate-pulse">Loading...</p>;
-  if (error) return <p className="text-center text-red-600 font-semibold">{error}</p>;
+  if (loading) return <p className="text-center text-lg font-bold text-gray-950 animate-pulse">Loading...</p>;
+  if (error) return <p className="text-center text-black font-semibold">{error}</p>;
 
   return (
-    <div className="p-8 bg-gray-100 min-h-screen bg-[url(https://i.pinimg.com/736x/c9/cd/b7/c9cdb7e9fa4b8edb14f610ba4762e280.jpg)] bg-cover">
-      <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">Admin Stats Dashboard</h2>
+    <div className="p-8 bg-gray-100 min-h-screen bg-[url(https://img.freepik.com/premium-vector/bar-chart-with-pie-chart-overlay-research-statistical-data-company-performance-indicators-simple-minimalist-flat-vector-illustration_538213-118982.jpg)] bg-fill">
+      <h2 className="font-bold text-gray-950 mb-8 text-center">Admin Stats Dashboard</h2>
 
       <div className="stats-container grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <div className="stat-card p-6 bg-white shadow-lg rounded-lg transition transform hover:scale-105">
-          <h3 className="font-semibold text-gray-700 text-lg mb-2">Users Registered This Month</h3>
+          <h3 className="font-bold text-gray-950 text-lg mb-2">Users Registered This Month</h3>
           <p className="text-2xl font-bold text-blue-500">{stats.usersThisMonth}</p>
         </div>
 
         <div className="stat-card p-6 bg-white shadow-lg rounded-lg transition transform hover:scale-105">
-          <h3 className="font-semibold text-gray-700 text-lg mb-2">Active Users This Month</h3>
+          <h3 className="font-bold text-gray-950 text-lg mb-2">Active Users This Month</h3>
           <p className="text-2xl font-bold text-green-500">{stats.activeUsers}</p>
         </div>
 
         <div className="stat-card p-6 bg-white shadow-lg rounded-lg transition transform hover:scale-105">
-          <h3 className="font-semibold text-gray-700 text-lg mb-2">Request Status Counts</h3>
+          <h3 className="font-bold text-gray-950 text-lg mb-2">Request Status Counts</h3>
           {stats.requestCounts.map((status) => (
             <p key={status._id} className="text-gray-600">
               {status._id}: <span className="font-semibold">{status.count}</span>
