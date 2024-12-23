@@ -2,9 +2,9 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import dotenv from "dotenv";
-import { ApiError } from "../src/utils/ApiError.js"; // Adjust this path accordingly
+import { ApiError } from "../src/utils/ApiError.js"; 
 import multer from "multer";
-dotenv.config(); // Load .env file
+dotenv.config(); 
 import Razorpay from "razorpay";
 import * as crypto from "crypto";
 
